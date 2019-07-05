@@ -1,0 +1,22 @@
+<div sc-modal="indexCtrl.cargosCtrl.modal">
+	<div class="sc-modal-header">
+		Novo cargo
+		<i class="sc-modal-close sc-icon sc-icon-fechar-1 sc-badge-hover-red" ng-click="indexCtrl.cargosCtrl.modal.close()"></i>
+	</div>
+
+	<div class="sc-modal-body">
+		<form ng-init="indexCtrl.cargosCtrl.formInit(cargo = cargo || {})">
+			<div class="col-xs-12">
+				<div class="col-xs-5">
+					<div class="sc-label">Nome do cargo:</div>
+					<input class="sc-input-default sc-input-block" ng-model="params.nome"/>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="sc-modal-footer">
+		<button class="sc-btn sc-btn-blue">Salvar</button>
+		<button class="sc-btn sc-btn-default" ng-click="indexCtrl.cargosCtrl.modal.close()">Cancelar</button>
+	</div>
+</div>

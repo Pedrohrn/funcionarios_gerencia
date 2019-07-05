@@ -1,0 +1,50 @@
+--- Usuários poderão ter cadastro livre (sem vínculo com grupos ou cargos)?:
+			-> não, no ato do cadstro do usuário, será necessário e obrigatório escolher um grupo no qual ele fará parte (selecione ou cadastre um grupo);
+			-> sim:
+				-> grupo 'constante' "Sem grupos", nos quais os usuários sem vínculos serão colocados;
+				-> deixar soltos na tela, abaixo de todos os grupos;
+--- Usuários terão a base de cadastro do próprio sistema (igual ao cadastro feito na tela de permissões) ou será uma tabela diferente?
+--- Tela de gerenciamento de cargos (edição, exclusão, etc)?
+--- Tela de gerenciamento de grupos (edição, exclusão, etc)?
+--- A filtragem na tela principal é por grupo ou por usuário (listagem de grupos, com seus usuários; ou uma listagem de usuários aglomerados, que irão gerar o grupo)?
+
+
+
+u = Usuario.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), telefone: Faker::PhoneNumber.phone_number, cargo_id: Faker::Number.within(1..4), ferias_inicio: Faker::Date.between(2.years.ago, Date.today), ferias_fim: Faker::Date.between(2.years.ago, Date.today), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today))
+
+for i in 1..15
+u = Usuario.find(i)
+u.grupo_id = Faker::Number.within(1..3)
+u.save
+end
+
+talvez será necessário criar a tabela de férias [ :inicio, :fim, :observacoes, :user_id ] (com user_id)
+
+
+
+
+Usuario
+	id
+	grupo_id
+	cargo_id
+	inativado_em
+	foto
+	nome
+	...
+	DADOS PESSOAIS
+	...
+	vigencia =
+		{ data_inicio, data_fim }
+	expedientes = [
+		{ days_list }
+	]
+	anexos
+	grupo_permissoes = [
+		{ grupo_id }
+	]
+	gestoes = [
+		{ gestao_id }
+	]
+	ferias = [
+		{ data_inicio, data_fim, observacoes }
+	]

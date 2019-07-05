@@ -1,0 +1,60 @@
+<div ng-controller="CorpoDiretivo::IndexCtrl as indexCtrl" ng-init="indexCtrl.init()">
+	<section id="top-bar">
+		<div id="top-bar-content">
+			<div ng-include="indexCtrl.templates.usuarios.top_bar_content">
+			</div>
+		</div>
+	</section>
+
+	<section id="breadcrumb">
+		<a>Início</a> / Ações / Corpo Diretivo
+	</section>
+
+	<section id="usuarios">
+		<div>
+			<ul class="sc-accordion sc-border-t-none" sc-scroll="listCtrl.nextPage()">
+				<li as-sortable-item ng-repeat="grupo in indexCtrl.listCtrl.list track by $index" class="sc-border-t-none as-sortable-item" ng-init="indexCtrl.itemCtrl.init(grupo)" ng-class="{'sc-acc-blue': grupo.show.opened}">
+					<div class="sc-accordion-head flex-row" ng-click="grupo.show.toggle()">
+						<label class="fcol-xs-3em align-center" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'" ng-show="indexCtrl.screenMode.list">
+							<i class="sc-icon" ng-if="indexCtrl.screenMode.list" ng-class="grupo.show.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
+						</label>
+						<label as-sortable-item-handle ng-if="indexCtrl.screenMode.sort" class="fcol-xs-3em align-center as-sortable-item-handle" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
+							<i class="sc-icon sc-icon-menu sc-text-black"></i>
+						</label>
+						<div class="fcol-xs-40" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
+							{{grupo.nome}}
+						</div>
+
+						<div class="fcol-xs-auto"></div>
+						<div class="fcol-xs-3em align-center" sc-stop-click>
+							<div class="sc-dropdown">
+								<i class="sc-icon sc-icon-reticiencias-v" ng-click="grupo.menu.toggle()" ng-class="grupo.show.opened ? 'sc-badge-hover-white' : 'sc-badge-hover-gray'"></i>
+								<ul ng-if="grupo.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
+									<li><span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar grupo</span></li>
+									<li><span class="align-left"><i class="sc-icon sc-icon-lapis"></i>Editar</span></li>
+									<li><span class="align-left"><i class="sc-icon sc-icon-lixeira-1"></i>Excluir</span></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div ng-if="grupo.show.opened" class="sc-accordion-body ng-animation-slider" ng-include="indexCtrl.templates.usuarios.show"></div>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<section id="includes">
+		<div ng-if="indexCtrl.newUserCtrl.modal.active">
+			<div ng-include="indexCtrl.templates.usuarios.form"></div>
+		</div>
+		<div ng-if="indexCtrl.configuracoesCtrl.modal.active">
+			<div ng-include="indexCtrl.templates.usuarios.configuracoes_modal"></div>
+		</div>
+		<div ng-if="indexCtrl.cargosCtrl.modal.active">
+			<div ng-include="indexCtrl.templates.usuarios.cargos_form_modal"></div>
+		</div>
+		<div ng-if="indexCtrl.gruposCtrl.modal.active">
+			<div ng-include="indexCtrl.templates.usuarios.cadastrar_grupo_modal" scope="" onload=""
+		</div>
+	</section>
+</div>

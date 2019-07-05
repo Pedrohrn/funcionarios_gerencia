@@ -1,0 +1,119 @@
+<div class="flex-row">
+	<div class="left">
+		<button class="sc-btn sc-btn-blue sc-btn-awesomeness" ng-click="indexCtrl.newUserCtrl.cadastrarUsuario(usuario = {})">
+			<div class="sc-btn-icon"><i class="sc-icon sc-icon-mais-1"></i></div>
+			<div class="sc-btn-text">Cadastrar usuário</div>
+		</button>
+	</div>
+
+	<div class="fcol-xs-45 sc-m-h-xxxl">
+		<div class="sc-input-group">
+			<input class="sc-input-default sc-input-block" placeholder="Busque por nome, cargo, RG, CPF, e-mail, etc..." ng-model="params.termo_busca" type="text">
+			<button class="sc-btn sc-btn-blue"><i class="sc-icon sc-icon-lupa-1"></i></button>
+			<button class="sc-btn" ng-class="indexCtrl.filtro.filtro_avancado ? 'sc-btn-gray' : 'sc-btn-default' " ng-click="indexCtrl.filtro.showFiltro()"><i class="sc-icon sc-icon-filtro-2"></i></button>
+			<button class="sc-btn sc-btn-default"><i class="sc-icon sc-icon-impressora"></i></button>
+		</div>
+	</div>
+
+	<div class="fcol-xs-auto">
+		<div class="sc-btn-group">
+			<button class="sc-btn sc-btn-default" ng-click="indexCtrl.gruposCtrl.openModal()">Ativos</button>
+			<button class="sc-btn sc-btn-default">Inativos</button>
+		</div>
+	</div>
+
+
+	<div class="fcol-xs-3em right" sc-stop-click ng-click="indexCtrl.topbarCtrl.showMenu()">
+		<div class="sc-btn sc-btn-default sc-dropdown">
+			<i class="sc-icon sc-icon-reticiencias-v"></i>
+			<ul ng-if="indexCtrl.topbarCtrl.menu_IsOn" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
+				<li ng-click="indexCtrl.configuracoesCtrl.openModal()">
+					<span class="align-left">
+						<i class="sc-icon sc-icon-engrenagem"></i>
+						Configurações
+					</span>
+				</li>
+				<li>
+					<span class="align-left" ng-click="indexCtrl.screenMode.changeMode()">
+						<i class="sc-icon sc-icon-menu"></i>Ordenar
+					</span>
+				</li>
+				<li>
+					<span class="align-left">
+						<i class="sc-icon sc-icon-historico"></i>Histórico
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div ng-if="indexCtrl.filtro.filtro_avancado" class="flex-row ng-animation-slider sc-p-sm" id="top-bar-filter">
+	<form class="col-xs-12 sc-p-md sc-p-h-o sc-p-t-md" ng-init="indexCtrl.filtro.init()" ng-submit="indexCtrl.filtro.buscar(params)">
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">Função/Cargos</div>
+			<select placeholder="Selecione uma função/cargo" class="sc-input-default sc-input-block"></select>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">Nome</div>
+			<input class="sc-input-default sc-input-block"/>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">E-mail</div>
+			<input class="sc-input-default sc-input-block"/>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">RG</div>
+			<input class="sc-input-default sc-input-block"/>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">CPF</div>
+			<input class="sc-input-default sc-input-block"/>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">Opções</div>
+			<div class="sc-dropdown">
+				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showOptions()">
+					Selecione
+					<i class="sc-icon" ng-class="indexCtrl.filtro.options_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+				</button>
+				<ul class="sc-dropdown-menu" ng-if="indexCtrl.filtro.options_are_visible" style="display: block; width: 100%;">
+					<li ng-repeat="option in indexCtrl.settings.filtroOpcoes track by $index" ng-click="indexCtrl.filtro.toggleOption(option)">
+						<span class="align-left">
+							<i class="sc-icon" ng-class="option.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>
+							{{option.label.capitalize()}}
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+			<div class="sc-label">Em jornada de trabalho às</div>
+			<div class="sc-input-group sc-input-block">
+				<input type="time" sc-mask="hora" class="sc-input-default sc-input-time"/>
+				<div class="sc-dropdown">
+					<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showDays()">
+						<i class="sc-icon" ng-class="indexCtrl.filtro.days_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+						Dias
+					</button>
+					<ul class="sc-dropdown-menu" style="display: block; max-width: 5em !important;" ng-if="indexCtrl.filtro.days_are_visible">
+						<li ng-repeat="day in indexCtrl.settings.diasSemana" ng-click="indexCtrl.filtro.dayToggle(day)">
+							<span class="align-self"><i class="sc-icon" ng-class="day.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>{{day.key}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<hr class="sc-hr-gray"/>
+		<div class="align-left sc-p-b-md">
+			<button class="sc-btn sc-m-h-lg sc-btn-awesomeness sc-btn-blue" ng-click="indexCtrl.filtro.buscar(params)">
+				<div class="sc-btn-icon"><i class="sc-icon sc-icon-visto-1"></i></div>
+				<div class="sc-btn-text">Aplicar</div>
+			</button>
+			<button class="sc-btn sc-btn-awesomeness sc-btn-red" ng-click="indexCtrl.filtro.limpar_busca()">
+				<div class="sc-btn-icon"><i class="sc-icon sc-icon-visto-1"></i></div>
+				<div class="sc-btn-text">Limpar buscar</div>
+			</button>
+		</div>
+	</form>
+</div>

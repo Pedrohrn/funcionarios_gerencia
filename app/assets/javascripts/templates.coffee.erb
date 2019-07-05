@@ -1,0 +1,12 @@
+angular.module('scApp').lazy
+.factory 'Templates', ->
+	obj =
+		usuarios:
+			top_bar_content: "<%= asset_path('usuarios/top_bar_content.html') %>"
+			show: "<%= asset_path('usuarios/show.html') %>"
+			form: "<%= asset_path('usuarios/form.html') %>"
+			configuracoes_modal: "<%= asset_path('usuarios/configuracoes_modal.html') %>"
+			cargos_form_modal: "<%= asset_path('usuarios/cargos_form_modal.html') %>"
+			ferias_modal: "<%= asset_path('usuarios/ferias_modal.html') %>"
+			cadastrar_grupo_modal: "<%= asset_path('usuarios/cadastrar_grupo_modal.html') %>"
+	obj
