@@ -51,9 +51,9 @@ app = angular.module('scApp', ['ngRoute', 'ngResource', 'sc.commons.directives.m
     resolve : carregarCssJs({
       js: [
         "<%= asset_path('templates.js') %>", // Não, Jamais, nunca tire do primeiro item!!!
+        "<%= asset_path('usuarios/resources/usuario.js') %>",
         "<%= asset_path('usuarios/controllers/index.js') %>",
         "<%= asset_path('usuarios/controllers/form.js') %>",
-        "<%= asset_path('usuarios/resources/usuario.js') %>",
         "<%= asset_path('cargos/resources/cargo.js') %>",
         "<%= asset_path('grupos/resources/grupo.js') %>",
 
