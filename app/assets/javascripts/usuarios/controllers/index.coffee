@@ -199,26 +199,41 @@ angular.module('scApp').lazy
 				usuario.ferias_modal.close()
 
 		vm.cargosCtrl =
-			newRecord: false
+			creatingMode: false
+			menuOpened: false
 			list: []
 			modal: new scModal()
 
-			novoCargo: ->
-				@modal.open()
+			openMenu: ->
+				@menuOpened = !@menuOpened
+
+			toggleCreatingMode: ->
+				@creatingMode = !@creatingMode
+
+			formInit: (cargo)->
+				@params = angular.copy cargo || {}
+
+			cancelar: ->
+				scAlert.open
+					title: 'Tem certeza de que deseja fechar'
+					messages: [
+						{ msg: 'Dados não salvos serão perdidos' },
+					]
+					buttons: [
+						{ label: 'Sim', color: 'yellow', action: -> vm.cargosCtrl.toggleCreatingMode() },
+						{ label: 'Não', color: 'gray' },
+					]
+
+			edit: (cargo)->
+				@toggleCreatingMode()
+				@params.nome = angular.copy cargo.nome
 
 		vm.newUserCtrl =
-			params: {}
 			newRecord: false
 			modal: new scModal()
 
 			cadastrarUsuario: (usuario) ->
 				@modal.active = !@modal.active
-
-			init: (usuario)->
-				console.log 'uiui'
-				@params = usuario || {}
-				@params.expedientes = [{ horario_fim: '', horario_inicio: ''}]
-				console.log @params
 
 		vm.itemCtrl =
 			init: (grupo)->

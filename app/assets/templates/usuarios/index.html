@@ -30,9 +30,24 @@
 							<div class="sc-dropdown">
 								<i class="sc-icon sc-icon-reticiencias-v" ng-click="grupo.menu.toggle()" ng-class="grupo.show.opened ? 'sc-badge-hover-white' : 'sc-badge-hover-gray'"></i>
 								<ul ng-if="grupo.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
-									<li><span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar grupo</span></li>
-									<li><span class="align-left"><i class="sc-icon sc-icon-lapis"></i>Editar</span></li>
-									<li><span class="align-left"><i class="sc-icon sc-icon-lixeira-1"></i>Excluir</span></li>
+									<li ng-click="indexCtrl.itemCtrl.inativar(grupo)">
+										<span class="align-left">
+											<i class="sc-icon sc-icon-banir"></i>
+											Inativar grupo
+										</span>
+									</li>
+									<li ng-click="indexCtrl.itemCtrl.edit(grupo)">
+										<span class="align-left">
+											<i class="sc-icon sc-icon-lapis"></i>
+										  Editar
+										</span>
+									</li>
+									<li ng-click="indexCtrl.itemCtrl.rmv(grupo)">
+										<span class="align-left">
+											<i class="sc-icon sc-icon-lixeira-1"></i>
+										  Excluir
+										</span>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -54,7 +69,7 @@
 			<div ng-include="indexCtrl.templates.usuarios.cargos_form_modal"></div>
 		</div>
 		<div ng-if="indexCtrl.gruposCtrl.modal.active">
-			<div ng-include="indexCtrl.templates.usuarios.cadastrar_grupo_modal" scope="" onload=""
+			<div ng-include="indexCtrl.templates.usuarios.cadastrar_grupo_modal"></div>
 		</div>
 	</section>
 </div>
