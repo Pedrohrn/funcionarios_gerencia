@@ -9,5 +9,4 @@ class Cargo < ApplicationRecord
 		}
 	end
 
-
 end
