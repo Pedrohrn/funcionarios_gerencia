@@ -8,6 +8,10 @@
 --- Tela de gerenciamento de grupos (edição, exclusão, etc)?
 --- A filtragem na tela principal é por grupo ou por usuário (listagem de grupos, com seus usuários; ou uma listagem de usuários aglomerados, que irão gerar o grupo)?
 
+Trocar componente cargo/função "editar/adicionar/excluir"
+quebrar tela de cadastro de grupo (permissoes vai para tela de cadastro de usuario, numa nova seção, e grupo vai para topbar ctrl, com direito à drag and drop); colocar select de grupo
+
+
 
 
 u = Usuario.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), telefone: Faker::PhoneNumber.phone_number, cargo_id: Faker::Number.within(1..4), ferias_inicio: Faker::Date.between(2.years.ago, Date.today), ferias_fim: Faker::Date.between(2.years.ago, Date.today), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today))
@@ -48,3 +52,38 @@ Usuario
 	ferias = [
 		{ data_inicio, data_fim, observacoes }
 	]
+
+
+							<div class="fcol-xs-auto sc-m-b-md">
+								<label class="sc-dropdown" sc-dropdown-menu>
+									<div class="sc-label">Cargo/Função:</div>
+									<div class="sc-input-group">
+										<select class="sc-input-default sc-input-thin" ng-options="cargo as cargo.nome for cargo in indexCtrl.cargosCtrl.list track by cargo.id" ng-model="formCtrl.params.cargo">
+											<option value="empty" label="Selecione um cargo"></option>
+										</select>
+										<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="indexCtrl.cargosCtrl.openMenu()">
+											<i class="sc-icon sc-icon-reticiencias-v"></i>
+										</button>
+										<ul class="sc-dropdown-menu pull-right" ng-if="indexCtrl.cargosCtrl.menuOpened" style="display: block;">
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.new()">
+												<span class="align-center">
+													<i class="sc-icon sc-icon-mais-1"></i>
+													Novo
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.edit(cargo)">
+												<span class="align-center">
+													<i class="sc-icon sc-icon-lapis"></i>
+													Editar
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.rmv(cargo)">
+												<span class="align-center">
+													<i class="sc-icon sc-icon-lixeira-2"></i>
+													Excluir
+												</span>
+											</li>
+										</ul>
+									</div>
+								</label>
+							</div>
