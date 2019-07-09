@@ -1,0 +1,59 @@
+<div sc-modal="indexCtrl.gruposCtrl.modal">
+	<div ng-init="indexCtrl.gruposCtrl.formInit(grupo)">
+		<div class="sc-modal-header">
+			Grupos
+			<button class="sc-btn sc-btn-green sc-btn-thin sc-btn-sm sc-m-l-lg" ng-click="indexCtrl.gruposCtrl.new()">
+				<i class="sc-icon sc-icon-mais-1"></i>
+				Novo
+			</button>
+			<i class="sc-modal-close sc-icon sc-icon-fechar-1 sc-badge-hover-red" ng-click="indexCtrl.gruposCtrl.cancelar()"></i>
+		</div>
+
+		<div class="sc-modal-body" style="min-height: 25em;">
+			<ul class="sc-accordion">
+				<li as-sortable-item ng-repeat="grupo in indexCtrl.listCtrl.list track by $index" ng-init="indexCtrl.gruposCtrl.init(grupo)">
+					<div class="flex-row sc-accordion-head">
+						<div as-sortable-item-handle class="as-sortable-item-handle align-center sc-accordion-head fcol-xs-3em">
+							<i class="sc-icon sc-icon-menu"></i>
+						</div>
+						<div class="fcol-xs-auto">{{grupo.nome}}
+							<span ng-if="grupo.is_inative" class="sc-border-radius sc-m-l-lg sc-text-sm sc-p-v-sm sc-text-white sc-p-h-lg sc-bg-yellow">Inativo!
+							</span>
+						</div>
+						<div class="align-center fcol-xs-3em" sc-stop-click ng-click="grupo.options.toggle()">
+							<div class="sc-dropdown">
+								<i class="sc-icon sc-icon-reticiencias-v sc-badge-hover-gray"></i>
+								<div ng-if="grupo.options.opened" class="sc-dropdown-menu pull-right" style="display: block;">
+									<ul>
+										<li>
+											<span>
+												<i class="s-icon sc-icon-banir"></i>
+												Editar
+										</span>
+										</li>
+										<li>
+											<span>
+												<i class="s-icon sc-icon-lapis"></i>
+												Inativar
+											</span>
+										</li>
+										<li>
+											<span>
+												<i class="s-icon sc-icon-lixeira-1"></i>
+												Excluir
+											</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="sc-modal-footer">
+			<button class="sc-btn sc-btn-default" ng-click="indexCtrl.gruposCtrl.cancelar()">Cancelar</button>
+		</div>
+	</div>
+</div>
