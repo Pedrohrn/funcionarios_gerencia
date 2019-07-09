@@ -16,7 +16,16 @@ angular.module('scApp').lazy
 			#vm.params.vigencia = new Date()
 
 		vm.formCtrl =
-			teste: 'oi'
+			init: (grupo) ->
+				grupo.visualizacoes = new scToggle()
+				grupo.checked = 0
+
+			toggleVisualizacoesOption: (option, grupo) ->
+				option.checked = !option.checked
+				if option.checked
+					grupo.checked++
+				else
+					grupo.checked--
 
 			rmvExpediente: (expediente)->
 				vm.params.expedientes.remove expediente
