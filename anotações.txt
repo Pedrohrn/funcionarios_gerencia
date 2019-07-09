@@ -87,3 +87,30 @@ Usuario
 									</div>
 								</label>
 							</div>
+
+
+
+Jeito correto de fazer dropdown!
+<div class="right align-self-center">
+	<div class="sc-dropdown">
+		<i class="sc-icon sc-icon-reticiencias-v sc-badge-hover-gray" ng-class="{'sc-badge-active': categoria.menu.opened}" ng-click="indexCtrl.categoriasCtrl.showMenu(categoria)"></i>
+		<div class="sc-dropdown-menu pull-right" ng-if="categoria.menuIsShown" style="display: block;">
+			<ul>
+				<li ng-click="indexCtrl.categoriasCtrl.editar(categoria)">
+					<span>Editar</span>
+				</li>
+				<li ng-click="indexCtrl.categoriasCtrl.desativar(categoria)">
+					<span ng-if="categoria.disabled">Reativar</span>
+					<span ng-if="!categoria.disabled">Desativar</span>
+				</li>
+				<li ng-click="indexCtrl.categoriasCtrl.rmv(categoria)">
+					<span>Excluir</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+TODO
+
+	grupo constante "Usuários sem grupo"
