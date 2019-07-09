@@ -17,7 +17,7 @@
 
 	<div class="fcol-xs-auto">
 		<div class="sc-btn-group">
-			<button class="sc-btn sc-btn-default" ng-click="indexCtrl.gruposCtrl.openModal()">Ativos</button>
+			<button class="sc-btn sc-btn-default">Ativos</button>
 			<button class="sc-btn sc-btn-default">Inativos</button>
 		</div>
 	</div>
@@ -33,8 +33,14 @@
 						Configurações
 					</span>
 				</li>
-				<li>
-					<span class="align-left" ng-click="indexCtrl.screenMode.changeMode()">
+				<li ng-click="indexCtrl.gruposCtrl.openModal()">
+					<span class="align-left">
+						<i class="sc-icon sc-icon-grupo-2"></i>
+						Grupos
+					</span>
+				</li>
+				<li ng-click="indexCtrl.screenMode.changeMode()">
+					<span class="align-left">
 						<i class="sc-icon sc-icon-menu"></i>Ordenar
 					</span>
 				</li>
@@ -51,7 +57,23 @@
 	<form class="col-xs-12 sc-p-md sc-p-h-o sc-p-t-md" ng-init="indexCtrl.filtro.init()" ng-submit="indexCtrl.filtro.buscar(params)">
 		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
 			<div class="sc-label">Função/Cargos</div>
-			<select placeholder="Selecione uma função/cargo" class="sc-input-default sc-input-block"></select>
+			<div class="sc-dropdown">
+				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showCargos()">
+					Selecione
+					<span ng-if="indexCtrl.filtro.cargo_count > 0" class="sc-badge sc-badge-fixed sc-bg-yellow">{{indexCtrl.filtro.cargo_count}}</span>
+					<i class="sc-icon" ng-class="indexCtrl.filtro.cargos_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+				</button>
+				<div class="sc-dropdown-menu" ng-if="indexCtrl.filtro.cargos_are_visible" style="display: block; width: 100%;">
+					<ul>
+						<li class="align-left" ng-repeat="cargo in indexCtrl.cargosCtrl.list track by $index" ng-click="indexCtrl.filtro.cargoToggle(cargo)">
+							<span>
+								<i class="sc-icon" ng-class="cargo.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>
+								{{cargo.nome}}
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
 			<div class="sc-label">Nome</div>
@@ -74,6 +96,7 @@
 			<div class="sc-dropdown">
 				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showOptions()">
 					Selecione
+					<span ng-if="indexCtrl.filtro.option_count > 0" class="sc-badge sc-badge-fixed sc-bg-yellow">{{indexCtrl.filtro.option_count}}</span>
 					<i class="sc-icon" ng-class="indexCtrl.filtro.options_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
 				</button>
 				<ul class="sc-dropdown-menu" ng-if="indexCtrl.filtro.options_are_visible" style="display: block; width: 100%;">
@@ -92,12 +115,16 @@
 				<input type="time" sc-mask="hora" class="sc-input-default sc-input-time"/>
 				<div class="sc-dropdown">
 					<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showDays()">
+						<span ng-if="indexCtrl.filtro.day_count > 0" class="sc-badge sc-badge-fixed sc-bg-yellow">{{indexCtrl.filtro.day_count}}</span>
 						<i class="sc-icon" ng-class="indexCtrl.filtro.days_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
 						Dias
 					</button>
 					<ul class="sc-dropdown-menu" style="display: block; max-width: 5em !important;" ng-if="indexCtrl.filtro.days_are_visible">
 						<li ng-repeat="day in indexCtrl.settings.diasSemana" ng-click="indexCtrl.filtro.dayToggle(day)">
-							<span class="align-self"><i class="sc-icon" ng-class="day.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>{{day.key}}</span>
+							<span class="align-self">
+								<i class="sc-icon" ng-class="day.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>
+								{{day.key}}
+							</span>
 						</li>
 					</ul>
 				</div>

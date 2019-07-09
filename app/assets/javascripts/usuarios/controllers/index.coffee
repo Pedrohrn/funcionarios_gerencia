@@ -26,6 +26,20 @@ angular.module('scApp').lazy
 				{ key: 'com_email', 		label: 'Com e-mail', 		checked: false },
 				{ key: 'sem_email', 		label: 'Sem e-mail', 		checked: false },
 			]
+			dadosPessoais: [
+				{ key: 'nome', 				label: 'Nome' },
+				{ key: 'grupos', 			label: 'Grupos' },
+				{ key: 'cargo', 			label: 'Cargo' },
+				{ key: 'email', 			label: 'E-mail' },
+				{ key: 'contatos', 		label: 'Contatos' },
+				{ key: 'cpf', 				label: 'Cpf' },
+				{ key: 'rg', 					label: 'RG' },
+				{ key: 'nascimento', 	label: 'Nascimento' },
+				{ key: 'expedientes', label: 'Expedientes' },
+				{ key: 'vigencia', 		label: 'Vigência' },
+				{ key: 'endereco', 		label: 'Endereço' },
+				{ key: 'anexos', 			label: 'Anexos' },
+			]
 
 		vm.init = ->
 			vm.filtro.exec()
@@ -37,18 +51,40 @@ angular.module('scApp').lazy
 			filtro_avancado: false
 			options_are_visible: false
 			days_are_visible: false
+			cargos_are_visible: false
+			day_count: 0
+			cargo_count: 0
+			option_count: 0
 
 			showOptions: ->
 				@options_are_visible = !@options_are_visible
 
 			toggleOption: (option)->
 				option.checked = !option.checked
+				if option.checked
+					@option_count++
+				else
+					@option_count--
 
 			showDays: ->
 				@days_are_visible = !@days_are_visible
 
 			dayToggle: (day)->
 				day.checked = !day.checked
+				if day.checked
+					@day_count++
+				else
+					@day_count--
+
+			showCargos: ->
+				@cargos_are_visible = !@cargos_are_visible
+
+			cargoToggle: (cargo)->
+				cargo.checked = !cargo.checked
+				if cargo.checked
+					@cargo_count++
+				else
+					@cargo_count--
 
 			exec: ->
 				vm.listCtrl.loadList()
@@ -138,11 +174,16 @@ angular.module('scApp').lazy
 			]
 			modal: new scModal()
 
+			init: (grupo)->
+				grupo.options = new scToggle()
+				grupo.edit = new scToggle()
+
 			openModal: ->
 				@modal.open()
 
 			cancelar: (grupo)->
-				scAlert.open
+				if @new
+					scAlert.open
 					title: 'Tem certeza de que deseja cancelar?'
 					messages: [
 						{ msg: 'Dados não salvos serão perdidos' }
@@ -151,6 +192,8 @@ angular.module('scApp').lazy
 						{ label: 'Fechar', color: 'yellow', action: -> vm.gruposCtrl.modal.close() },
 						{ label: 'Voltar', color: 'gray' }
 					]
+				else
+					@modal.close()
 
 			formInit: (grupo)->
 				console.log 'oi formInit grupos'
@@ -257,8 +300,9 @@ angular.module('scApp').lazy
 						{ label: 'Não', color: 'gray' },
 					]
 
-			edit: ->
+			edit: (grupo) ->
 				vm.gruposCtrl.modal.open()
+				grupo.edit.toggle()
 
 		vm.topbarCtrl =
 			menu_IsOn: false
