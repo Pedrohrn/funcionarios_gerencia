@@ -7,4 +7,7 @@ angular.module('scApp').lazy
 			list:
 				method: 'GET'
 
+			show:
+				method: 'GET'
+
 ]
