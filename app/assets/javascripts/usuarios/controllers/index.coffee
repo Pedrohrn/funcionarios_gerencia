@@ -1,7 +1,7 @@
 angular.module('scApp').lazy
 .controller 'CorpoDiretivo::IndexCtrl', [
-	'$scModal', 'scAlert', 'scToggle', 'scTopMessages', 'Templates', 'Usuario', 'Grupo', 'Cargo'
-	(scModal, scAlert, scToggle, scTopMessages, Templates, Usuario, Grupo, Cargo)->
+	'$scModal', 'scAlert', 'scToggle', 'scTopMessages', 'Templates', 'Usuario', 'Grupo', 'Cargo', 'Recesso'
+	(scModal, scAlert, scToggle, scTopMessages, Templates, Usuario, Grupo, Cargo, Recesso)->
 		vm = this
 		vm.templates = Templates
 
@@ -15,6 +15,7 @@ angular.module('scApp').lazy
 				{ key: 'SEX', label: 'sexta', 	checked: false },
 				{ key: 'SAB', label: 'sábado', 	checked: false },
 			]
+
 			filtroOpcoes: [
 				{ key: 'de_ferias', 		label: 'De férias', 		checked: false },
 				{ key: 'em_expediente', label: 'Em expediente', checked: false },
@@ -26,6 +27,7 @@ angular.module('scApp').lazy
 				{ key: 'com_email', 		label: 'Com e-mail', 		checked: false },
 				{ key: 'sem_email', 		label: 'Sem e-mail', 		checked: false },
 			]
+
 			dadosPessoais: [
 				{ key: 'nome', 				label: 'Nome' },
 				{ key: 'grupos', 			label: 'Grupos' },
@@ -39,6 +41,14 @@ angular.module('scApp').lazy
 				{ key: 'vigencia', 		label: 'Vigência' },
 				{ key: 'endereco', 		label: 'Endereço' },
 				{ key: 'anexos', 			label: 'Anexos' },
+			]
+
+			grupos_list: [
+				{ label: 'Proprietários' },
+				{ label: 'Moradores' },
+				{ label: 'Moradores responsáveis' },
+				{ label: 'Imobiliárias' },
+				{ label: 'Porteiros' },
 			]
 
 		vm.init = ->
@@ -92,6 +102,12 @@ angular.module('scApp').lazy
 			showFiltro: ->
 				@filtro_avancado = !@filtro_avancado
 
+			toggleAtivos: ->
+				@ativos = !@ativos
+
+			toggleInativos: ->
+				@inativos = !@inativos
+
 		vm.screenMode =
 			list: true
 			sort: false
@@ -127,10 +143,6 @@ angular.module('scApp').lazy
 					(data)=>
 						vm.usuariosCtrl.list.addOrExtend item for item in data.usuarios
 
-				Cargo.list params,
-					(data)=>
-						vm.cargosCtrl.list.addOrExtend item for item in data.cargos
-
 		vm.usuariosCtrl =
 			list: []
 
@@ -142,8 +154,38 @@ angular.module('scApp').lazy
 
 			open_ferias_modal: (usuario)->
 				usuario.ferias_modal.open()
+				return if usuario.ferias.loaded
+
+				usuario.ferias.loading = true
+
+				params = { usuario_id: usuario.id }
+
+				Recesso.list params,
+					(data)=>
+						usuario.ferias.loading = false
+						usuario.ferias.loaded = true
+
+						usuario.ferias.addOrExtend item for item in data.recessos
 
 			edit: (usuario)->
+				return if @loading
+
+				@loading = true
+
+				Usuario.show usuario,
+					(data)=>
+						@loading = false
+
+						usuario = vm.listCtrl.list.find (obj)-> obj.id == data.usuario.id
+						angular.extend usuario, data.usuario
+						console.log usuario
+						console.log "usuarioooooooooooooooooooooo"
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
 				usuario.edit.opened = true
 				vm.newUserCtrl.modal.open()
 
@@ -156,7 +198,7 @@ angular.module('scApp').lazy
 					]
 
 			inativar: (usuario)->
-				label = if usuario.inativado_em? then 'reativar' else 'desativar'
+				label = if usuario.inativado_em then 'reativar' else 'desativar'
 				scAlert.open
 					title: 'Tem certeza de que deseja ' + label + ' o usuário?'
 					buttons: [
@@ -165,123 +207,294 @@ angular.module('scApp').lazy
 					]
 
 		vm.gruposCtrl =
-			grupos_list: [
-				{ label: 'Proprietários' },
-				{ label: 'Moradores' },
-				{ label: 'Moradores responsáveis' },
-				{ label: 'Imobiliárias' },
-				{ label: 'Porteiros' },
-			]
 			modal: new scModal()
+			newRecord: false
+			creatingModeOn: false
+			params: {}
 
 			init: (grupo)->
 				grupo.options = new scToggle()
-				grupo.edit = new scToggle()
+				grupo.modal_edit = new scToggle()
+
+			formInit: (grupo)->
+				@params = angular.copy grupo || {}
+				console.log 'oi formInit grupos'
 
 			openModal: ->
 				@modal.open()
 
-			cancelar: (grupo)->
-				if @new
-					scAlert.open
-					title: 'Tem certeza de que deseja cancelar?'
-					messages: [
-						{ msg: 'Dados não salvos serão perdidos' }
-					]
-					buttons: [
-						{ label: 'Fechar', color: 'yellow', action: -> vm.gruposCtrl.modal.close() },
-						{ label: 'Voltar', color: 'gray' }
-					]
-				else
-					@modal.close()
+			new: ->
+				@newRecord = true
+				@creatingModeOn = true
 
-			formInit: (grupo)->
-				console.log 'oi formInit grupos'
+			cancelar: (grupo)->
+				if @newRecord
+					@newRecord = false
+				else
+					grupo.edit.toggle()
+
+			salvar: (grupo)->
+				if @newRecord
+					@create()
+				else
+					@update(grupo)
+
+			create: ->
+				console.log 'create'
+				return if @loading
+
+				@loading = true
+
+				Grupo.create @params,
+					(data)=>
+						@loading = false
+
+						grupo = data.grupo
+
+						vm.listCtrl.list.push(grupo)
+
+						scTopMessages.openSuccess data.message
+						@resetForm()
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			update: (grupo)->
+				console.log 'update'
+				return if @loading
+
+				@loading = true
+
+				Grupo.update @params,
+					(data)=>
+						@loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == grupo.id
+						grupo.edit.opened = false
+						angular.extend grupo, data.grupo
+						@resetForm()
+						scTopMessages.openSuccess data.message
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			resetForm: ->
+				@newRecord = false
+				@creatingModeOn = false
+
+			destroy: (grupo)->
+				return if @loading
+
+				@loading = true
+
+				Grupo.destroy grupo,
+					(data)=>
+						@loading = false
+
+						vm.listCtrl.list.remove(grupo)
+						scTopMessages.openSuccess data.message
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			inativar: (grupo)->
+				@params = { id: grupo.id, inativado_em: grupo.inativado_em, micro_update_type: 'inativar'}
+
+				@micro_update_submit()
+
+			micro_update_submit: ->
+				return if @loading
+
+				@loading = true
+
+				Grupo.micro_update @params,
+					(data)=>
+						@loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+						angular.extend grupo, data.grupo
+						@resetForm()
+						scTopMessages.openSuccess data.message
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 		vm.feriasCtrl =
-			form: new scToggle()
 			newRecord: false
 			params: {}
 			loading: false
+			creatingModeOn: false
 
-			novoCadastro: ->
-				@form.opened = !@form.opened
+			novoCadastro: (usuario)->
+				@creatingModeOn = true
+				@newRecord = true
+				@params = { usuario_id: usuario.id}
 
 			init: (ferias)->
-				vm.feriasCtrl.form.opened = false
 				ferias.acc = new scToggle()
 				ferias.menu = new scToggle()
 
-			formInit: (usuario, ferias)->
-				@params = angular.copy usuario.ferias || {}
+			editar: (ferias, usuario)->
+				@creatingModeOn = true
+				@params = angular.copy ferias
+				@params.usuario_id = usuario.id
+				@formInit()
 
-			closeModal: (usuario)->
-				if @form.opened
+			formInit: ->
+				@params.data_inicio = new Date(@params.data_inicio)
+				@params.data_fim = new Date(@params.data_fim)
+				console.log @params
+
+			rmv: (ferias, usuario)->
+				scAlert.open
+					title: 'Tem certeza de que deseja excluir esse registro?'
+					buttons: [
+						{ label: 'Excluir', color: 'red', action: -> vm.feriasCtrl.excluir(ferias, usuario) },
+						{ label: 'Cancelar', color: 'gray' }
+					]
+
+			excluir: (ferias, usuario)->
+				return if @loading
+
+				@loading = true
+
+				Recesso.destroy ferias,
+					(data)=>
+						@loading = false
+						usuario.ferias.remove(ferias)
+						message = data.message
+
+						scTopMessages.openSuccess message unless Object.blank(message)
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			show: (ferias) ->
+				ferias.acc.toggle()
+
+			cancelar: (usuario) ->
+				if @creatingModeOn
 					scAlert.open
-						title: 'Existem formulários abertos nesta tela. Deseja mesmo fechar?'
-						messages: [
-							{ msg: 'Dados não salvos serão perdidos' },
-						]
+						title: 'Tem certeza que deseja cancelar? Dados não salvos serão perdidos.'
 						buttons: [
-							{ label: 'Fechar', color: 'yellow', action: -> usuario.ferias_modal.close() },
-							{ label: 'Cancelar', color: 'gray' }
+							{ label: 'Sim', color: 'yellow', action: -> vm.feriasCtrl.resetModal(usuario) },
+							{ label: 'Não', color: 'gray' }
 						]
 				else
 					usuario.ferias_modal.close()
 
-			cancelar: (usuario) ->
-				scAlert.open
-					title: 'Tem certeza que deseja cancelar? Dados não salvos serão perdidos.'
-					buttons: [
-						{ label: 'Sim', color: 'yellow', action: -> vm.feriasCtrl.resetModal(usuario) },
-						{ label: 'Não', color: 'gray' }
-					]
+			salvar: (usuario)->
+				console.log @params
+				if @newRecord
+					@create(usuario)
+				else
+					@update(usuario)
+
+			create: (usuario)->
+				return if @loading
+
+				@loading = true
+
+				Recesso.create @params,
+					(data)=>
+						@loading = false
+
+						ferias = data.recesso
+
+						usuario.ferias.push(ferias)
+						@resetForm()
+
+						scTopMessages.openSuccess data.message
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			update: (usuario)->
+				console.log 'update'
+				return if @loading
+
+				@loading = true
+
+				Recesso.update @params,
+					(data)=>
+						@loading = false
+
+						ferias = usuario.ferias.find (obj)-> obj.id == data.recesso.id
+						angular.extend ferias, data.recesso
+
+						@resetForm()
+
+						scTopMessages.openSuccess data.message
+					(response)=>
+						@loading = false
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			resetModal: (usuario)->
-				@form.opened = false
-				usuario.ferias_modal.close()
+				@creatingModeOn = false
+				@newRecord = false
+
+			resetForm: ->
+				@creatingModeOn = false
+				@newRecord = false
 
 		vm.cargosCtrl =
-			creatingMode: false
-			menuOpened: false
 			list: []
-			modal: new scModal()
-
-			openMenu: ->
-				@menuOpened = !@menuOpened
-
-			toggleCreatingMode: ->
-				@creatingMode = !@creatingMode
-
-			formInit: (cargo)->
-				@params = angular.copy cargo || {}
-
-			cancelar: ->
-				scAlert.open
-					title: 'Tem certeza de que deseja fechar'
-					messages: [
-						{ msg: 'Dados não salvos serão perdidos' },
-					]
-					buttons: [
-						{ label: 'Sim', color: 'yellow', action: -> vm.cargosCtrl.toggleCreatingMode() },
-						{ label: 'Não', color: 'gray' },
-					]
-
-			edit: (cargo)->
-				@toggleCreatingMode()
-				@params.nome = angular.copy cargo.nome
 
 		vm.newUserCtrl =
 			newRecord: false
 			modal: new scModal()
 
 			cadastrarUsuario: (usuario) ->
+				@newRecord = true
 				@modal.active = !@modal.active
 
 		vm.itemCtrl =
 			init: (grupo)->
 				grupo.show = new scToggle()
 				grupo.menu = new scToggle()
+				grupo.edit = new scToggle()
+
+			accToggle: (grupo)->
+				return if grupo.edit.opened
+				grupo.loading = false
+				grupo.show.toggle()
+				@show(grupo)
+
+			show: (grupo)->
+				console.log grupo
+				return if grupo.loaded
+
+				Grupo.show grupo,
+					(data)=>
+						grupo.loaded = true
+						grupo.loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+						angular.extend grupo, data.grupo
+					(response)=>
+						grupo.loaded = true
+						grupo.loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			rmv: (grupo)->
 				scAlert.open
@@ -300,8 +513,11 @@ angular.module('scApp').lazy
 						{ label: 'Não', color: 'gray' },
 					]
 
-			edit: (grupo) ->
-				vm.gruposCtrl.modal.open()
+			edit: (grupo)->
+				console.log grupo
+				return unless !grupo.edit.opened
+				vm.gruposCtrl.creatingModeOn = true
+				grupo.show.opened = false
 				grupo.edit.toggle()
 
 		vm.topbarCtrl =

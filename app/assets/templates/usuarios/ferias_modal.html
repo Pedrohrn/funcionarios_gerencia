@@ -1,7 +1,7 @@
 <div sc-modal="usuario.ferias_modal">
 	<div class="sc-modal-header">
 		Férias
-		<button class="sc-btn sc-btn-green sc-btn-thin sc-btn-sm sc-m-h-lg" ng-click="indexCtrl.feriasCtrl.novoCadastro()">
+		<button class="sc-btn sc-btn-green sc-btn-thin sc-btn-sm sc-m-h-lg" ng-click="indexCtrl.feriasCtrl.novoCadastro(usuario)">
 			<i class="sc-icon sc-icon-mais-1"></i>
 			Cadastrar férias
 		</button>
@@ -9,61 +9,78 @@
 	</div>
 
 	<div class="sc-modal-body">
-		<form ng-if="indexCtrl.feriasCtrl.form.opened" ng-init="indexCtrl.feriasCtrl.formInit(usuario, ferias)">
-			<div class="flex-row">
+		<form ng-if="indexCtrl.feriasCtrl.creatingModeOn">
+			<div class="flex-row sc-p-h-lg">
 				<div class="fcol-xs-50">
 					<div class="sc-label">Início:</div>
-					<input sc-date-picker type="date" class="sc-input-default sc-date-picker" ng-model="params.data_inicio"/>
+					<input sc-date-picker type="date" class="sc-input-default sc-date-picker" ng-model="indexCtrl.feriasCtrl.params.data_inicio"/>
 				</div>
 				<div class="fcol-xs-50">
 					<div class="sc-label">Fim:</div>
-					<input sc-date-picker type="date" class="sc-input-default sc-date-picker" ng-model="params.data_fim"/>
+					<input sc-date-picker type="date" class="sc-input-default sc-date-picker" ng-model="indexCtrl.feriasCtrl.params.data_fim"/>
 				</div>
 				<div class="fcol-xs-100 sc-m-v-md">
 					<div class="sc-label">Observações:</div>
-					<textarea class="sc-input-default" col="30" rows="4" ng-model="params.observacoes"></textarea>
+					<textarea class="sc-input-default" col="30" rows="4" ng-model="indexCtrl.feriasCtrl.params.observacoes"></textarea>
 				</div>
 			</div>
-			<div class="align-right">
-				<button class="sc-btn sc-btn-blue" ng-click="indexCtrl.feriasCtrl.salvar()">Salvar</button>
-				<button class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.cancelar()">Cancelar</button>
-			</div>
 		</form>
-		<div ng-if="!indexCtrl.feriasCtrl.form.opened" class="flex-row">
-			<div class="sc-label">Histórico de férias</div>
+		<div ng-if="!indexCtrl.feriasCtrl.creatingModeOn" class="flex-row">
+			<div class="sc-m-b-lg sc-label">Histórico de férias</div>
 			<ul class="fcol-xs-100">
-				<li ng-if="indexCtrl.feriasCtrl.loading || usuario.ferias.length < 1" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-lg sc-border-radius">
+				<li ng-if="usuario.ferias.loading || usuario.ferias.length < 1" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-lg sc-border-radius">
 					<div class="align-center">
-						<span ng-if="indexCtrl.feriasCtrl.loading">
+						<span ng-if="usuario.ferias.loading">
 							<i class="sc-icon sc-icon-carregando-1 sc-icon-spin"></i>
 							Carregando!
 						</span>
-						<span ng-if="usuario.ferias.length < 1 && !indexCtrl.feriasCtrl.loading">
+						<span ng-if="usuario.ferias.length < 1 && !usuario.ferias.loading">
 							<i class="sc-icon sc-icon-exclamacao-1"></i>
 							Nenhum histórico de férias!
 						</span>
 					</div>
 				</li>
-				<li ng-repeat="ferias in usuario.ferias track by $index" ng-init="indexCtrl.feriasCtrl.init(ferias)" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-lg sc-m-b-sm sc-border-radius">
-					<div class="sc-cursor-pointer" ng-click="ferias.acc.toggle()">
-						<span class="sc-label">{{ferias.ano_inicio}}</span>
-						<i class="sc-icon right" ng-class="ferias.acc.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
-						<div class="sc-dropdown right">
-							<i sc-stop-click class="sc-icon sc-icon-reticiencias-v" ng-click="ferias.menu.toggle()"></i>
-							<ul class="sc-dropdown-menu" ng-if="ferias.menu.opened">
-								<li><span><i class="sc-icon sc-icon-lapis"></i>Editar</span></li>
-								<li><span><i class="sc-icon sc-icon-lixeira-2"></i>Excluir</span></li>
+				<li ng-repeat="ferias in usuario.ferias track by $index" ng-init="indexCtrl.feriasCtrl.init(ferias)" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-sm sc-p-r-o sc-m-b-sm sc-border-radius">
+					<div class="sc-cursor-pointer flex-row" ng-click="indexCtrl.feriasCtrl.show(ferias)">
+						<div class="sc-m-l-md align-self-center">
+							<i class="sc-icon" ng-class="ferias.acc.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
+						</div>
+						<div class="sc-m-h-lg fcol-xs-50 sc-text-blue-dark align-self-center"><b>{{ferias.data_inicio | date: "yyyy" }}</b></div>
+						<div class="fcol-xs-auto align-self-center"></div>
+						<div sc-stop-click class="fcol-xs-3em align-center sc-dropdown">
+							<i class="sc-icon sc-badge-hover-gray sc-icon-reticiencias-v" ng-click="ferias.menu.toggle()"></i>
+							<ul class="sc-dropdown-menu pull-right sc-m-b-xs" style="display: block; min-width: 10em;" ng-if="ferias.menu.opened">
+								<li ng-click="indexCtrl.feriasCtrl.editar(ferias, usuario)">
+									<span>
+										<i class="sc-icon sc-icon-lapis"></i>
+										Editar
+									</span>
+									</li>
+								<li ng-click="indexCtrl.feriasCtrl.rmv(ferias, usuario)">
+									<span>
+										<i class="sc-icon sc-icon-lixeira-2"></i>
+										Excluir
+									</span>
+									</li>
 							</ul>
 						</div>
 					</div>
-					<div class="ng-angular-slider" ng-if="ferias.acc.opened">
+					<div class="ng-angular-slider sc-m-l-md" ng-if="ferias.acc.opened">
 						<div class="sc-m-t-md">
-							<span class="sc-text-red">{{ferias.data_inicio}}</span>
-							<span class="sc-text-green">{{ferias.data_fim}}</span>
+							<span class="sc-label">Início:</span>
+							<span class="sc-text-">{{ferias.data_inicio | date: "dd/MM/yyyy" }}</span>
+						</div>
+						<div class="sc-m-t-md">
+							<span class="sc-label">Fim:</span>
+							<span class="sc-text-">{{ferias.data_fim | date: "dd/MM/yyyy" }}</span>
 						</div>
 						<div class="sc-m-v-md">
 							<span class="sc-label">Observações:</span>
 							<span class="sc-text">{{ferias.observacoes}}</span>
+						</div>
+						<div class="sc-m-v-md">
+							<span class="sc-label">Cadastrado em:</span>
+							<span class="sc-text">{{ferias.created_at | date: "dd/MM/yyyy "}}</span>
 						</div>
 					</div>
 				</li>
@@ -72,6 +89,10 @@
 	</div>
 
 	<div class="sc-modal-footer">
-		<button class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.closeModal(usuario)">Fechar</button>
+		<button ng-if="!indexCtrl.feriasCtrl.creatingModeOn" class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.cancelar(usuario)">Fechar</button>
+		<div class="align-right" ng-if="indexCtrl.feriasCtrl.creatingModeOn">
+			<button class="sc-btn sc-btn-blue" ng-click="indexCtrl.feriasCtrl.salvar()">Salvar</button>
+			<button class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.cancelar()">Cancelar</button>
+		</div>
 	</div>
 </div>

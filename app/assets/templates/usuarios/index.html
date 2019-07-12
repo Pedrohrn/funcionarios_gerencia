@@ -14,17 +14,27 @@
 		<div>
 			<ul class="sc-accordion sc-border-t-none" sc-scroll="listCtrl.nextPage()">
 				<li as-sortable-item ng-repeat="grupo in indexCtrl.listCtrl.list track by $index" class="sc-border-t-none as-sortable-item" ng-init="indexCtrl.itemCtrl.init(grupo)" ng-class="{'sc-acc-blue': grupo.show.opened}">
-					<div class="sc-accordion-head flex-row" ng-click="grupo.show.toggle()">
+					<div class="sc-accordion-head flex-row" ng-click="indexCtrl.itemCtrl.accToggle(grupo)">
 						<label class="fcol-xs-3em align-center" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'" ng-show="indexCtrl.screenMode.list">
 							<i class="sc-icon" ng-if="indexCtrl.screenMode.list" ng-class="grupo.show.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
 						</label>
 						<label as-sortable-item-handle ng-if="indexCtrl.screenMode.sort" class="fcol-xs-3em align-center as-sortable-item-handle" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
 							<i class="sc-icon sc-icon-menu sc-text-black"></i>
 						</label>
-						<div class="fcol-xs-40" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
+						<div ng-if="!grupo.edit.opened" class="fcol-xs-40" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
 							{{grupo.nome}}
 						</div>
-
+						<div sc-stop-click ng-if="grupo.edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="fcol-xs-60 fcol-md-30 fcol-lg-20 sc-stop-click">
+							<div class="sc-input-group">
+								<input class="sc-input-default" ng-model="indexCtrl.gruposCtrl.params.nome"/>
+								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.submit()">
+									<i class="sc-icon sc-icon-visto-1"></i>
+								</button>
+								<button class="sc-btn sc-btn-red" ng-click="grupo.edit.toggle()">
+									<i class="sc-icon sc-icon-fechar-1"></i>
+								</button>
+							</div>
+						</div>
 						<div class="fcol-xs-auto"></div>
 						<div class="fcol-xs-3em align-center" sc-stop-click>
 							<div class="sc-dropdown">
@@ -54,14 +64,14 @@
 							</div>
 						</div>
 					</div>
-					<div ng-if="grupo.show.opened" class="sc-accordion-body ng-animation-slider" ng-include="indexCtrl.templates.usuarios.show"></div>
+					<div ng-if="grupo.show.opened" class="sc-accordion-body sc-p-b-o ng-animation-slider" ng-include="indexCtrl.templates.usuarios.show"></div>
 				</li>
 			</ul>
 		</div>
 	</section>
 
 	<section id="includes">
-		<div ng-if="indexCtrl.newUserCtrl.modal.active">
+		<div ng-if="indexCtrl.newUserCtrl.modal.active && indexCtrl.newUserCtrl.newRecord">
 			<div ng-include="indexCtrl.templates.usuarios.form"></div>
 		</div>
 		<div ng-if="indexCtrl.configuracoesCtrl.modal.active">

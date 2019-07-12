@@ -30,11 +30,11 @@
 							</div>
 							<div class="fcol-xs-auto sc-m-b-md">
 								<div class="sc-label">E-mail:</div>
-								<input class="sc-input-default sc-input-block" type="email" ng-model="formCtrl.params.emails"/>
+								<input class="sc-input-default sc-input-block" type="email" ng-model="formCtrl.params.email"/>
 							</div>
 							<div class="fcol-xs-auto sc-m-b-md">
 								<div class="sc-label">Contatos:</div>
-								<input class="sc-input-default sc-input-block" type="" ng-model="formCtrl.params.contatos"/>
+								<input class="sc-input-default sc-input-block" type="" ng-model="formCtrl.params.telefone"/>
 							</div>
 						</div>
 						<div class="clear"></div>
@@ -46,32 +46,32 @@
 								</select>
 							</div>
 						</div>
-						<div class="fcol-xs-50">
+						<div class="fcol-xs-50 sc-p-r-none" ng-init="formCtrl.cargosCtrl.init(obj)">
 							<div class="sc-m-b-md">
-								<label ng-if="!indexCtrl.cargosCtrl.creatingMode">
+								<label ng-if="!formCtrl.cargosCtrl.creatingMode">
 									<div class="sc-label">Cargo/Função:</div>
 									<div class="sc-input-group sc-dropdown" sc-dropdown-menu>
-										<select class="sc-input-default" ng-options="cargo as cargo.nome for cargo in indexCtrl.cargosCtrl.list track by cargo.id" ng-model="formCtrl.params.cargo">
+										<select class="sc-input-default" ng-options="cargo as cargo.nome for cargo in formCtrl.cargosCtrl.list track by cargo.id" ng-model="formCtrl.params.cargo">
 											<option value="empty" label="Selecione um cargo"></option>
 										</select>
-										<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="indexCtrl.cargosCtrl.openMenu()">
+										<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="formCtrl.cargosCtrl.openMenu()">
 											<i class="sc-icon sc-icon-reticiencias-v"></i>
 										</button>
-										<div class="sc-dropdown-menu pull-right" ng-if="indexCtrl.cargosCtrl.menuOpened" style="display: block; top: 2.3em; left: 8.9em;">
+										<div class="sc-dropdown-menu pull-right" ng-if="formCtrl.cargosCtrl.menuOpened" style="display: block; top: 2.3em; left: 8.9em;">
 											<ul>
-												<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.toggleCreatingMode()">
+												<li sc-dropdown-close-menu ng-click="formCtrl.cargosCtrl.new()">
 													<span class="align-left">
 														<i class="sc-icon sc-icon-mais-1"></i>
 														Novo
 													</span>
 												</li>
-												<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.edit(cargo)">
+												<li sc-dropdown-close-menu ng-click="formCtrl.cargosCtrl.edit()">
 													<span class="align-left">
 														<i class="sc-icon sc-icon-lapis"></i>
 														Editar
 													</span>
 												</li>
-												<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.rmv(cargo)">
+												<li sc-dropdown-close-menu ng-click="formCtrl.cargosCtrl.rmv(cargo = formCtrl.params.cargo)">
 													<span class="align-left">
 														<i class="sc-icon sc-icon-lixeira-2"></i>
 														Excluir
@@ -81,14 +81,14 @@
 										</div>
 									</div>
 								</label>
-								<label ng-if="indexCtrl.cargosCtrl.creatingMode" ng-init="indexCtrl.cargosCtrl.formInit(cargo)">
-									<div class="sc-label">Novo cargo:</div>
+								<label ng-if="formCtrl.cargosCtrl.creatingMode" ng-init="formCtrl.cargosCtrl.formInit(formCtrl.params.cargo)">
+									<div class="sc-label">Nome:</div>
 									<div class="sc-input-group">
-										<input class="sc-input-default sc-input-thin" type="text" ng-model="indexCtrl.cargosCtrl.params.nome"/>
-										<button class="sc-btn sc-btn-green" ng-click="indexCtrl.cargosCtrl.submit()">
+										<input class="sc-input-default sc-input-thin" type="text" ng-model="formCtrl.cargosCtrl.params.nome"/>
+										<button class="sc-btn sc-btn-green" ng-click="formCtrl.cargosCtrl.salvar(cargo = formCtrl.cargosCtrl.params)">
 											<i class="sc-icon sc-icon-visto-1"></i>
 										</button>
-										<button class="sc-btn sc-btn-red" ng-click="indexCtrl.cargosCtrl.cancelar()">
+										<button class="sc-btn sc-btn-red" ng-click="formCtrl.cargosCtrl.edit()">
 											<i class="sc-icon sc-icon-fechar-1"></i>
 										</button>
 									</div>
@@ -180,7 +180,7 @@
 								<i class="sc-icon sc-icon-clipe"></i>
 								Anexar
 							</button>
-							<select class="sc-input sc-input-default" ng-model="params.anexo.type">
+							<select class="sc-input sc-input-default sc-m-l-lg" ng-model="params.anexo.type">
 								<option value="empty" label="Selecione o tipo" selected="true"></option>
 								<option label="Documento" value="documento"></option>
 								<option label="Foto" value="foto"></option>
@@ -190,7 +190,7 @@
 						<div class="fcol-xs-100">
 							<div class="sc-label sc-text-lg">Visualizações:</div>
 							<ul class="fcol-xs-100 sc-m-t-lg">
-								<li ng-repeat="grupo in indexCtrl.gruposCtrl.grupos_list track by $index" class="sc-m-v-sm flex-row sc-border-b-lg" ng-init="formCtrl.formCtrl.init(grupo)">
+								<li ng-repeat="grupo in indexCtrl.settings.grupos_list track by $index" class="sc-m-v-sm flex-row sc-border-b-lg" ng-init="formCtrl.formCtrl.init(grupo)">
 									<div class="fcol-xs-auto">
 										<div class="sc-label sc-text-">{{grupo.label}}</div>
 									</div>
@@ -200,7 +200,7 @@
 											Visualizar
 											<i class="sc-icon" ng-class="grupo.visualizacoes.opened ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
 										</button>
-										<ul class="sc-dropdown-menu pull-right" ng-if="grupo.visualizacoes.opened" style="display: block; max-height: 13em; overflow: auto;">
+										<ul class="sc-dropdown-menu pull-right" ng-if="grupo.visualizacoes.opened" style="display: block; max-height: 13em; overflow: auto; min-width: 10.8em;">
 											<li ng-repeat="option in indexCtrl.settings.dadosPessoais track by $index" ng-click="formCtrl.formCtrl.toggleVisualizacoesOption(option, grupo)">
 												<span class="align-left">
 													<i class="sc-icon" ng-class="option.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>

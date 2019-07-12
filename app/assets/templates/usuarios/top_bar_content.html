@@ -17,8 +17,8 @@
 
 	<div class="fcol-xs-auto">
 		<div class="sc-btn-group">
-			<button class="sc-btn sc-btn-default">Ativos</button>
-			<button class="sc-btn sc-btn-default">Inativos</button>
+			<button ng-click="indexCtrl.filtro.toggleAtivos()" class="sc-btn" ng-class="indexCtrl.filtro.ativos ? 'sc-btn-blue' : ' sc-btn-default'">Ativos</button>
+			<button ng-click="indexCtrl.filtro.toggleInativos()" class="sc-btn sc-btn-default" ng-class="indexCtrl.filtro.inativos ? 'sc-btn-blue' : 'sc-btn-default'">Inativos</button>
 		</div>
 	</div>
 

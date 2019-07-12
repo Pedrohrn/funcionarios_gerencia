@@ -1,65 +1,79 @@
-<div class="sc-m-h-md sc-p-t-sm">
-	<div class="">
-		<ul class="flex-row">
-			<li ng-repeat="usuario in grupo.usuarios track by $index" ng-init="indexCtrl.usuariosCtrl.init(usuario)" class="fcol-lg-25 fcol-md-25 fcol-sm-33 fcol-xs-100">
-				<div class="flex-row sc-fieldset justify-content-space-between sc-m-md sc-bg-{{usuario.status.color}}-lighter">
-					<div class="flex sc-p-b-o">
-						<div class="sc-p-r-lg"> <!-- SÓ A IMAGEM NESSA DIV -->
-							<div class="sc-border-gray-light sc-border-solid sc-border-lg sc-border-radius sc-bg-white align-center" style="background-size: cover; background-position: center; width: 5.158em; height: 4.586em; line-height: 5.258em;">
-								<i class="sc-icon sc-icon-camera-1 sc-text-gray" style="font-size: 2.4em;"></i>
-							</div>
-						</div>
-						<div class="sc-p-b-md">
-							<div>{{usuario.nome}}</div>
-							<div>{{usuario.cargo_id}}</div>
-							<div>Telefone:
-								<span class="sc-text-blue">{{usuario.telefone}}</span>
-							</div>
-							<div>E-mail:
-								<span class="sc-text-blue">{{usuario.email}}</span>
-							</div>
+<div class="sc-m-h-md sc-fieldset">
+	<ul class="flex-row sc-p-o">
+		<li ng-if="grupo.loading" class="fcol-xs-100 sc-m-v-md">
+			<div class="sc-text-blue align-center">
+				<i class="sc-icon sc-icon-carregando-2 sc-icon-spin"></i>
+				Carregando!
+			</div>
+		</li>
+		<li ng-if="grupo.usuarios.length <= 0" class="fcol-xs-100">
+			<div class="align-center sc-text-blue sc-border-radius sc-bg-white sc-p-v-lg">
+				<i class="sc-icon sc-icon-exclamacao-1 sc-p-o"></i>
+				<span class="sc-p-o">Nenhum usuário cadastrado!</span>
+				<button class="sc-btn sc-btn-green sc-m-h-lg sc-btn-thin">
+					<i class="sc-icon sc-icon-mais-1"></i>
+					Cadastrar
+				</button>
+			</div>
+		</li>
+		<li ng-repeat="usuario in grupo.usuarios track by $index" ng-init="indexCtrl.usuariosCtrl.init(usuario)" class="fcol-lg-25 fcol-md-25 fcol-sm-33 fcol-xs-100">
+			<div class="flex-row sc-fieldset justify-content-space-between sc-m-md sc-bg-{{usuario.status.color}}-lighter">
+				<div class="flex sc-p-b-o">
+					<div class="sc-p-r-lg"> <!-- SÓ A IMAGEM NESSA DIV -->
+						<div class="sc-border-gray-light sc-border-solid sc-border-lg sc-border-radius sc-bg-white align-center" style="background-size: cover; background-position: center; width: 5.158em; height: 4.586em; line-height: 5.258em;">
+							<i class="sc-icon sc-icon-camera-1 sc-text-gray" style="font-size: 2.4em;"></i>
 						</div>
 					</div>
-					<div class="">
-						<button class="sc-btn sc-btn-default sc-dropdown" ng-click="usuario.menu.toggle()">
-							<i class="sc-icon sc-icon-reticiencias-v"></i>
-							<ul ng-if="usuario.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
-								<li ng-click="indexCtrl.usuariosCtrl.open_ferias_modal(usuario)">
-									<span class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</span>
-								</li>
-								<li  ng-click="indexCtrl.usuariosCtrl.edit(usuario)">
-									<span class="align-left"><i class="sc-icon sc-icon-lapis"></i>Editar</span>
-								</li>
-								<li>
-									<span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar</span>
-								</li>
-								<li>
-									<span class="align-left"><i class="sc-icon sc-icon-lixeira-2"></i>Remover</span>
-								</li>
-							</ul>
-						</button>
-					</div>
-					<div class="sc-p-t-o">
-						<div>Vigência:
-							<span class="sc-text-blue">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} à {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+					<div class="sc-p-b-md">
+						<div>{{usuario.nome}}</div>
+						<div>{{usuario.cargo.nome}}</div>
+						<div>Telefone:
+							<span class="sc-text-blue">{{usuario.telefone}}</span>
+						</div>
+						<div>E-mail:
+							<span class="sc-text-blue">{{usuario.email}}</span>
 						</div>
 					</div>
 				</div>
-				<div ng-if="usuario.edit.opened">
-					<div ng-include="indexCtrl.templates.usuarios.form"></div>
-				</div>
-				<div nf-ig="usuario.ferias_modal.active">
-					<div ng-include="indexCtrl.templates.usuarios.ferias_modal"></div>
-				</div>
-			</li>
-			<li class="fcol-lg-25 fcol-md-25 fcol-sm-33 fcol-xs-100 align-self-center">
-				<div class="align-center">
-					<button class="sc-btn sc-btn-green" ng-click="indexCtrl.newUserCtrl.cadastrarUsuario(usuario = { grupo_id: grupo.id })">
-						<i class="sc-icon sc-icon-mais-1"></i>
-						Adicionar
+				<div class="">
+					<button class="sc-btn sc-btn-default sc-dropdown" ng-click="usuario.menu.toggle()">
+						<i class="sc-icon sc-icon-reticiencias-v"></i>
+						<ul ng-if="usuario.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
+							<li ng-click="indexCtrl.usuariosCtrl.open_ferias_modal(usuario)">
+								<span class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</span>
+							</li>
+							<li  ng-click="indexCtrl.usuariosCtrl.edit(usuario)">
+								<span class="align-left"><i class="sc-icon sc-icon-lapis"></i>Editar</span>
+							</li>
+							<li ng-click="indexCtrl.usuariosCtrl.inativar(usuario)">
+								<span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar</span>
+							</li>
+							<li ng-click="indexCtrl.usuariosCtrl.rmv(usuario)">
+								<span class="align-left"><i class="sc-icon sc-icon-lixeira-2"></i>Remover</span>
+							</li>
+						</ul>
 					</button>
 				</div>
-			</li>
-		</ul>
-	</div>
+				<div class="sc-p-t-o">
+					<div>Vigência:
+						<span class="sc-text-blue">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} à {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+					</div>
+				</div>
+			</div>
+			<div ng-if="usuario.edit.opened">
+				<div ng-include="indexCtrl.templates.usuarios.form"></div>
+			</div>
+			<div nf-ig="usuario.ferias_modal.active">
+				<div ng-include="indexCtrl.templates.usuarios.ferias_modal"></div>
+			</div>
+		</li>
+		<li ng-if="!grupo.loading && grupo.usuarios.length > 0" class="fcol-lg-25 fcol-md-25 fcol-sm-33 fcol-xs-100 align-self-center">
+			<div class="align-center">
+				<button class="sc-btn sc-btn-green" ng-click="indexCtrl.newUserCtrl.cadastrarUsuario(usuario = { grupo_id: grupo.id })">
+					<i class="sc-icon sc-icon-mais-1"></i>
+					Adicionar
+				</button>
+			</div>
+		</li>
+	</ul>
 </div>
