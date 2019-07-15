@@ -33,8 +33,16 @@
 								<input class="sc-input-default sc-input-block" type="email" ng-model="formCtrl.params.email"/>
 							</div>
 							<div class="fcol-xs-auto sc-m-b-md">
-								<div class="sc-label">Contatos:</div>
-								<input class="sc-input-default sc-input-block" type="" ng-model="formCtrl.params.telefone"/>
+								<div class="sc-label">Telefones:</div>
+								<div class="sc-tag-box">
+									<div ng-repeat="telefone in formCtrl.params.telefones track by $index">
+										<span class="sc-tag sc-tag-blue">
+											<span ng-click="formCtrl.formCtrl.updateTelefone(telefone)">{{telefone.label}}</span>
+											<i class="sc-icon sc-icon-fechar-1 sc-tag-remove" ng-click="formCtrl.formCtrl.rmvTelefone(telefone)"></i>
+										</span>
+									</div>
+									<input class="phantom sc-input-block" ng-blur="formCtrl.formCtrl.addTelefone()" ng-keydown="formCtrl.formCtrl.telNavigate()" ng-model="formCtrl.formCtrl.novoTelefone.label" placeholder="Digite um novo telefone"/>
+								</div>
 							</div>
 						</div>
 						<div class="clear"></div>

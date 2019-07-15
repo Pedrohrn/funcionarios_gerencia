@@ -41,6 +41,12 @@
 								<i class="sc-icon sc-icon-reticiencias-v" ng-click="grupo.menu.toggle()" ng-class="grupo.show.opened ? 'sc-badge-hover-white' : 'sc-badge-hover-gray'"></i>
 								<div ng-if="grupo.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
 									<ul>
+										<li ng-click="indexCtrl.newUserCtrl.cadastrarUsuario(usuario = { grupo_id: grupo.id })">
+											<span class="align-left">
+												<i class="sc-icon sc-icon-mais-1"></i>
+												Cadastrar usuário
+											</span>
+										</li>
 										<li ng-click="indexCtrl.itemCtrl.inativar(grupo)">
 											<span class="align-left">
 												<i class="sc-icon sc-icon-banir"></i>
