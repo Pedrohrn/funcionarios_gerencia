@@ -20,7 +20,12 @@ class UsuariosController < ApplicationController
 	end
 
 	def show
+		st, resp = service.show({}, get_params)
 
+		case st
+		when :success then render json: resp, status: :ok
+		when :error then render json: { errors: resp }, status: :error
+		end
 	end
 
 	def update

@@ -16,7 +16,7 @@ class Grupo < ApplicationRecord
 	end
 
 	def usuarios_obj
-		usuarios(&:to_frontend_obj)
+		usuarios.map(&:slim_obj)
 	end
 
 end

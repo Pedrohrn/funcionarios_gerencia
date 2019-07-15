@@ -8,4 +8,11 @@ class UsuariosService
 
 		[ :success, resp ]
 	end
+
+	def self.show(opts, params)
+		usuario = model.find_by(id: params[:id])
+
+		return [:success, { usuario: usuario, message: 'oi' } ] if !usuario.blank?
+		[:error, usuario.errors.full_messages]
+	end
 end
