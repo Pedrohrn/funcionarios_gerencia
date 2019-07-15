@@ -41,7 +41,14 @@ class UsuariosController < ApplicationController
 	end
 
 	def usuarios_params
-		attrs = [ :id, :nome, :grupo, :cargo, :cpf, :rg, :ferias_inicio, :ferias_fim, :vigencia_inicio, :vigencia_fim, :horarios, :email, :contatos, :inativado_em ]
+		attrs = [ :id, :nome, :grupo, :cargo, :cpf, :rg, :ferias_inicio, :ferias_fim, :vigencia_inicio, :vigencia_fim, :horarios, :email, :inativado_em ]
+		attrs << {cargo: [:id]}
+		attrs << {grupo: [:id]}	
+		attrs << {
+			telefones: [
+				:label,
+			]
+		}
 
 		resp = params.require(:usuario).permit(attrs).to_h
 		resp.deep_symbolize_keys
