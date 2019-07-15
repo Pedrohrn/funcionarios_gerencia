@@ -1,9 +1,11 @@
 class Usuario < ApplicationRecord
 	belongs_to 	:cargo
 	belongs_to 	:grupo
-	has_many 		:recessos
+	has_many 		:recessos, dependent: :destroy
 
-	accepts_nested_attributes_for :recessos
+	accepts_nested_attributes_for :recessos, allow_destroy: true
+
+	#before_validation :set_telefone
 
 	def slim_obj
 		{
@@ -15,7 +17,7 @@ class Usuario < ApplicationRecord
 			vigencia_fim: vigencia_fim,
 			horarios: horarios,
 			email: email,
-			telefone: telefone,
+			telefones: telefone_obj,
 			inativado_em: inativado_em,
 		}
 	end
@@ -25,6 +27,15 @@ class Usuario < ApplicationRecord
 		attrs[:cpf] = cpf
 		attrs[:rg] = rg
 		attrs[:ferias] = recessos
+		attrs[:logradouro] = logradouro
+		attrs[:complemento] = complemento
+		attrs[:cep] = cep
+		attrs[:bairro] = bairro
+		attrs[:cidade] = cidade
 		attrs
+	end
+
+	def telefone_obj
+		telefones
 	end
 end

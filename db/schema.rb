@@ -37,19 +37,25 @@ ActiveRecord::Schema.define(version: 2019_07_11_200908) do
 
   create_table "usuarios", force: :cascade do |t|
     t.string "nome", null: false
-    t.integer "grupo_id"
+    t.string "email"
+    t.string "cidade"
+    t.string "logradouro"
+    t.string "complemento"
+    t.string "bairro"
+    t.integer "cep"
+    t.integer "gestao_id"
     t.integer "cargo_id"
-    t.integer "telefone"
-    t.datetime "ferias_inicio"
-    t.datetime "ferias_fim"
+    t.integer "grupo_id"
+    t.integer "cpf"
+    t.integer "rg"
+    t.datetime "inativado_em"
+    t.datetime "data_nascimento"
     t.datetime "horarios"
     t.datetime "vigencia_inicio"
     t.datetime "vigencia_fim"
-    t.integer "cpf"
-    t.integer "rg"
-    t.integer "gestao_id"
-    t.string "email"
-    t.datetime "inativado_em"
+    t.json "telefones"
+    t.json "expedientes"
+    t.json "visualizacoes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
