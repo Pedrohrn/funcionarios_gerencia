@@ -13,18 +13,25 @@ quebrar tela de cadastro de grupo (permissoes vai para tela de cadastro de usuar
 
 
 
+tel_list = []
 
-u = Usuario.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), telefone: Faker::PhoneNumber.phone_number, cargo_id: Faker::Number.within(1..4), grupo_id = Faker::Number.within(1..3), ferias_inicio: Faker::Date.between(2.years.ago, Date.today), ferias_fim: Faker::Date.between(2.years.ago, Date.today), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today))
+100.times do
+t = Faker::PhoneNumber.phone_number
+telList << telefone
+end
 
-for i in 1..15
-u = Usuario.find(i)
-u.grupo_id = Faker::Number.within(1..3)
+def sort_numero
+q = [1,2,3,4]
+q.sample
+end
+
+10.times do
+u = Usuario.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), cargo_id: Faker::Number.within(1..5), grupo_id: Faker::Number.within(1..4), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today), cep: Faker::Address.zip, logradouro: Faker::Address.street_name, cidade: Faker::Address.city, bairro: Faker::Address.community, complemento: Faker::Address.secondary_address, data_nascimento: Faker::Date.between(60.years.ago, Date.today), telefones: telList.sample(sort_numero))
 u.save
 end
 
+
 talvez será necessário criar a tabela de férias [ :inicio, :fim, :observacoes, :user_id ] (com user_id)
-
-
 
 
 Usuario
