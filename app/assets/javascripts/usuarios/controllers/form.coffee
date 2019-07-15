@@ -14,11 +14,15 @@ angular.module('scApp').lazy
 			vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 			vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
 			vm.params.nascimento = new Date(vm.params.nascimento)
-			console.log usuario
-			console.log vm.params
-			#vm.params.vigencia = new Date()
+			vm.params.telefones = [
+				{ label: 111111111 },
+				{ label: 222222222 },
+				{ label: 333333333 },
+			]
 
 		vm.formCtrl =
+			novoTelefone: { label: '' }
+
 			init: (grupo) ->
 				grupo.visualizacoes = new scToggle()
 				grupo.checked = 0
@@ -35,6 +39,17 @@ angular.module('scApp').lazy
 
 			addExpediente: ->
 				vm.params.expedientes.unshift({ dias: [], horario_fim: '', horario_inicio: '' })
+
+			addTelefone: ->
+				return if @novoTelefone.label == ''
+				vm.params.telefones.push(@novoTelefone)
+				@novoTelefone.label = ''
+
+			updateTelefone: (telefone)->
+				console.log 'oioi nada por aqui ainda'
+
+			rmvTelefone: (telefone)->
+				vm.params.telefones.remove(telefone)
 
 		vm.cargosCtrl =
 			creatingMode: false
@@ -62,7 +77,6 @@ angular.module('scApp').lazy
 					@params = { nome: '' }
 				else
 					@params = angular.copy cargo || {}
-				console.log @params
 
 			openMenu: ->
 				@menuOpened = !@menuOpened
@@ -93,7 +107,6 @@ angular.module('scApp').lazy
 				@menuOpened = false
 
 			update: (cargo) ->
-				console.log 'update'
 				return if @loading
 
 				@loading = true
@@ -143,7 +156,6 @@ angular.module('scApp').lazy
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			create: ->
-				console.log 'create'
 				return if @loading
 
 				@loading = true

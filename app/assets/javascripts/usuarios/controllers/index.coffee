@@ -54,9 +54,6 @@ angular.module('scApp').lazy
 		vm.init = ->
 			vm.filtro.exec()
 
-		vm.getData = (data) ->
-			dia = data.getDate() #??????
-
 		vm.filtro =
 			filtro_avancado: false
 			options_are_visible: false
@@ -178,8 +175,6 @@ angular.module('scApp').lazy
 
 						usuario = vm.listCtrl.list.find (obj)-> obj.id == data.usuario.id
 						angular.extend usuario, data.usuario
-						console.log usuario
-						console.log "usuarioooooooooooooooooooooo"
 					(response)=>
 						@loading = false
 
@@ -218,7 +213,6 @@ angular.module('scApp').lazy
 
 			formInit: (grupo)->
 				@params = angular.copy grupo || {}
-				console.log 'oi formInit grupos'
 
 			openModal: ->
 				@modal.open()
@@ -240,7 +234,6 @@ angular.module('scApp').lazy
 					@update(grupo)
 
 			create: ->
-				console.log 'create'
 				return if @loading
 
 				@loading = true
@@ -263,7 +256,6 @@ angular.module('scApp').lazy
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			update: (grupo)->
-				console.log 'update'
 				return if @loading
 
 				@loading = true
@@ -353,7 +345,6 @@ angular.module('scApp').lazy
 			formInit: ->
 				@params.data_inicio = new Date(@params.data_inicio)
 				@params.data_fim = new Date(@params.data_fim)
-				console.log @params
 
 			rmv: (ferias, usuario)->
 				scAlert.open
@@ -397,7 +388,6 @@ angular.module('scApp').lazy
 					usuario.ferias_modal.close()
 
 			salvar: (usuario)->
-				console.log @params
 				if @newRecord
 					@create(usuario)
 				else
@@ -426,7 +416,6 @@ angular.module('scApp').lazy
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			update: (usuario)->
-				console.log 'update'
 				return if @loading
 
 				@loading = true
@@ -479,7 +468,6 @@ angular.module('scApp').lazy
 				@show(grupo)
 
 			show: (grupo)->
-				console.log grupo
 				return if grupo.loaded
 
 				Grupo.show grupo,
@@ -514,7 +502,6 @@ angular.module('scApp').lazy
 					]
 
 			edit: (grupo)->
-				console.log grupo
 				return unless !grupo.edit.opened
 				vm.gruposCtrl.creatingModeOn = true
 				grupo.show.opened = false
