@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_133920) do
+ActiveRecord::Schema.define(version: 2019_07_11_200908) do
 
   create_table "cargos", force: :cascade do |t|
     t.string "nome", null: false
@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 2019_07_03_133920) do
   create_table "grupos", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "inativado_em"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "recessos", force: :cascade do |t|
+    t.string "observacoes"
+    t.datetime "data_inicio", null: false
+    t.datetime "data_fim", null: false
+    t.integer "usuario_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

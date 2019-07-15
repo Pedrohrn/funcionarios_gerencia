@@ -5,8 +5,7 @@ class CreateUsuarios < ActiveRecord::Migration[5.2]
     	t.integer :grupo_id
     	t.integer :cargo_id
     	t.integer :telefone
-    	t.datetime :ferias_inicio
-    	t.datetime :ferias_fim
+        t.datetime :data_nascimento
     	t.datetime :horarios
     	t.datetime :vigencia_inicio
     	t.datetime :vigencia_fim
