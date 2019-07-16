@@ -24,13 +24,13 @@
 						<div ng-if="!grupo.edit.opened" class="fcol-xs-40" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
 							{{grupo.nome}}
 						</div>
-						<div sc-stop-click ng-if="grupo.edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="fcol-xs-60 fcol-md-30 fcol-lg-20 sc-stop-click">
+						<div sc-stop-click ng-if="grupo.edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="sc-stop-click fcol-xs-60 fcol-md-30 fcol-lg-20 sc-stop-click">
 							<div class="sc-input-group">
 								<input class="sc-input-default" ng-model="indexCtrl.gruposCtrl.params.nome"/>
-								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.submit()">
+								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.salvar(grupo)">
 									<i class="sc-icon sc-icon-visto-1"></i>
 								</button>
-								<button class="sc-btn sc-btn-red" ng-click="grupo.edit.toggle()">
+								<button class="sc-btn sc-btn-red" ng-click="indexCtrl.gruposCtrl.resetForm(grupo)">
 									<i class="sc-icon sc-icon-fechar-1"></i>
 								</button>
 							</div>
@@ -82,9 +82,6 @@
 		</div>
 		<div ng-if="indexCtrl.configuracoesCtrl.modal.active">
 			<div ng-include="indexCtrl.templates.usuarios.configuracoes_modal"></div>
-		</div>
-		<div ng-if="indexCtrl.cargosCtrl.modal.active">
-			<div ng-include="indexCtrl.templates.usuarios.cargos_form_modal"></div>
 		</div>
 		<div ng-if="indexCtrl.gruposCtrl.modal.active">
 			<div ng-include="indexCtrl.templates.usuarios.grupos_modal"></div>

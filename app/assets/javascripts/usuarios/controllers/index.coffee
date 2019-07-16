@@ -140,6 +140,10 @@ angular.module('scApp').lazy
 					(data)=>
 						vm.usuariosCtrl.list.addOrExtend item for item in data.usuarios
 
+				Cargo.list params,
+					(data)=>
+						vm.cargosCtrl.list.addOrExtend item for item in data.cargos
+
 		vm.usuariosCtrl =
 			list: []
 
@@ -233,6 +237,37 @@ angular.module('scApp').lazy
 				else
 					@update(grupo)
 
+			rmv: (grupo)->
+				scAlert.open
+					title: "Atenção! Deseja mesmo excluir o grupo selecionado?"
+					message: [
+						{ msg: 'Os dados não poderão ser recuperados, uma vez que sejam excluídos.'},
+						{ msg: 'Os usuários participantes desse grupo serão realocados no grupo "Sem Grupo".'}
+						{ msg: 'Confirma a operação?'}
+					]
+					buttons: [
+						{ label: 'Excluir', color: 'red', action: -> vm.gruposCtrl.excluir(grupo) },
+						{ label: 'Cancelar', color: 'gray' }
+					]
+
+			excluir: (grupo)->
+				return if @loading
+
+				@loading = true
+
+				Grupo.destroy grupo,
+					(data)=>
+						@loading = false
+
+						msg = data.message
+
+						scTopMessages.openSuccess msg unless Object.blank(msg)
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
 			create: ->
 				return if @loading
 
@@ -275,7 +310,9 @@ angular.module('scApp').lazy
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
-			resetForm: ->
+			resetForm: (grupo)->
+				if grupo && grupo.edit
+					grupo.edit.opened = false
 				@newRecord = false
 				@creatingModeOn = false
 
@@ -388,12 +425,14 @@ angular.module('scApp').lazy
 					usuario.ferias_modal.close()
 
 			salvar: (usuario)->
+				console.log usuario
 				if @newRecord
 					@create(usuario)
 				else
 					@update(usuario)
 
 			create: (usuario)->
+				console.log usuario
 				return if @loading
 
 				@loading = true
@@ -445,7 +484,119 @@ angular.module('scApp').lazy
 				@newRecord = false
 
 		vm.cargosCtrl =
+			creatingMode: false
+			loading: false
+			menuOpened: false
 			list: []
+			modal: new scModal()
+			params: {}
+
+			init: (obj={})->
+				console.log 'oi'
+
+			formInit: (cargo)->
+				if @newRecord
+					@params = { nome: '' }
+				else
+					@params = angular.copy cargo || {}
+
+			openMenu: ->
+				@menuOpened = !@menuOpened
+
+			toggleCreatingMode: ->
+				@creatingMode = !@creatingMode
+
+			edit: (cargo) ->
+				if Object.blank(cargo)
+					scAlert.open
+						title: 'Selecione um cargo para poder editar!'
+						buttons: [
+							{ label: 'Ok', color: 'gray' }
+						]
+				else
+					@toggleCreatingMode()
+
+			new: ->
+				@newRecord = true
+				@toggleCreatingMode()
+
+			salvar: (cargo)->
+				if @newRecord
+					@create()
+				else
+					@update(cargo)
+
+				@menuOpened = false
+
+			update: (cargo) ->
+				return if @loading
+
+				@loading = true
+
+				Cargo.update @params,
+					(data)=>
+						@loading = false
+
+						cargo = @list.find (obj)-> obj.id == cargo.id
+						angular.extend cargo, data.cargo
+						scTopMessages.openSuccess data.message
+						@resetForm()
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			rmv: (cargo)->
+				scAlert.open
+					title: 'Tem certeza de que deseja excluir este registro?'
+					buttons: [
+						{ label: 'Excluir', 	color: 'red', action: -> vm.cargosCtrl.destroy(cargo) },
+						{ label: 'Cancelar', 	color: 'gray' }
+					]
+
+			destroy: (cargo) ->
+				return if @loading
+
+				@loading = true
+
+				Cargo.destroy cargo,
+					(data)=>
+						@loading = false
+
+						msg = data.message
+						vm.params.cargo = {}
+						@init({})
+						@resetForm()
+
+						scTopMessages.openSuccess msg unless Object.blank(msg)
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			create: ->
+				return if @loading
+
+				@loading = true
+
+				Cargo.create @params,
+					(data)=>
+						@loading = false
+						@list.push(data.cargo)
+						scTopMessages.openSuccess data.message
+						@resetForm()
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
+			resetForm: ->
+				@newRecord = false
+				@creatingMode = false
 
 		vm.newUserCtrl =
 			newRecord: false
