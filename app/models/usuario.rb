@@ -15,7 +15,7 @@ class Usuario < ApplicationRecord
 			cargo: cargo.to_frontend_obj,
 			vigencia_inicio: vigencia_inicio,
 			vigencia_fim: vigencia_fim,
-			horarios: horarios,
+			expedientes: expediente_obj,
 			email: email,
 			telefones: telefone_obj,
 			inativado_em: inativado_em,
@@ -24,6 +24,7 @@ class Usuario < ApplicationRecord
 
 	def to_frontend_obj
 		attrs = slim_obj
+		attrs[:data_nascimento] = data_nascimento
 		attrs[:cpf] = cpf
 		attrs[:rg] = rg
 		attrs[:ferias] = recessos
@@ -37,5 +38,9 @@ class Usuario < ApplicationRecord
 
 	def telefone_obj
 		telefones
+	end
+
+	def expediente_obj
+		expedientes
 	end
 end

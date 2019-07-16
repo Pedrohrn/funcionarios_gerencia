@@ -16,7 +16,21 @@ class UsuariosController < ApplicationController
 	end
 
 	def create
+		st, resp = service.create({}, usuarios_params)
 
+		case st
+		when :success then render json: resp, status: :ok
+		when :error then render json: { errors: resp }, status: :error
+		end
+	end
+
+	def update
+		st, resp = service.update({}, usuarios_params)
+
+		case st
+		when :success then render json: resp, status: :ok
+		when :error then render json: { errors: resp }, status: :error
+		end
 	end
 
 	def show
@@ -28,27 +42,45 @@ class UsuariosController < ApplicationController
 		end
 	end
 
-	def update
-
-	end
-
 	def micro_update
+		st, resp = service.micro_update({}, micro_update_params)
 
+		case st
+		when :success then render json: resp, status: :ok
+		when :error then render json: { errors: resp }, status: :ok
+		end
 	end
 
 	def destroy
+		st, resp = service.destroy({}, get_params)
 
+		case st
+		when :success then render json: resp, status: :ok
+		when :error then render json: { errors: resp }, status: :error
+		end
 	end
 
 	def usuarios_params
-		attrs = [ :id, :nome, :grupo, :cargo, :cpf, :rg, :ferias_inicio, :ferias_fim, :vigencia_inicio, :vigencia_fim, :horarios, :email, :inativado_em ]
+		attrs = [ :id, :nome, :cpf, :rg, :vigencia_inicio, :vigencia_fim, :expedientes, :email, :inativado_em, :cep, :logradouro, :complemento, :bairro, :cidade, :data_nascimento ]
 		attrs << {cargo: [:id]}
-		attrs << {grupo: [:id]}	
+		attrs << {grupo: [:id]}
 		attrs << {
-			telefones: [
-				:label,
+			telefones: []
+		}
+		attrs << {
+			expedientes: [
+				hora_inicio: hora_inicio,
+				hora_fim: hora_fim,
+				dias: [],
 			]
 		}
+
+		resp = params.require(:usuario).permit(attrs).to_h
+		resp.deep_symbolize_keys
+	end
+
+	def micro_update_params
+		attrs = [:id, :micro_update_type, :inativado_em]
 
 		resp = params.require(:usuario).permit(attrs).to_h
 		resp.deep_symbolize_keys

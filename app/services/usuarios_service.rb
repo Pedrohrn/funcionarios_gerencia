@@ -25,20 +25,22 @@ class UsuariosService
 	end
 
 	def self.submit(opts, params)
+		puts 'params'
+		puts params
 		cargo = params.delete(:cargo)
 		grupo = params.delete(:grupo)
-		gestao = params.delete(:gestao)
+		#gestao =
+		params.delete(:gestao)
 
-		params[:gestao_id] = cargo[:id]
+		params[:cargo_id] = cargo[:id]
 		params[:grupo_id] = grupo[:id]
-		params[:gestao_id] = gestao[:id]
 
-		usuario = model.new
+		usuario = model.find_by(id: params[:id]) || model.new
 		usuario.assign_attributes(params)
 
 		message = usuario.new_record? ? 'Registro cadastrado com sucesso!' : 'Registro atualizado com sucesso!'
 
-		return [:success, { usuario: usuario.to_frontend_obj, message: message }] if usuario.save?
+		return [:success, { usuario: usuario.to_frontend_obj, message: message }] if usuario.save
 		[:error, usuario.errors.full_messages]
 	end
 
@@ -46,7 +48,7 @@ class UsuariosService
 		usuario = model.find_by(id: params[:id])
 		usuario.destroy
 
-		return [:success, { message: 'Registro excluído com sucesso!' }] if usuario.destroy?
+		return [:success, { message: 'Registro excluído com sucesso!' }] if usuario.destroy
 		[:error, usuario.errors.full_messages]
 	end
 
