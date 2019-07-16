@@ -40,7 +40,7 @@
 										<i class="sc-icon sc-icon-fechar-1 sc-tag-remove" ng-click="formCtrl.formCtrl.rmvTelefone(telefone)"></i>
 									</span>
 								</div>
-								<input class="phantom sc-input-block" ng-blur="formCtrl.formCtrl.addTelefone()" ng-keydown="formCtrl.formCtrl.telNavigate()" ng-model="formCtrl.formCtrl.novoTelefone.label" placeholder="Digite um novo telefone"/>
+								<input class="phantom sc-input-block" ng-blur="formCtrl.formCtrl.addTelefone()" ng-keydown="formCtrl.formCtrl.telNavigate()" ng-model="formCtrl.formCtrl.novoTelefone" placeholder="Digite um novo telefone"/>
 							</div>
 						</div>
 					</div>
@@ -53,7 +53,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="fcol-xs-50 sc-p-r-none" ng-init="indexCtrl.cargosCtrl.init(obj)">
+					<div class="fcol-xs-50 sc-p-r-none">
 						<div class="sc-m-b-md">
 							<label ng-if="!indexCtrl.cargosCtrl.creatingMode">
 								<div class="sc-label">Cargo/Função:</div>
@@ -123,15 +123,15 @@
 						 	<div class="sc-m-b-lg sc-m-t-sm" style="font-size: 11.9px;">
 						 		<div class="ng-animation-slider flex-row" style="display: block;">
 						 			<label class="sc-p-md" ng-repeat="dia in indexCtrl.settings.diasSemana">
-						 				<input class="sc-m-r-xs sc-checkbox" type="checkbox"/>
+						 				<input class="sc-m-r-xs sc-checkbox" ng-checked="expediente.dias.include(dia.value)" ng-click="formCtrl.expedientesCtrl.toggleDay(dia, expediente)" type="checkbox"/>
 						 				<span class="sc-label">{{dia.key}}</span>
 						 			</label>
 						 			<label class="fcol-xs-10">
-										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.horario_inicio"/>
+										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_inicio"/>
 									</label>
 									<label class="sc-label align-self-center">até</label>
 									<label class="fcol-xs-10 sc-m-h-lg">
-										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" sc-input-time ng-model="expediente.horario_fim"/>
+										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" sc-input-time ng-model="expediente.hora_fim"/>
 									</label>
 						 			<i class="sc-icon sc-icon-lixeira-1 sc-text-lg sc-badge-hover-red" ng-click="formCtrl.formCtrl.rmvExpediente(expediente)"></i>
 						 		</div>
@@ -174,7 +174,7 @@
 					</div>
 					<div class="fcol-xs-25">
 						<div class="sc-label">Complemento:</div>
-						<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.logradouro"/>
+						<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.complemento"/>
 					</div>
 					<div class="fcol-xs-25">
 						<div class="sc-label">Bairro:</div>
@@ -245,7 +245,7 @@
 		</div>
 
 		<div class="sc-modal-footer">
-			<button class="sc-btn sc-btn-blue sc-m-h-lg">Salvar</button>
+			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.salvar(usuario)">Salvar</button>
 			<button class="sc-btn sc-btn-red" ng-click="indexCtrl.formCtrl.cancelar()">Cancelar</button>
 		</div>
 

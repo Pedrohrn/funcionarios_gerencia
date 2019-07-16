@@ -7,13 +7,13 @@ angular.module('scApp').lazy
 
 		vm.settings =
 			diasSemana: [
-				{ key: 'DOM', label: 'domingo', checked: false },
-				{ key: 'SEG', label: 'segunda', checked: false },
-				{ key: 'TER', label: 'terça', 	checked: false },
-				{ key: 'QUA', label: 'quarta', 	checked: false },
-				{ key: 'QUI', label: 'quinta', 	checked: false },
-				{ key: 'SEX', label: 'sexta', 	checked: false },
-				{ key: 'SAB', label: 'sábado', 	checked: false },
+				{ key: 'DOM', label: 'domingo', checked: false, value: 1 },
+				{ key: 'SEG', label: 'segunda', checked: false, value: 2 },
+				{ key: 'TER', label: 'terça', 	checked: false, value: 3 },
+				{ key: 'QUA', label: 'quarta', 	checked: false, value: 4 },
+				{ key: 'QUI', label: 'quinta', 	checked: false, value: 5 },
+				{ key: 'SEX', label: 'sexta', 	checked: false, value: 6 },
+				{ key: 'SAB', label: 'sábado', 	checked: false, value: 7 },
 			]
 
 			filtroOpcoes: [
@@ -169,7 +169,9 @@ angular.module('scApp').lazy
 						usuario.ferias.addOrExtend item for item in data.recessos
 
 			edit: (usuario)->
-				return if @loading
+				usuario.edit.opened = true
+				vm.newUserCtrl.modal.open()
+				return if usuario.loaded || @loading
 
 				@loading = true
 
@@ -177,16 +179,15 @@ angular.module('scApp').lazy
 					(data)=>
 						@loading = false
 
-						usuario = vm.listCtrl.list.find (obj)-> obj.id == data.usuario.id
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.usuario.grupo_id
+						usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
+						usuario.loaded = true
 						angular.extend usuario, data.usuario
 					(response)=>
 						@loading = false
 
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
-
-				usuario.edit.opened = true
-				vm.newUserCtrl.modal.open()
 
 			rmv: (usuario)->
 				scAlert.open
@@ -425,14 +426,12 @@ angular.module('scApp').lazy
 					usuario.ferias_modal.close()
 
 			salvar: (usuario)->
-				console.log usuario
 				if @newRecord
 					@create(usuario)
 				else
 					@update(usuario)
 
 			create: (usuario)->
-				console.log usuario
 				return if @loading
 
 				@loading = true
@@ -490,9 +489,6 @@ angular.module('scApp').lazy
 			list: []
 			modal: new scModal()
 			params: {}
-
-			init: (obj={})->
-				console.log 'oi'
 
 			formInit: (cargo)->
 				if @newRecord
@@ -675,16 +671,19 @@ angular.module('scApp').lazy
 				@modal.active = !@modal.active
 
 		vm.formCtrl =
-			cancelar: ->
+			cancelar: (usuario) ->
 				scAlert.open
 					title: 'Deseja mesmo cancelar a edição? Dados não salvos serão perdidos'
 					buttons: [
-						{ label: 'Sim', color: 'yellow', action: -> vm.formCtrl.closeForm() },
+						{ label: 'Sim', color: 'yellow', action: -> vm.formCtrl.closeForm(usuario) },
 						{ label: 'Não', color: 'gray' }
 					]
 
-			closeForm: ->
+			closeForm: (usuario)->
 				vm.newUserCtrl.modal.close()
+				return if usuario == undefined
+				console.log 'oi'
+				usuario.edit.opened = false
 
 		vm
 ]
