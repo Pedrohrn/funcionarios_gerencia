@@ -14,11 +14,6 @@ angular.module('scApp').lazy
 			vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 			vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
 			vm.params.nascimento = new Date(vm.params.nascimento)
-			vm.params.telefones = [
-				{ label: 111111111 },
-				{ label: 222222222 },
-				{ label: 333333333 },
-			]
 
 		vm.formCtrl =
 			novoTelefone: { label: '' }
@@ -43,7 +38,7 @@ angular.module('scApp').lazy
 			addTelefone: ->
 				return if @novoTelefone.label == ''
 				vm.params.telefones.push(@novoTelefone)
-				@novoTelefone.label = ''
+				@novoTelefone = ''
 
 			updateTelefone: (telefone)->
 				console.log 'oioi nada por aqui ainda'

@@ -39,11 +39,11 @@
 						<button class="sc-btn sc-btn-default sc-dropdown" ng-click="usuario.menu.toggle()">
 							<i class="sc-icon sc-icon-reticiencias-v"></i>
 							<ul ng-if="usuario.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block; min-width: 11em;">
-								<li ng-click="indexCtrl.usuariosCtrl.open_ferias_modal(usuario)">
-									<span class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</span>
-								</li>
 								<li  ng-click="indexCtrl.usuariosCtrl.edit(usuario)">
 									<span class="align-left"><i class="sc-icon sc-icon-lapis"></i>Editar</span>
+								</li>
+								<li ng-click="indexCtrl.usuariosCtrl.open_ferias_modal(usuario)">
+									<span class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</span>
 								</li>
 								<li ng-click="indexCtrl.usuariosCtrl.inativar(usuario)">
 									<span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar</span>
