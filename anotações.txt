@@ -65,3 +65,4 @@ Usuario
 TODO
 	edição de grupos (usuarios) e categorias (passagem_serviço) tá zuada. ao editar mais de um ao mesmo tempo, o controller buga, pegando uma só informação e colocando nos outros três campos
 	grupo constante "Usuários sem grupo"
+	colocar loadings onde for necessário (botões, edições, carregamentos de lista, etc)
