@@ -598,15 +598,17 @@ angular.module('scApp').lazy
 			newRecord: false
 			modal: new scModal()
 
-			cadastrarUsuario: (usuario) ->
+			cadastrarUsuario: (usuario, grupo) ->
 				@newRecord = true
 				@modal.active = !@modal.active
 
 		vm.itemCtrl =
+			newRecord: false
 			init: (grupo)->
 				grupo.show = new scToggle()
 				grupo.menu = new scToggle()
 				grupo.edit = new scToggle()
+				grupo.newUser = new scToggle()
 
 			accToggle: (grupo)->
 				return if grupo.edit.opened
@@ -653,6 +655,12 @@ angular.module('scApp').lazy
 				vm.gruposCtrl.creatingModeOn = true
 				grupo.show.opened = false
 				grupo.edit.toggle()
+
+			new: (grupo)->
+				console.log grupo
+				grupo.newUser.opened = true
+				@newRecord = true
+				vm.newUserCtrl.modal.active = true
 
 		vm.topbarCtrl =
 			menu_IsOn: false

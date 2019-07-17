@@ -61,7 +61,7 @@
 					</div>
 				</div>
 			</div>
-			<div ng-if="usuario.edit.opened">
+			<div ng-if="usuario.edit.opened || indexCtrl.gruposCtrl.newRecord">
 				<div ng-include="indexCtrl.templates.usuarios.form"></div>
 			</div>
 			<div nf-ig="usuario.ferias_modal.active">

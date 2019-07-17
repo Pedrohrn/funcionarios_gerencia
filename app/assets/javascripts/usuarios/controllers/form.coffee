@@ -7,14 +7,20 @@ angular.module('scApp').lazy
 		vm.usuario = null
 		vm.loading = false
 
-		vm.init = (usuario)->
+		vm.init = (usuario, grupo)->
 			vm.params = angular.copy usuario || {}
-			console.log usuario
+			console.log grupo
+			if !vm.params.id
+				console.log 'novo'
+				vm.params.telefones = []
+				vm.params.expedientes = []
+				vm.params.grupo = grupo
+			else
+				console.log 'edição'
+				vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
+				vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
+				vm.params.nascimento = new Date(vm.params.data_nascimento)
 			console.log vm.params
-			return if Object.blank(vm.params)
-			vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
-			vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
-			vm.params.nascimento = new Date(vm.params.data_nascimento)
 
 		vm.expedientesCtrl =
 			toggleDay: (dia, expediente)->
@@ -48,8 +54,15 @@ angular.module('scApp').lazy
 
 			addTelefone: ->
 				return if @novoTelefone == ''
-				vm.params.telefones.push(@novoTelefone)
-				@novoTelefone = ''
+				if vm.params.telefones.include(@novoTelefone)
+					scAlert.open
+						title: 'Este telefone já existe na lista e não será adicionado novamente.'
+						buttons: [
+							{ label: 'Ok', color: 'gray' }
+						]
+				else
+					vm.params.telefones.push(@novoTelefone)
+					@novoTelefone = ''
 
 			updateTelefone: (telefone)->
 				console.log 'oioi nada por aqui ainda'

@@ -1,4 +1,4 @@
-<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario)">
+<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario, grupo)">
 	<div sc-modal="indexCtrl.newUserCtrl.modal">
 		<div class="sc-modal-header">
 			<span ng-if="!usuario.id">Novo usuário</span>
@@ -127,11 +127,11 @@
 						 				<span class="sc-label">{{dia.key}}</span>
 						 			</label>
 						 			<label class="fcol-xs-10">
-										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_inicio"/>
+										<input sc-mask="hora" type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_inicio"/>
 									</label>
 									<label class="sc-label align-self-center">até</label>
 									<label class="fcol-xs-10 sc-m-h-lg">
-										<input type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" sc-input-time ng-model="expediente.hora_fim"/>
+										<input sc-mask="hora" type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_fim"/>
 									</label>
 						 			<i class="sc-icon sc-icon-lixeira-1 sc-text-lg sc-badge-hover-red" ng-click="formCtrl.formCtrl.rmvExpediente(expediente)"></i>
 						 		</div>
