@@ -60,4 +60,15 @@ class UsuariosService
 			[:error, 'Tipo de operação não permitida!']
 		end
 	end
+
+	private
+
+	def self.inativar_reativar(params)
+		usuario = model.find_by(id: params[:id])
+
+		usuario.inativado_em = usuario.inativado? ? nil : Time.now
+
+		return [:success, { usuario: usuario.to_frontend_obj, message: 'Registro atualizado com sucesso!' }] if usuario.save
+		[:error, usuario.errors.full_messages]
+	end
 end

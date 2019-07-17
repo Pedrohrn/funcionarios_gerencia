@@ -1,6 +1,12 @@
 class Grupo < ApplicationRecord
 	has_many :usuarios
 
+	VALIDATES_PRESENCES = [
+		{ key: :nome, label: 'Nome' },
+	]
+
+	validate :validar_campos
+
 	def slim_obj
 		{
 			id: id,
@@ -17,6 +23,19 @@ class Grupo < ApplicationRecord
 
 	def usuarios_obj
 		usuarios.map(&:slim_obj)
+	end
+
+	def inativado?
+		inativado_em.present?
+	end
+
+	def validar_campos
+		VALIDATES_PRESENCES.each{ |obj|
+			next if send(obj[:key]).present?
+			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
+		}
+
+		errors.empty?
 	end
 
 end

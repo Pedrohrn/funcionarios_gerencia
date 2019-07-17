@@ -3,6 +3,15 @@ class Usuario < ApplicationRecord
 	belongs_to 	:grupo
 	has_many 		:recessos, dependent: :destroy
 
+	validates_uniqueness_of :cpf, message: 'Já existe um cadastro com esse CPF!'
+
+	VALIDATES_PRESENCES = [
+		{ key: :nome, label: 'Nome' },
+		{ key: :cpf, label: 'CPF' },
+	]
+
+	validate :validar_campos
+
 	accepts_nested_attributes_for :recessos, allow_destroy: true
 
 	#before_validation :set_telefone
@@ -42,5 +51,18 @@ class Usuario < ApplicationRecord
 
 	def expediente_obj
 		expedientes
+	end
+
+	def inativado?
+		inativado_em.present?
+	end
+
+	def validar_campos
+		VALIDATES_PRESENCES.each{ |obj|
+			next if send(obj[:key]).present?
+			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
+		}
+
+		errors.empty?
 	end
 end

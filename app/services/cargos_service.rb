@@ -36,15 +36,24 @@ class CargosService
 		[:error, { message: cargo.errors.full_messages }]
 	end
 
-	def micro_update(opts, params)
+	def self.micro_update(opts, params)
+		case params[:micro_update_type].to_s.to_sym
+		when :inativar, :reativar
+			self.inativar_reativar(params)
+		else
+			[:error, "Tipo de operação não permitida!"]
+		end
+	end
+
+	private
+
+	def self.inativar_reativar(params)
 		cargo = model.find_by(id: params[:id])
 
-		case params[:micro_update_type]
-		when :inativar
-			self.destroy(opts, params)
-		when :desativar
-			self.destroy(opts, params)
-		end
+		cargo.inativado_em = cargo.inativado? ? nil : Time.now
+
+		return [:success, { cargo: cargo.to_frontend_obj }] if cargo.save
+		[:error, cargo.errors.full_messages]
 	end
 
 end
