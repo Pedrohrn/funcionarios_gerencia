@@ -9,18 +9,14 @@ angular.module('scApp').lazy
 
 		vm.init = (usuario, grupo)->
 			vm.params = angular.copy usuario || {}
-			console.log grupo
 			if !vm.params.id
-				console.log 'novo'
 				vm.params.telefones = []
 				vm.params.expedientes = []
 				vm.params.grupo = grupo
 			else
-				console.log 'edição'
 				vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 				vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
 				vm.params.nascimento = new Date(vm.params.data_nascimento)
-			console.log vm.params
 
 		vm.expedientesCtrl =
 			toggleDay: (dia, expediente)->
@@ -28,7 +24,6 @@ angular.module('scApp').lazy
 					expediente.dias.remove(dia.value)
 				else
 					expediente.dias.push(dia.value)
-				console.log expediente.dias
 
 		vm.formCtrl =
 			novoTelefone: ''
@@ -48,8 +43,6 @@ angular.module('scApp').lazy
 				vm.params.expedientes.remove expediente
 
 			addExpediente: ->
-				console.log '1'
-				console.log vm.params
 				vm.params.expedientes.unshift({ dias: [], horario_fim: '', horario_inicio: '' })
 
 			addTelefone: ->
@@ -65,7 +58,6 @@ angular.module('scApp').lazy
 					@novoTelefone = ''
 
 			updateTelefone: (telefone)->
-				console.log 'oioi nada por aqui ainda'
 
 			rmvTelefone: (telefone)->
 				vm.params.telefones.remove(telefone)
