@@ -67,3 +67,4 @@ TODO
 	grupo constante "Usuários sem grupo"
 	colocar loadings onde for necessário (botões, edições, carregamentos de lista, etc)
 	talvez será necessário colocar um timeout na abertura do formulário de novo usuário, afim de garantir que os dados sejam carregados completamente (atualmente alguns dados não são exibidos, pois o segundo load - to_frontend_obj - não teve tempo de ser executado completamente - da solicitação até o extend)
+	passar o grupo_id para os params ao clicar no botão adicionar do menu grupo
