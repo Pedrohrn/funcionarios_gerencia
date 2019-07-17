@@ -17,7 +17,6 @@ class CreateUsuarios < ActiveRecord::Migration[5.2]
       t.integer :rg
     	t.datetime :inativado_em
       t.datetime :data_nascimento
-      t.datetime :horarios
       t.datetime :vigencia_inicio
       t.datetime :vigencia_fim
       t.json :telefones
