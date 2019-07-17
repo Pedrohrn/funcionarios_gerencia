@@ -222,15 +222,36 @@ angular.module('scApp').lazy
 			openModal: ->
 				@modal.open()
 
+			edit: (grupo) ->
+				if @creatingModeOn
+					scAlert.open
+						title: 'Termine a edição atual antes de editar/criar outro grupo!'
+						buttons: [
+							{ label: 'Ok', color: 'gray' }
+						]
+				else
+					@creatingModeOn = true
+					grupo.modal_edit.toggle()
+
 			new: ->
-				@newRecord = true
-				@creatingModeOn = true
+				if @creatingModeOn
+					scAlert.open
+						title: 'Termine a edição atual antes de criar um novo grupo!'
+						buttons: [
+							{ label: 'Ok', color: 'gray' }
+						]
+				else
+					@newRecord = true
 
 			cancelar: (grupo)->
 				if @newRecord
 					@newRecord = false
 				else
 					grupo.edit.toggle()
+
+			cancelar_modal: (grupo)->
+				grupo.modal_edit.toggle()
+				@creatingModeOn = false
 
 			salvar: (grupo)->
 				if @newRecord
