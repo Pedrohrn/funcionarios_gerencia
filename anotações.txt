@@ -66,4 +66,8 @@ TODO
 	-> edição de grupos (usuarios) e categorias (passagem_serviço) tá zuada. ao editar mais de um ao mesmo tempo, o controller buga, pegando uma só informação e colocando nos outros três campos
 	-> grupo constante "Usuários sem grupo"
 	-> colocar loadings onde for necessário (botões, edições, carregamentos de lista, etc)
-	-> talvez será necessário colocar um timeout na abertura do formulário de novo usuário, afim de garantir que os dados sejam carregados completamente (atualmente alguns dados não são exibidos, pois o segundo load - to_frontend_obj - não teve tempo de ser executado completamente - da solicitação até o extend)
+	-> talvez será necessário colocar um timeout na abertura do formulário de novo usuário, afim de garantir que os dados sejam carregados completamente (atualmente alguns dados não são exibidos, pois o segundo load - to_frontend_obj - pode não ter tido o tempo necessário para ser executado completamente - da solicitação até o extend)
+	-> é possível os cards ficarem alinhados, mesmo quando não são do mesmo tamanho?
+	-> quais dados serão necessários para salvar um usuário? apenas o nome já será o suficiente para poder salvar?
+	-> como armazenar as informações de horários e datas? Time.now ou usar uma string com a data/horário formatada?
+	-> é necessário validar o tamanho de cada um dos dados recebidos? se não, de alguns? se sim, quais?
