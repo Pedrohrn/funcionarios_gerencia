@@ -69,8 +69,8 @@ class UsuariosController < ApplicationController
 		}
 		attrs << {
 			expedientes: [
-				hora_inicio: hora_inicio,
-				hora_fim: hora_fim,
+				:hora_inicio,
+				:hora_fim,
 				dias: [],
 			]
 		}
