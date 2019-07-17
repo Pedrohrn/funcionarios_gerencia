@@ -26,7 +26,9 @@
 					</div>
 					<div class="fcol-xs-auto sc-p-b-md">
 						<div class="sc-m-b-xs">{{usuario.nome}}</div>
-						<div class="sc-m-b-xs">{{usuario.cargo.nome}}</div>
+						<div class="sc-m-b-xs">Cargo:
+							<span class="sc-text-blue">{{usuario.cargo.nome}}</span>
+						</div>
 						<div class="sc-m-b-xs">Telefones:
 							<span ng-repeat="telefone in usuario.telefones" class="sc-text-blue">{{telefone}}   </span>
 						</div>
@@ -56,8 +58,17 @@
 					</div>
 				</div>
 				<div class="sc-p-t-o">
-					<div>Vigência:
-						<span class="sc-text-blue">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} à {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+					<div class="sc-m-b-xs">Vigência:
+						<span class="sc-text-blue sc-label">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} à {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+					</div>
+					<div class="sc-m-b-xs">Dias e horários:
+						<div class="clear"></div>
+						<span ng-repeat="expediente in usuario.expedientes track by $index" class="sc-text-blue clear">
+							<i class="sc-icon sc-icon-relogio-2"></i>
+							<span ng-repeat="dia in expediente.dias">{{dia}},</span>
+							a partir de {{expediente.hora_inicio | date: 'mediumTime' }} até {{expediente.hora_fim | date: 'mediumTime' }}
+							<div class="clear"></div>
+						</span>
 					</div>
 				</div>
 			</div>

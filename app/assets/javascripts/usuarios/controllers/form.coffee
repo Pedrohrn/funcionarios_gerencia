@@ -17,6 +17,7 @@ angular.module('scApp').lazy
 				vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 				vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
 				vm.params.nascimento = new Date(vm.params.data_nascimento)
+			console.log vm.params
 
 		vm.expedientesCtrl =
 			toggleDay: (dia, expediente)->

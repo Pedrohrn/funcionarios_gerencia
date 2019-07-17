@@ -245,7 +245,10 @@
 		</div>
 
 		<div class="sc-modal-footer">
-			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.salvar(usuario)">Salvar</button>
+			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.salvar(usuario)">
+				<span ng-if="!formCtrl.formCtrl.loading">Salvar</span>
+				<span ng-if="formCtrl.formCtrl.loading">Carregando</span>
+			</button>
 			<button class="sc-btn sc-btn-red" ng-click="indexCtrl.formCtrl.cancelar()">Cancelar</button>
 		</div>
 

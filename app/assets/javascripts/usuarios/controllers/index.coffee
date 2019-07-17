@@ -152,6 +152,7 @@ angular.module('scApp').lazy
 				usuario.edit = new scToggle()
 				usuario.ferias_modal = new scModal()
 				usuario.ferias = usuario.ferias || []
+				expedientes = usuario.expedientes
 
 			open_ferias_modal: (usuario)->
 				usuario.ferias_modal.open()
@@ -710,6 +711,7 @@ angular.module('scApp').lazy
 
 			closeForm: (usuario)->
 				vm.newUserCtrl.modal.close()
+				vm.newUserCtrl.newRecord = false
 				return if usuario == undefined
 				console.log 'oi'
 				usuario.edit.opened = false
