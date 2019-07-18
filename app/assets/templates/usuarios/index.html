@@ -50,7 +50,8 @@
 										<li ng-click="indexCtrl.itemCtrl.inativar(grupo)">
 											<span class="align-left">
 												<i class="sc-icon sc-icon-banir"></i>
-												Inativar grupo
+												<span ng-if="!grupo.inativado_em">Inativar grupo</span>
+												<span ng-if="grupo.inativado_em">Reativar</span>
 											</span>
 										</li>
 										<li ng-click="indexCtrl.itemCtrl.edit(grupo)">

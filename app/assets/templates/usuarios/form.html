@@ -48,7 +48,7 @@
 					<div class="fcol-xs-50">
 						<div class="sc-m-b-md">
 							<div class="sc-label">Grupo:</div>
-							<select class="sc-input-default sc-input-block" ng-options="grupo as grupo.nome for grupo in indexCtrl.listCtrl.list track by grupo.id" ng-model="formCtrl.params.grupo">
+							<select class="sc-input-default sc-input-block" ng-options="grupo as grupo.nome disable when grupo.inativado_em for grupo in indexCtrl.listCtrl.list track by grupo.id" ng-model="formCtrl.params.grupo">
 								<option value="empty" label="Selecione um grupo"></option>
 							</select>
 						</div>
@@ -82,6 +82,13 @@
 												<span class="align-left">
 													<i class="sc-icon sc-icon-lixeira-2"></i>
 													Excluir
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.inativar_reativar(cargo = formCtrl.params.cargo)">
+												<span class="align-left">
+													<i class="sc-icon sc-icon-banir"></i>
+													<span ng-if="!cargo.inativado_em">Inativar</span>
+													<span ng-if="cargo.inativado_em">Reativar</span>
 												</span>
 											</li>
 										</ul>

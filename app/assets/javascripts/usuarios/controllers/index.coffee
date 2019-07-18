@@ -199,13 +199,42 @@ angular.module('scApp').lazy
 					]
 
 			inativar: (usuario)->
-				label = if usuario.inativado_em then 'reativar' else 'desativar'
+				label = if usuario.inativado_em then 'reativar' else 'inativar'
 				scAlert.open
 					title: 'Tem certeza de que deseja ' + label + ' o usuário?'
 					buttons: [
-						{ label: label.capitalize(), color: 'yellow', action: -> vm.usuariosCtrl.micro_update(usuario) },
+						{ label: label.capitalize(), color: 'yellow', action: -> vm.usuariosCtrl.micro_update(usuario, label) },
 						{ label: 'Não', color: 'gray' },
 					]
+
+			micro_update: (usuario, label)->
+				return if @loading
+
+				params = {
+					id: usuario.id,
+					grupo_id: usuario.grupo_id
+					micro_update_type: label,
+					inativado_em: usuario.inativado_em
+				}
+
+				@loading = true
+
+				Usuario.micro_update params,
+					(data)=>
+						@loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == params.grupo_id
+						usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
+						angular.extend usuario, data.usuario
+
+						msg = data.message
+						scTopMessages.openSuccess msg unless Object.blank(msg)
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 		vm.gruposCtrl =
 			modal: new scModal()
@@ -333,6 +362,34 @@ angular.module('scApp').lazy
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
+			micro_update: (grupo, label)->
+				return if @loading
+
+				params = {
+					id: grupo.id,
+					micro_update_type: label,
+					inativado_em: grupo.inativado_em,
+				}
+
+				@loading = true
+
+				Grupo.micro_update params,
+					(data)=>
+						@loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+						angular.extend grupo, data.grupo
+
+						msg = data.message
+
+						scTopMessages.openSuccess msg unless Object.blank(msg)
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
 			resetForm: (grupo)->
 				if grupo && grupo.edit
 					grupo.edit.opened = false
@@ -355,30 +412,6 @@ angular.module('scApp').lazy
 
 						errors = response.data?.errors
 
-						scTopMessages.openDanger errors unless Object.blank(errors)
-
-			inativar: (grupo)->
-				@params = { id: grupo.id, inativado_em: grupo.inativado_em, micro_update_type: 'inativar'}
-
-				@micro_update_submit()
-
-			micro_update_submit: ->
-				return if @loading
-
-				@loading = true
-
-				Grupo.micro_update @params,
-					(data)=>
-						@loading = false
-
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
-						angular.extend grupo, data.grupo
-						@resetForm()
-						scTopMessages.openSuccess data.message
-					(response)=>
-						@loading = false
-
-						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 		vm.feriasCtrl =
@@ -612,6 +645,45 @@ angular.module('scApp').lazy
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
+			inativar_reativar: (cargo)->
+				label = if cargo.inativado_em then 'reativar' else 'inativar'
+				console.log label
+				scAlert.open
+					title: "Deseja mesmo " + label + ' o cargo?'
+					buttons: [
+						{ label: label.capitalize(), color: 'yellow', action: -> vm.cargosCtrl.micro_update(cargo, label) },
+						{ label: 'Cancelar', color: 'gray' }
+					]
+
+			micro_update: (cargo, label)->
+				return if @loading
+
+				params = {
+					id: cargo.id,
+					micro_update_type: label,
+					inativado_em: cargo.inativado_em,
+				}
+
+				@loading = false
+
+				Cargo.micro_update params,
+					(data)=>
+						@loading = false
+
+						cargo = vm.cargosCtrl.list.find (obj)-> obj.id == data.cargo.id
+						angular.extend cargo, data.cargo
+
+						msg = data.message
+
+						scTopMessages.openSuccess msg unless Object.blank(msg)
+
+					(response)=>
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
+
 			resetForm: ->
 				@newRecord = false
 				@creatingMode = false
@@ -664,7 +736,7 @@ angular.module('scApp').lazy
 					]
 
 			inativar: (grupo)->
-				label = if grupo.inativado_em? then 'reativar' else 'desativar'
+				label = if grupo.inativado_em then 'reativar' else 'inativar'
 				scAlert.open
 					title: 'Tem certeza que deseja ' + label + ' o grupo?'
 					buttons: [

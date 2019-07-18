@@ -32,7 +32,7 @@
 							<i class="sc-icon sc-icon-menu sc-text-black"></i>
 						</div>
 						<div ng-if="!grupo.modal_edit.opened" class="fcol-xs-auto">{{grupo.nome}}
-							<span ng-if="grupo.is_inative" class="sc-border-radius sc-m-l-lg sc-text-sm sc-p-v-sm sc-text-white sc-p-h-lg sc-bg-yellow">Inativo!
+							<span ng-if="grupo.inativado_em" class="sc-border-radius sc-m-l-lg sc-text-sm sc-p-v-sm sc-text-white sc-p-h-lg sc-bg-yellow">Inativo!
 							</span>
 						</div>
 						<div ng-if="grupo.modal_edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="fcol-xs-50">
@@ -61,7 +61,8 @@
 										<li ng-click="indexCtrl.itemCtrl.inativar(grupo)">
 											<span>
 												<i class="s-icon sc-icon-lapis"></i>
-												Inativar
+												<span ng-if="!grupo.inativado_em">Inativar</span>
+												<span ng-if="grupo.inativado_em">Reativar</span>
 											</span>
 										</li>
 										<li ng-click="indexCtrl.itemCtrl.rmv(grupo)">
