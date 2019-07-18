@@ -65,5 +65,5 @@ class GruposService
 		return [:success, { grupo: grupo.to_frontend_obj }] if grupo.save
 		[:error, grupo.errors.full_messages]
 	end
-	private_class_method :desativar_reativar
+	private_class_method :inativar_reativar
 end

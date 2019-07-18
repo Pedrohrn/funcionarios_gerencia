@@ -42,7 +42,7 @@ class CargosController < ApplicationController
 	end
 
 	def micro_update
-		st, resp = serice.micro_update({}, micro_update_params)
+		st, resp = service.micro_update({}, micro_update_params)
 
 		case st
 		when :success then render json: resp, status: :ok
