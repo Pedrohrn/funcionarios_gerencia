@@ -48,7 +48,11 @@
 									<span class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</span>
 								</li>
 								<li ng-click="indexCtrl.usuariosCtrl.inativar(usuario)">
-									<span class="align-left"><i class="sc-icon sc-icon-banir"></i>Inativar</span>
+									<span class="align-left">
+										<i class="sc-icon sc-icon-banir"></i>
+										<span ng-if="!usuario.inativado_em">Inativar</span>
+										<span ng-if="usuario.inativado_em">Reativar</span>
+									</span>
 								</li>
 								<li ng-click="indexCtrl.usuariosCtrl.rmv(usuario)">
 									<span class="align-left"><i class="sc-icon sc-icon-lixeira-2"></i>Remover</span>
