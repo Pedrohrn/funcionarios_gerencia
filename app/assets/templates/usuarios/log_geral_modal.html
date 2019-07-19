@@ -1,0 +1,20 @@
+<div sc-modal="indexCtrl.logCtrl.modal">
+	<div class="sc-modal-header">
+		Histórico
+		<i ng-click="indexCtrl.logCtrl.modal.close()" class="sc-icon sc-icon-fechar-1 sc-modal-close sc-badge-hover-red"></i>
+	</div>
+
+	<div class="sc-modal-body">
+		<div class="sc-label">Histórico geral</div>
+		<ul>
+			<li ng-repeat="registro in indexCtrl.logCtrl.list track by $index" class="sc-border-radius sc-bg-{{registro.acao.color}}">
+				re
+			</li>
+		</ul>
+
+	</div>
+
+	<div class="sc-modal-footer">
+		<button class="sc-btn sc-btn-default" ng-click="indexCtrl.logCtrl.modal.close()">Fechar</button>
+	</div>
+</div>
