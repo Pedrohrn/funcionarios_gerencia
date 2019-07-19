@@ -12,16 +12,8 @@ class UsuariosService
 	def self.show(opts, params)
 		usuario = model.find_by(id: params[:id])
 
-		return [:success, { usuario: usuario, message: 'oi' } ] if !usuario.blank?
-		[:error, usuario.errors.full_messages]
-	end
-
-	def self.create(opts,params)
-		self.submit(opts, params)
-	end
-
-	def self.update(opts, params)
-		self.submit(opts, params)
+		return [:success, {usuario: usuario} ] if !usuario.blank?
+		[:error, recesso.errors.full_messages]
 	end
 
 	def self.submit(opts, params)
@@ -35,21 +27,37 @@ class UsuariosService
 		params[:cargo_id] = cargo[:id]
 		params[:grupo_id] = grupo[:id]
 
-		usuario = model.find_by(id: params[:id]) || model.new
-		usuario.assign_attributes(params)
+		usuario, errors = nil, []
+		ApplicationRecord.transaction do
+			usuario = model.find_by(id: params[:id]) || model.new
+			usuario.assign_attributes(params)
 
-		message = usuario.new_record? ? 'Registro cadastrado com sucesso!' : 'Registro atualizado com sucesso!'
+			puts params
 
-		return [:success, { usuario: usuario.to_frontend_obj, message: message }] if usuario.save
-		[:error, usuario.errors.full_messages]
+			unless usuario.save
+				errors = errors
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return [:error, errors] if errors.any?
+		[:success, {usuario: usuario.to_frontend_obj}]
 	end
 
 	def self.destroy(opts, params)
-		usuario = model.find_by(id: params[:id])
-		usuario.destroy
+		usuario, errors = nil, []
+		ApplicationRecord.transaction do
+			usuario = model.find_by(id: params[:id])
+			usuario.destroy
 
-		return [:success, { message: 'Registro excluído com sucesso!' }] if usuario.destroy
-		[:error, usuario.errors.full_messages]
+			unless usuario.destroy
+				errors = errors
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return [:error, errors] if errors.any?
+		[:success, {}]
 	end
 
 	def self.micro_update(opts, params)
@@ -64,11 +72,19 @@ class UsuariosService
 	private
 
 	def self.inativar_reativar(params)
-		usuario = model.find_by(id: params[:id])
+		usuario, errors = nil, []
+		ApplicationRecord.transaction do
+			usuario = model.find_by(id: params[:id])
 
-		usuario.inativado_em = usuario.inativado? ? nil : Time.now
+			usuario.inativado_em = usuario.inativado? ? nil : Time.now
 
-		return [:success, { usuario: usuario.to_frontend_obj, message: 'Registro atualizado com sucesso!' }] if usuario.save
-		[:error, usuario.errors.full_messages]
+			unless usuario.save
+				errors = errors
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return [:error, errors] if errors.any?
+		[:success, {usuario: usuario.to_frontend_obj}]
 	end
 end

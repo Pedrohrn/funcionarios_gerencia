@@ -23,17 +23,8 @@ class GruposController < ApplicationController
 		end
 	end
 
-	def create
-		st, resp = service.create({}, grupos_params)
-
-		case st
-		when :success then render json: resp, status: :ok
-		when :error then render json: { errors: resp }, status: :error
-		end
-	end
-
-	def update
-		st, resp = service.update({}, grupos_params)
+	def submit
+		st, resp = service.submit({}, grupos_params)
 
 		case st
 		when :success then render json: resp, status: :ok
@@ -51,7 +42,7 @@ class GruposController < ApplicationController
 	end
 
 	def destroy
-		st, resp = service.micro_update({}, grupos_params)
+		st, resp = service.destroy({}, get_params)
 
 		case st
 		when :success then render json: resp, status: :ok

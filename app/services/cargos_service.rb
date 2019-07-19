@@ -10,30 +10,38 @@ class CargosService
 		[ :error, { message: 'Nenhum registro encontrado!'} ]
 	end
 
-	def self.create(opts, params)
-		self.submit(opts, params)
-	end
-
-	def self.update(opts, params)
-		self.submit(opts, params)
-	end
-
 	def self.submit(opts, params)
-		cargo = model.find_by(id: params[:id]) || model.new
+		cargo, errors = nil, []
+		ApplicationRecord.transaction do
+			cargo = model.find_by(id: params[:id]) || model.new
 
-		cargo.assign_attributes(params)
+			cargo.assign_attributes(params)
 
-		return [ :success, { cargo: cargo.to_frontend_obj, message: 'Operação realizada com sucesso!' } ] if cargo.save
-		[ :error, { message: cargo.errors.full_messages } ]
+			unless cargo.save
+				errors = cargo.errors.full_messages
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return [ :error, errors] if errors.any?
+		[ :success, {cargo: cargo.to_frontend_obj} ]
 	end
 
 	def self.destroy(opts, params)
-		cargo = model.find_by(id: params[:id])
+		cargo, errors = nil, []
+		ApplicationRecord.transaction do
+			cargo = model.find_by(id: params[:id])
 
-		cargo.destroy
+			cargo.destroy
 
-		return [:success, { message: 'Registro excluído com sucesso!' }] if cargo.destroy
-		[:error, { message: cargo.errors.full_messages }]
+			unless cargo.destroy
+				errors = cargo.errors.full_messages
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return [:error, errors] if errors.any?
+		[:success, {}]
 	end
 
 	def self.micro_update(opts, params)
@@ -48,12 +56,20 @@ class CargosService
 	private
 
 	def self.inativar_reativar(params)
-		cargo = model.find_by(id: params[:id])
+		cargo, errors = nil, []
+		ApplicationRecord.transaction do
+			cargo = model.find_by(id: params[:id])
 
-		cargo.inativado_em = cargo.inativado? ? nil : Time.now
+			cargo.inativado_em = cargo.inativado? ? nil : Time.now
 
-		return [:success, { cargo: cargo.to_frontend_obj }] if cargo.save
-		[:error, cargo.errors.full_messages]
+			unless cargo.save
+				errors = cargo.errors.full_messages
+				raise ActiveRecord::Rollback
+			end
+		end
+
+		return if [:error, errors] if errors.any?
+		[:success, { cargo: cargo.to_frontend_obj }]
 	end
 
 end

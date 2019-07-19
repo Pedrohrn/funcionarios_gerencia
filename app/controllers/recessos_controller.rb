@@ -23,17 +23,8 @@ class RecessosController < ApplicationController
 		end
 	end
 
-	def create
-		st, resp = service.create({}, recessos_params)
-
-		case st
-		when :success then render json: resp, status: :ok
-		when :error then render json: { errors: resp }, status: :ok
-		end
-	end
-
-	def update
-		st, resp = service.update({}, recessos_params)
+	def submit
+		st, resp = service.submit({}, recessos_params)
 
 		case st
 		when :success then render json: resp, status: :ok

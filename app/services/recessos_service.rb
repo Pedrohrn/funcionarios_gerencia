@@ -11,35 +11,41 @@ class RecessosService
 	def self.show(opts, params)
 		recesso = model.find_by(id: params[:id])
 
-		return [ :success, { recesso: recesso.to_frontend_obj } ] if recesso.present?
+		return [:success, { recesso: recesso.to_frontend_obj }] if recesso.present?
 		[:error, recesso.errors.full_messages]
 	end
 
-	def self.create(opts, params)
-		recesso = model.new
+	def self.submit(opts, params)
+		recesso, errors = nil, []
+		ApplicationRecord.transaction do
+			recesso = model.find_by(id: params[:id]) || model.new
 
-		recesso.assign_attributes(params)
+			recesso.assign_attributes(params)
 
-		return [:success, { recesso: recesso.to_frontend_obj, message: 'Registro cadastrado com sucesso!' }] if recesso.save
-		[:error, recesso.errors.full_messages]
-	end
+			unless recesso.save
+				errors = recesso.errors.full_messages
+				raise ActiveRecord::Rollback
+			end
+		end
 
-	def self.update(opts, params)
-		recesso = model.find_by(id: params[:id])
-
-		recesso.assign_attributes(params)
-
-		return [:success, { recesso: recesso.to_frontend_obj, message: 'Registro atualizado com sucesso!' }] if recesso.save
-		[:error, recesso.errors.full_messages]
+		return [:error, errors] if errors.any?
+		[:success, { recesso: recesso.to_frontend_obj }]
 	end
 
 	def self.destroy(opts, params)
-		recesso = model.find_by(id: params[:id])
+		recesso, errors = nil, []
+		ApplicationRecord.transaction do
+			recesso = model.find_by(id: params[:id])
 
-		recesso.destroy
+			recesso.destroy
+			unless recesso.destroy
+				errors = recesso.errors.full_messages
+				raise ActiveRecord::Rollback
+			end
+		end
 
-		return [:success, { message: 'Registro excluído com sucesso!' }] if recesso.destroy
-		[:error, recesso.errors.full_messages]
+		return [:error, errors] if errors.any?
+		[:success, {}]
 	end
 
 end
