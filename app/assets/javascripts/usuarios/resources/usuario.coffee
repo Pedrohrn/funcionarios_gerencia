@@ -11,12 +11,9 @@ angular.module('scApp').lazy
 			show:
 				method: 'GET'
 
-			create:
+			submit:
 				method: 'POST'
-				transformRequest: encapsulateData
-
-			update:
-				method: 'PUT'
+				url: 'http://localhost:3000/usuarios/submit'
 				transformRequest: encapsulateData
 
 			destroy:
