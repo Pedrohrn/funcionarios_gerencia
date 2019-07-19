@@ -63,51 +63,28 @@ angular.module('scApp').lazy
 			rmvTelefone: (telefone)->
 				vm.params.telefones.remove(telefone)
 
-		vm.salvar = (usuario) ->
-			if usuario == undefined
-				vm.create(usuario)
-			else
-				vm.update(usuario)
-
-		vm.update = (usuario) ->
+		vm.submit = (usuario) ->
 			return if vm.loading
 
 			vm.loading = true
 
-			Usuario.update vm.params,
+			Usuario.submit vm.params,
 				(data)=>
 					vm.loading = false
 
-					angular.extend usuario, data.usuario
-					msg = data.message
-					scTopMessages.openSuccess msg unless Object.blank(msg)
+					if vm.params.id
+						angular.extend usuario, data.usuario
+						message = 'Registro atualizado com sucesso!'
+					else
+						message = 'Registro cadastrado com sucesso!'
+
+					scTopMessages.openSuccess message
 				(response)=>
 					vm.loading = false
 
 					errors = response.data?.errors
 
 					scTopMessages.openDanger errors unless Object.blank(errors)
-
-
-		vm.create = (usuario) ->
-			return if vm.loading
-
-			vm.loading = true
-
-			Usuario.create vm.params,
-				(data)=>
-					vm.loading = false
-
-					usuario = data.usuario
-					msg = data.message
-
-					scTopMessages.openSuccess msg unless Object.blank(msg)
-				(response)=>
-					vm.loading = false
-
-					errors = response.data?.errors
-					scTopMessages.openDanger errors unless Object.blank(errors)
-
 
 		vm
 

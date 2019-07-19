@@ -8,12 +8,9 @@ angular.module('scApp').lazy
 			list:
 				method: 'GET'
 
-			create:
+			submit:
 				method: 'POST'
-				transformRequest: encapsulateData
-
-			update:
-				method: 'PUT'
+				url: 'http://localhost:3000/grupos/submit'
 				transformRequest: encapsulateData
 
 			micro_update:

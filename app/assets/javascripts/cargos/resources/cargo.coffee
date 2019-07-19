@@ -16,11 +16,9 @@ angular.module('scApp').lazy
 			destroy:
 				method: 'DELETE'
 
-			update:
-				method: 'PUT'
+			submit:
+				method: 'POST'
+				url: 'http://localhost:3000/cargos/submit'
 				transformRequest: encapsulateData
 
-			create:
-				method: 'POST'
-				transformRequest: encapsulateData
 ]
