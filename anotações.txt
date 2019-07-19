@@ -58,7 +58,7 @@ Usuario
 	]
 	ferias = [
 		{ data_inicio, data_fim, observacoes }
-	]
+
 
 
 
@@ -71,3 +71,4 @@ TODO
 	-> quais dados serão necessários para salvar um usuário? apenas o nome já será o suficiente para poder salvar?
 	-> como armazenar as informações de horários e datas? Time.now ou usar uma string com a data/horário formatada?
 	-> é necessário validar o tamanho de cada um dos dados recebidos? se não, de alguns? se sim, quais?
+	-> exclusão de cargos não está funcionando bem! o cargo passado como parâmetro não é reconhecido
