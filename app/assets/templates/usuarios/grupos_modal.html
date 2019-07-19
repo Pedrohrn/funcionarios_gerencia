@@ -15,7 +15,7 @@
 					<div class="sc-label sc-text-md">Novo grupo:</div>
 					<div class="sc-input-group sc-input-md sc-input-thin">
 						<input class="sc-input-default" placeholder="Entre com o nome do novo grupo" ng-model="indexCtrl.gruposCtrl.params.nome"/>
-						<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.salvar()">
+						<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.submit()">
 							<i class="sc-icon sc-icon-visto-1"></i>
 						</button>
 						<button class="sc-btn sc-btn-red" ng-click="indexCtrl.gruposCtrl.cancelar(grupo = {})">
@@ -38,7 +38,7 @@
 						<div ng-if="grupo.modal_edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="fcol-xs-50">
 							<div class="sc-input-group">
 								<input class="sc-input-default" placeholder="Entre com o nome do grupo" ng-model="indexCtrl.gruposCtrl.params.nome"/>
-								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.salvar(grupo)">
+								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.submit(grupo)">
 									<i class="sc-icon sc-icon-visto-1"></i>
 								</button>
 								<button class="sc-btn sc-btn-red" ng-click="indexCtrl.gruposCtrl.cancelar_modal(grupo)">

@@ -7,15 +7,14 @@
 	<div class="sc-modal-body">
 		<ul class=>
 			<li class="sc-accordion-head flex-row sc-m-t-lg" ng-repeat="config in indexCtrl.configuracoesCtrl.list track by $index">
-				<div class="fcol-xs-auto sc-label">{{config.label}}</div>
-				<div class="fcol-xs-10">
-					<label>
-						<span class="sc-toggle">
-							<input type="checkbox" ng-model="config.value" checked/>
-							<span label-true="sim" label-false="não"></span>
-						</span>
-					</label>
-				</div>
+				<div class="fcol-xs-70 sc-label">{{config.label}}</div>
+				<div class="fcol-xs-auto"></div>
+				<label>
+					<span class="sc-toggle">
+						<input type="checkbox" ng-model="config.value" checked/>
+						<span label-true="sim" label-false="não"></span>
+					</span>
+				</label>
 			</li>
 		</ul>
 	</div>

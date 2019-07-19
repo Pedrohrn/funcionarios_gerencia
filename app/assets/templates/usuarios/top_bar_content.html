@@ -2,7 +2,7 @@
 	<div class="left">
 		<button class="sc-btn sc-btn-blue sc-btn-awesomeness" ng-click="indexCtrl.newUserCtrl.cadastrarUsuario(usuario = {})">
 			<div class="sc-btn-icon"><i class="sc-icon sc-icon-mais-1"></i></div>
-			<div class="sc-btn-text">Cadastrar usuário</div>
+			<div class="sc-btn-text hidden-sm">Cadastrar usuário</div>
 		</button>
 	</div>
 
@@ -44,7 +44,7 @@
 						<i class="sc-icon sc-icon-menu"></i>Ordenar
 					</span>
 				</li>
-				<li>
+				<li ng-click="indexCtrl.logCtrl.modal.open()">
 					<span class="align-left">
 						<i class="sc-icon sc-icon-historico"></i>Histórico
 					</span>
@@ -55,7 +55,7 @@
 </div>
 <div ng-if="indexCtrl.filtro.filtro_avancado" class="flex-row ng-animation-slider sc-p-sm" id="top-bar-filter">
 	<form class="col-xs-12 sc-p-md sc-p-h-o sc-p-t-md" ng-init="indexCtrl.filtro.init()" ng-submit="indexCtrl.filtro.buscar(params)">
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">Função/Cargos</div>
 			<div class="sc-dropdown">
 				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showCargos()">
@@ -75,23 +75,23 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">Nome</div>
 			<input class="sc-input-default sc-input-block"/>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">E-mail</div>
 			<input class="sc-input-default sc-input-block"/>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">RG</div>
 			<input class="sc-input-default sc-input-block"/>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">CPF</div>
 			<input class="sc-input-default sc-input-block"/>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">Opções</div>
 			<div class="sc-dropdown">
 				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showOptions()">
@@ -109,7 +109,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-xs-6 sc-m-b-md col-sm-3 col-md-2">
+		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
 			<div class="sc-label">Em jornada de trabalho às</div>
 			<div class="sc-input-group sc-input-block">
 				<input type="time" sc-mask="hora" class="sc-input-default sc-input-time"/>
@@ -119,7 +119,7 @@
 						<i class="sc-icon" ng-class="indexCtrl.filtro.days_are_visible ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
 						Dias
 					</button>
-					<ul class="sc-dropdown-menu" style="display: block; max-width: 5em !important;" ng-if="indexCtrl.filtro.days_are_visible">
+					<ul class="sc-dropdown-menu" style="display: block; min-width: 6em;" ng-if="indexCtrl.filtro.days_are_visible">
 						<li ng-repeat="day in indexCtrl.settings.diasSemana" ng-click="indexCtrl.filtro.dayToggle(day)">
 							<span class="align-self">
 								<i class="sc-icon" ng-class="day.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>
