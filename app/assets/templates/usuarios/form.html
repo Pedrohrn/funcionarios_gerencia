@@ -99,7 +99,7 @@
 								<div class="sc-label">Nome:</div>
 								<div class="sc-input-group">
 									<input class="sc-input-default sc-input-thin" type="text" ng-model="indexCtrl.cargosCtrl.params.nome"/>
-									<button class="sc-btn sc-btn-green" ng-click="indexCtrl.cargosCtrl.salvar(cargo = indexCtrl.cargosCtrl.params)">
+									<button class="sc-btn sc-btn-green" ng-click="indexCtrl.cargosCtrl.submit(cargo = indexCtrl.cargosCtrl.params)">
 										<i class="sc-icon sc-icon-visto-1"></i>
 									</button>
 									<button class="sc-btn sc-btn-red" ng-click="indexCtrl.cargosCtrl.resetForm()">
@@ -252,7 +252,7 @@
 		</div>
 
 		<div class="sc-modal-footer">
-			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.salvar(usuario)">
+			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.submit(usuario)">
 				<span ng-if="!formCtrl.formCtrl.loading">Salvar</span>
 				<span ng-if="formCtrl.formCtrl.loading">Carregando</span>
 			</button>

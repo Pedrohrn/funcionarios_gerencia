@@ -27,7 +27,7 @@
 						<div sc-stop-click ng-if="grupo.edit.opened" ng-init="indexCtrl.gruposCtrl.formInit(grupo)" class="sc-stop-click fcol-xs-60 fcol-md-30 fcol-lg-20 sc-stop-click">
 							<div class="sc-input-group">
 								<input class="sc-input-default" ng-model="indexCtrl.gruposCtrl.params.nome"/>
-								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.salvar(grupo)">
+								<button class="sc-btn sc-btn-green" ng-click="indexCtrl.gruposCtrl.submit(grupo)">
 									<i class="sc-icon sc-icon-visto-1"></i>
 								</button>
 								<button class="sc-btn sc-btn-red" ng-click="indexCtrl.gruposCtrl.resetForm(grupo)">
@@ -89,6 +89,9 @@
 		</div>
 		<div ng-if="indexCtrl.gruposCtrl.modal.active">
 			<div ng-include="indexCtrl.templates.usuarios.grupos_modal"></div>
+		</div>
+		<div ng-if="indexCtrl.logCtrl.modal.active">
+			<div ng-include="indexCtrl.templates.usuarios.log_geral_modal">
 		</div>
 	</section>
 </div>

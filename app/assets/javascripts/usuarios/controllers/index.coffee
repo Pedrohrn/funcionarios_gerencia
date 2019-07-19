@@ -54,6 +54,9 @@ angular.module('scApp').lazy
 		vm.init = ->
 			vm.filtro.exec()
 
+		vm.logCtrl =
+			modal: new scModal()
+
 		vm.filtro =
 			filtro_avancado: false
 			options_are_visible: false
@@ -146,6 +149,7 @@ angular.module('scApp').lazy
 
 		vm.usuariosCtrl =
 			list: []
+			params: {}
 
 			init: (usuario)->
 				usuario.menu = new scToggle()
@@ -173,10 +177,11 @@ angular.module('scApp').lazy
 				usuario.edit.opened = true
 				vm.newUserCtrl.modal.open()
 				return if usuario.loaded || @loading
+				params = angular.copy usuario
 
 				@loading = true
 
-				Usuario.show usuario,
+				Usuario.show params,
 					(data)=>
 						@loading = false
 
@@ -197,6 +202,28 @@ angular.module('scApp').lazy
 						{ label: 'Sim', color: 'yellow', action: -> vm.usuariosCtrl.destroy(usuario) },
 						{ label: 'Não', color: 'gray' },
 					]
+
+			destroy: (usuario)->
+				grupo_id = usuario.grupo.id
+				return if @loading
+				@loading = true
+				params = angular.copy usuario
+
+				Usuario.destroy params,
+					(data)=>
+						@loading = false
+
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == grupo_id
+						usuario = grupo.usuarios.find (obj)-> obj.id == usuario.id
+						grupo.usuarios.remove(usuario)
+
+						scTopMessages.openSuccess 'Registro excluído com sucesso!'
+					(response)->
+						@loading = false
+
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			inativar: (usuario)->
 				label = if usuario.inativado_em then 'reativar' else 'inativar'
@@ -283,12 +310,6 @@ angular.module('scApp').lazy
 				grupo.modal_edit.toggle()
 				@creatingModeOn = false
 
-			salvar: (grupo)->
-				if @newRecord
-					@create()
-				else
-					@update(grupo)
-
 			rmv: (grupo)->
 				scAlert.open
 					title: "Atenção! Deseja mesmo excluir o grupo selecionado?"
@@ -298,68 +319,58 @@ angular.module('scApp').lazy
 						{ msg: 'Confirma a operação?'}
 					]
 					buttons: [
-						{ label: 'Excluir', color: 'red', action: -> vm.gruposCtrl.excluir(grupo) },
+						{ label: 'Excluir', color: 'red', action: -> vm.gruposCtrl.destroy(grupo) },
 						{ label: 'Cancelar', color: 'gray' }
 					]
 
-			excluir: (grupo)->
+			destroy: (grupo)->
 				return if @loading
 
 				@loading = true
 
-				Grupo.destroy grupo,
+				params = angular.copy grupo
+				console.log params
+
+				Grupo.destroy params,
 					(data)=>
 						@loading = false
 
-						msg = data.message
+						grupo = vm.listCtrl.list.find (obj)-> obj.id == params.id
+						vm.listCtrl.list.remove(grupo)
 
-						scTopMessages.openSuccess msg unless Object.blank(msg)
+						scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)=>
 						@loading = false
 
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
-			create: ->
+			submit: ->
 				return if @loading
-
 				@loading = true
 
-				Grupo.create @params,
+				Grupo.submit @params,
 					(data)=>
 						@loading = false
 
 						grupo = data.grupo
+						if @newRecord
+							vm.listCtrl.list.push(grupo)
+							message = 'Registro cadastrado com sucesso!'
+						else
+							grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+							grupo.edit.opened = false
+							grupo.modal_edit.opened = false
+							angular.extend grupo, data.grupo
+							message = 'Registro atualizado com sucesso!'
 
-						vm.listCtrl.list.push(grupo)
-
-						scTopMessages.openSuccess data.message
+						scTopMessages.openSuccess message
 						@resetForm()
 					(response)=>
 						@loading = false
 
 						errors = response.data?.errors
 
-						scTopMessages.openDanger errors unless Object.blank(errors)
-
-			update: (grupo)->
-				return if @loading
-
-				@loading = true
-
-				Grupo.update @params,
-					(data)=>
-						@loading = false
-
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == grupo.id
-						grupo.edit.opened = false
-						angular.extend grupo, data.grupo
-						@resetForm()
-						scTopMessages.openSuccess data.message
-					(response)=>
-						@loading = false
-
-						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			micro_update: (grupo, label)->
@@ -395,24 +406,6 @@ angular.module('scApp').lazy
 					grupo.edit.opened = false
 				@newRecord = false
 				@creatingModeOn = false
-
-			destroy: (grupo)->
-				return if @loading
-
-				@loading = true
-
-				Grupo.destroy grupo,
-					(data)=>
-						@loading = false
-
-						vm.listCtrl.list.remove(grupo)
-						scTopMessages.openSuccess data.message
-					(response)=>
-						@loading = false
-
-						errors = response.data?.errors
-
-						scTopMessages.openDanger errors unless Object.blank(errors)
 
 		vm.feriasCtrl =
 			newRecord: false
@@ -451,14 +444,14 @@ angular.module('scApp').lazy
 				return if @loading
 
 				@loading = true
+				params = angular.copy ferias
 
-				Recesso.destroy ferias,
+				Recesso.destroy params,
 					(data)=>
 						@loading = false
 						usuario.ferias.remove(ferias)
-						message = data.message
 
-						scTopMessages.openSuccess message unless Object.blank(message)
+						scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)=>
 						@loading = false
 
@@ -480,51 +473,30 @@ angular.module('scApp').lazy
 				else
 					usuario.ferias_modal.close()
 
-			salvar: (usuario)->
-				if @newRecord
-					@create(usuario)
-				else
-					@update(usuario)
-
-			create: (usuario)->
+			submit: (usuario)->
 				return if @loading
 
 				@loading = true
 
-				Recesso.create @params,
+				Recesso.submit @params,
 					(data)=>
 						@loading = false
 
 						ferias = data.recesso
 
-						usuario.ferias.push(ferias)
-						@resetForm()
-
-						scTopMessages.openSuccess data.message
-					(response)=>
-						@loading = false
-
-						errors = response.data?.errors
-
-						scTopMessages.openDanger errors unless Object.blank(errors)
-
-			update: (usuario)->
-				return if @loading
-
-				@loading = true
-
-				Recesso.update @params,
-					(data)=>
-						@loading = false
-
-						ferias = usuario.ferias.find (obj)-> obj.id == data.recesso.id
-						angular.extend ferias, data.recesso
+						if @newRecord
+							usuario.ferias.push(ferias)
+							message = 'Registro cadastrado com sucesso!'
+						else
+							angular.extend usuario, data.usuario
+							message = 'Registro atualizado com sucesso!'
 
 						@resetForm()
 
-						scTopMessages.openSuccess data.message
+						scTopMessages.openSuccess message
 					(response)=>
 						@loading = false
+
 						errors = response.data?.errors
 
 						scTopMessages.openDanger errors unless Object.blank(errors)
@@ -571,26 +543,24 @@ angular.module('scApp').lazy
 				@newRecord = true
 				@toggleCreatingMode()
 
-			salvar: (cargo)->
-				if @newRecord
-					@create()
-				else
-					@update(cargo)
-
+			submit: (cargo) ->
 				@menuOpened = false
-
-			update: (cargo) ->
 				return if @loading
 
 				@loading = true
 
-				Cargo.update @params,
+				Cargo.submit @params,
 					(data)=>
 						@loading = false
+						if @newRecord
+							@list.push(cargo)
+							message = 'Registro cadastrado com sucesso!'
+						else
+							cargo = @list.find (obj)-> obj.id == data.cargo.id
+							angular.extend cargo, data.cargo
+							message = 'Registro atualizado com sucesso!'
 
-						cargo = @list.find (obj)-> obj.id == cargo.id
-						angular.extend cargo, data.cargo
-						scTopMessages.openSuccess data.message
+						scTopMessages.openSuccess message
 						@resetForm()
 					(response)=>
 						@loading = false
@@ -607,42 +577,25 @@ angular.module('scApp').lazy
 					]
 
 			destroy: (cargo) ->
+				console.log cargo
 				return if @loading
 
 				@loading = true
+				params = angular.copy cargo
+				console.log cargo
 
-				Cargo.destroy cargo,
+				Cargo.destroy params,
 					(data)=>
+						console.log params
 						@loading = false
-
-						msg = data.message
-						vm.params.cargo = {}
-						@init({})
 						@resetForm()
 
-						scTopMessages.openSuccess msg unless Object.blank(msg)
+						scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)=>
 						@loading = false
 
 						errors = response.data?.errors
 
-						scTopMessages.openDanger errors unless Object.blank(errors)
-
-			create: ->
-				return if @loading
-
-				@loading = true
-
-				Cargo.create @params,
-					(data)=>
-						@loading = false
-						@list.push(data.cargo)
-						scTopMessages.openSuccess data.message
-						@resetForm()
-					(response)=>
-						@loading = false
-
-						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			inativar_reativar: (cargo)->
@@ -673,9 +626,7 @@ angular.module('scApp').lazy
 						cargo = vm.cargosCtrl.list.find (obj)-> obj.id == data.cargo.id
 						angular.extend cargo, data.cargo
 
-						msg = data.message
-
-						scTopMessages.openSuccess msg unless Object.blank(msg)
+						scTopMessages.openSuccess 'Registro atualizado com sucesso!'
 
 					(response)=>
 						@loading = false
@@ -713,16 +664,18 @@ angular.module('scApp').lazy
 			show: (grupo)->
 				return if grupo.loaded
 
-				Grupo.show grupo,
+				params = angular.copy grupo
+
+				Grupo.show params,
 					(data)=>
-						grupo.loaded = true
-						grupo.loading = false
+						params.loaded = true
+						params.loading = false
 
 						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
 						angular.extend grupo, data.grupo
 					(response)=>
-						grupo.loaded = true
-						grupo.loading = false
+						params.loaded = false
+						params.loading = false
 
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
@@ -731,7 +684,7 @@ angular.module('scApp').lazy
 				scAlert.open
 					title: 'Tem certeza de que deseja excluir esse grupo?'
 					buttons: [
-						{ label: 'Sim', color: 'yellow', action: -> vm.itemCtrl.destroy(grupo) },
+						{ label: 'Sim', color: 'yellow', action: -> vm.gruposCtrl.destroy(grupo) },
 						{ label: 'Não', color: 'gray' },
 					]
 
