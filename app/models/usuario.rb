@@ -3,18 +3,27 @@ class Usuario < ApplicationRecord
 	belongs_to 	:grupo
 	has_many 		:recessos, dependent: :destroy
 
-	validates_uniqueness_of :cpf, message: 'Já existe um cadastro com esse CPF!'
-
 	VALIDATES_PRESENCES = [
 		{ key: :nome, label: 'Nome' },
 		{ key: :cpf, label: 'CPF' },
 	]
 
-	validate :validar_campos
+	VALIDATES_UNIQUENESS = [
+		{ key: :cpf, label: 'CPF' },
+		{ key: :email, label: 'E-mail'}
+	]
+
+	VALIDATES_LENGTH = [
+		{ key: :nome, max_length: 120, label: 'nome' },
+		{ key: :rg, max_length: 30, label: 'rg' },
+		{ key: :cep, max_length: 7, label: 'cep' },
+		{ key: :logradouro, max_length: 150, label: 'logradouro' },
+		{ key: :complemento, max_length: 100, label: 'complemento' },
+	]
+
+	validate :validar_campos#, :validar_tamanhos, :validar_uniqueness
 
 	accepts_nested_attributes_for :recessos, allow_destroy: true
-
-	#before_validation :set_telefone
 
 	def slim_obj
 		{
@@ -45,7 +54,7 @@ class Usuario < ApplicationRecord
 		attrs
 	end
 
-	def telefone_obj
+	def telefone_obj   
 		telefones
 	end
 
@@ -61,6 +70,27 @@ class Usuario < ApplicationRecord
 		VALIDATES_PRESENCES.each{ |obj|
 			next if send(obj[:key]).present?
 			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
+		}
+
+		errors.empty?
+	end
+
+	def validar_uniqueness
+		VALIDATES_UNIQUENESS.each{ |obj|
+			aux = Usuario.where(obj[:key] == obj.to_s)
+			puts aux
+			next if aux.empty?
+			errors.add(:base, "Já existe um #{obj[:label]} igual a este cadastrado!")
+		}
+
+		errors.empty?
+	end
+
+	def validar_tamanhos
+		VALIDATES_LENGTH.each{ |obj|
+			puts obj[:label].to_s.length
+			next if obj[:label].length <= obj[:max_length]
+			errors.add(:base, "O tamanho do #{obj[:key]} é maior que o permitido (#{obj[:max_length]})!")
 		}
 
 		errors.empty?
