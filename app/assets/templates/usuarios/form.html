@@ -234,6 +234,27 @@
 							</li>
 						</ul>
 					</div>
+					<hr class="fcol-xs-100 sc-hr-gray-light"/>
+					<div class="fcol-xs-50">
+						<button class="sc-btn sc-btn-blue sc-btn-thin sc-dropdown">Faz parte de algum grupo de permissões?
+							<i class="sc-icon " ng-class="permissoes.menu.opened ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+						</button>
+						<ul class="sc-dropdown-menu" ng-if="permissoes.menu.opened">
+							<li ng-repeat="grupo in indexCtrl.gruposCtrl.list track by $index">
+								<span class="align-left">{{grupo.nome}}</span>
+							</li>
+						</ul>
+					</div>
+					<div class="fcol-xs-50">
+						<button class="sc-btn sc-btn-blue sc-btn-thin sc-dropdown">Faz parte de alguma gestão?
+							<i class="sc-icon " ng-class="gestoes.menu.opened ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+						</button>
+						<ul class="sc-dropdown-menu" ng-if="gestao.menu.opened">
+							<li ng-repeat="gestao in indexCtrl.gestoesCtrl.list track by $index">
+								<span class="align-left">{{gestao.nome}}</span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</form>
 		</div>
