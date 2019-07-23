@@ -7,7 +7,10 @@ angular.module('scApp').lazy
 		vm.usuario = null
 		vm.loading = false
 
-		vm.init = (usuario, grupo)->
+		vm.baseFact = null
+
+		vm.init = (usuario, grupo, baseFact)->
+			vm.baseFact = baseFact
 			vm.params = angular.copy usuario || {}
 			if !vm.params.id
 				vm.params.telefones = []
@@ -17,7 +20,6 @@ angular.module('scApp').lazy
 				vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 				vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
 				vm.params.nascimento = new Date(vm.params.data_nascimento)
-			console.log vm.params
 
 		vm.expedientesCtrl =
 			toggleDay: (dia, expediente)->
@@ -79,6 +81,8 @@ angular.module('scApp').lazy
 						message = 'Registro cadastrado com sucesso!'
 
 					scTopMessages.openSuccess message
+
+					vm.baseFact.close()
 				(response)=>
 					vm.loading = false
 

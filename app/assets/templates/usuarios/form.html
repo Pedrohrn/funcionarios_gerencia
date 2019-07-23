@@ -1,9 +1,9 @@
-<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario, grupo)">
-	<div sc-modal="indexCtrl.newUserCtrl.modal">
+<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario, grupo, formFact)">
+	<div sc-modal="indexCtrl.formFact.modal">
 		<div class="sc-modal-header">
 			<span ng-if="!usuario.id">Novo usuário</span>
 			<span ng-if="usuario.id">Editar usuário</span>
-			<i class="sc-icon sc-icon-fechar-1 sc-modal-close sc-badge-hover-red" ng-click="indexCtrl.formCtrl.cancelar()"></i>
+			<i class="sc-icon sc-icon-fechar-1 sc-modal-close sc-badge-hover-red" ng-click="indexCtrl.formFact.cancelar()"></i>
 		</div>
 
 		<div class="sc-modal-body">
@@ -49,17 +49,24 @@
 						<div class="sc-m-b-md">
 							<div class="sc-label">Grupo:</div>
 							<select class="sc-input-default sc-input-block" ng-options="grupo as grupo.nome disable when grupo.inativado_em for grupo in indexCtrl.listCtrl.list track by grupo.id" ng-model="formCtrl.params.grupo">
-								<option value="empty" label="Selecione um grupo"></option>
+								<option ng-hide="formCtrl.params.grupo" label="Selecione um grupo"></option>
 							</select>
 						</div>
 					</div>
 					<div class="fcol-xs-50 sc-p-r-none">
 						<div class="sc-m-b-md">
 							<label ng-if="!indexCtrl.cargosCtrl.creatingMode">
-								<div class="sc-label">Cargo/Função:</div>
+								<div class="sc-label">Cargo:
+									<span class="sc-text-red sc-text-sm" ng-if="formCtrl.params.cargo.inativado_em">Desativado! Escolha outro ou reative-o</span>
+								</div>
 								<div class="sc-input-group sc-dropdown" sc-dropdown-menu>
-									<select class="sc-input-default" ng-options="cargo as cargo.nome for cargo in indexCtrl.cargosCtrl.list track by cargo.id" ng-model="formCtrl.params.cargo">
-										<option value="empty" label="Selecione um cargo"></option>
+									<select
+									class="sc-input-default"
+									ng-class="{'error': formCtrl.params.cargo.inativado_em}"
+									ng-options="cargo as cargo.nome for cargo in indexCtrl.cargosCtrl.list track by cargo.id"
+									ng-model="formCtrl.params.cargo"
+									>
+										<option ng-hide="formCtrl.params.cargo" label="Selecione um cargo"></option>
 									</select>
 									<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="indexCtrl.cargosCtrl.openMenu()">
 										<i class="sc-icon sc-icon-reticiencias-v"></i>
@@ -86,9 +93,10 @@
 											</li>
 											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.inativar_reativar(cargo = formCtrl.params.cargo)">
 												<span class="align-left">
-													<i class="sc-icon sc-icon-banir"></i>
-													<span ng-if="!cargo.inativado_em">Inativar</span>
-													<span ng-if="cargo.inativado_em">Reativar</span>
+													<i ng-if="!formCtrl.params.cargo.inativado_em" class="sc-icon sc-icon-banir"></i>
+													<i ng-if="formCtrl.params.cargo.inativado_em" class="sc-icon sc-icon-seta-9-esquerda"></i>
+													<span ng-if="!formCtrl.params.cargo.inativado_em">Inativar</span>
+													<span ng-if="formCtrl.params.cargo.inativado_em">Reativar</span>
 												</span>
 											</li>
 										</ul>
@@ -195,7 +203,7 @@
 							Anexar
 						</button>
 						<select class="sc-input sc-input-default sc-m-l-lg" ng-model="params.anexo.type">
-							<option value="empty" label="Selecione o tipo" selected="true"></option>
+							<option label="Selecione o tipo"></option>
 							<option label="Documento" value="documento"></option>
 							<option label="Foto" value="foto"></option>
 						</select>
@@ -256,7 +264,7 @@
 				<span ng-if="!formCtrl.formCtrl.loading">Salvar</span>
 				<span ng-if="formCtrl.formCtrl.loading">Carregando</span>
 			</button>
-			<button class="sc-btn sc-btn-red" ng-click="indexCtrl.formCtrl.cancelar()">Cancelar</button>
+			<button class="sc-btn sc-btn-red" ng-click="indexCtrl.formFact.cancelar()">Cancelar</button>
 		</div>
 
 	</div>

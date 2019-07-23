@@ -1,9 +1,11 @@
 angular.module('scApp').lazy
 .controller 'CorpoDiretivo::IndexCtrl', [
-	'$scModal', 'scAlert', 'scToggle', 'scTopMessages', 'Templates', 'Usuario', 'Grupo', 'Cargo', 'Recesso'
-	(scModal, scAlert, scToggle, scTopMessages, Templates, Usuario, Grupo, Cargo, Recesso)->
+	'$scModal', 'scAlert', 'scToggle', 'scTopMessages', 'Templates', 'Usuario', 'Grupo', 'Cargo', 'Recesso', 'CorpoDiretivo::FormFactory'
+	(scModal, scAlert, scToggle, scTopMessages, Templates, Usuario, Grupo, Cargo, Recesso, FormFactory)->
 		vm = this
 		vm.templates = Templates
+
+		vm.formFact = new FormFactory
 
 		vm.settings =
 			diasSemana: [
@@ -175,7 +177,6 @@ angular.module('scApp').lazy
 
 			edit: (usuario)->
 				usuario.edit.opened = true
-				vm.newUserCtrl.modal.open()
 				return if usuario.loaded || @loading
 				params = angular.copy usuario
 
@@ -189,6 +190,7 @@ angular.module('scApp').lazy
 						usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
 						usuario.loaded = true
 						angular.extend usuario, data.usuario
+						vm.formFact.init(usuario)
 					(response)=>
 						@loading = false
 
@@ -274,7 +276,8 @@ angular.module('scApp').lazy
 				grupo.modal_edit = new scToggle()
 
 			formInit: (grupo)->
-				@params = angular.copy grupo || {}
+				return if !@newRecord && !@creatingModeOn
+				@params = angular.copy grupo || { nome: '' }
 
 			openModal: ->
 				@modal.open()
@@ -329,7 +332,6 @@ angular.module('scApp').lazy
 				@loading = true
 
 				params = angular.copy grupo
-				console.log params
 
 				Grupo.destroy params,
 					(data)=>
@@ -348,7 +350,6 @@ angular.module('scApp').lazy
 			submit: ->
 				return if @loading
 				@loading = true
-
 				Grupo.submit @params,
 					(data)=>
 						@loading = false
@@ -391,9 +392,7 @@ angular.module('scApp').lazy
 						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
 						angular.extend grupo, data.grupo
 
-						msg = data.message
-
-						scTopMessages.openSuccess msg unless Object.blank(msg)
+						scTopMessages.openSuccess 'Registro atualizado com sucesso!'
 					(response)=>
 						@loading = false
 
@@ -553,7 +552,7 @@ angular.module('scApp').lazy
 					(data)=>
 						@loading = false
 						if @newRecord
-							@list.push(cargo)
+							@list.push(data.cargo)
 							message = 'Registro cadastrado com sucesso!'
 						else
 							cargo = @list.find (obj)-> obj.id == data.cargo.id
@@ -577,16 +576,13 @@ angular.module('scApp').lazy
 					]
 
 			destroy: (cargo) ->
-				console.log cargo
 				return if @loading
 
 				@loading = true
 				params = angular.copy cargo
-				console.log cargo
 
 				Cargo.destroy params,
 					(data)=>
-						console.log params
 						@loading = false
 						@resetForm()
 
@@ -600,7 +596,6 @@ angular.module('scApp').lazy
 
 			inativar_reativar: (cargo)->
 				label = if cargo.inativado_em then 'reativar' else 'inativar'
-				console.log label
 				scAlert.open
 					title: "Deseja mesmo " + label + ' o cargo?'
 					buttons: [
@@ -649,36 +644,6 @@ angular.module('scApp').lazy
 
 		vm.itemCtrl =
 			newRecord: false
-			init: (grupo)->
-				grupo.show = new scToggle()
-				grupo.menu = new scToggle()
-				grupo.edit = new scToggle()
-				grupo.newUser = new scToggle()
-
-			accToggle: (grupo)->
-				return if grupo.edit.opened
-				grupo.loading = false
-				grupo.show.toggle()
-				@show(grupo)
-
-			show: (grupo)->
-				return if grupo.loaded
-
-				params = angular.copy grupo
-
-				Grupo.show params,
-					(data)=>
-						params.loaded = true
-						params.loading = false
-
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
-						angular.extend grupo, data.grupo
-					(response)=>
-						params.loaded = false
-						params.loading = false
-
-						errors = response.data?.errors
-						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			rmv: (grupo)->
 				scAlert.open
@@ -693,7 +658,7 @@ angular.module('scApp').lazy
 				scAlert.open
 					title: 'Tem certeza que deseja ' + label + ' o grupo?'
 					buttons: [
-						{ label: label.capitalize(), color: 'yellow', action: -> vm.gruposCtrl.micro_update(grupo) },
+						{ label: label.capitalize(), color: 'yellow', action: -> vm.gruposCtrl.micro_update(grupo, label) },
 						{ label: 'Não', color: 'gray' },
 					]
 
@@ -704,7 +669,6 @@ angular.module('scApp').lazy
 				grupo.edit.toggle()
 
 			new: (grupo)->
-				console.log grupo
 				grupo.newUser.opened = true
 				@newRecord = true
 				vm.newUserCtrl.modal.active = true
@@ -738,7 +702,6 @@ angular.module('scApp').lazy
 				vm.newUserCtrl.modal.close()
 				vm.newUserCtrl.newRecord = false
 				return if usuario == undefined
-				console.log 'oi'
 				usuario.edit.opened = false
 
 		vm
