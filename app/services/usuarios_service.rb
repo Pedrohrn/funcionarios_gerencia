@@ -19,13 +19,13 @@ class UsuariosService
 	def self.submit(opts, params)
 		puts 'params'
 		puts params
-		cargo = params.delete(:cargo)
-		grupo = params.delete(:grupo)
+		cargo = params.delete(:cargo) || []
+		grupo = params.delete(:grupo) || []
 		#gestao =
 		params.delete(:gestao)
 
-		params[:cargo_id] = cargo[:id]
-		params[:grupo_id] = grupo[:id]
+		params[:cargo_id] = cargo.empty? ? nil : cargo[:id]
+		params[:grupo_id] = grupo.empty? ? nil : grupo[:id]
 
 		usuario, errors = nil, []
 		ApplicationRecord.transaction do
@@ -35,7 +35,7 @@ class UsuariosService
 			puts params
 
 			unless usuario.save
-				errors = errors
+				errors = usuario.errors.full_messages
 				raise ActiveRecord::Rollback
 			end
 		end

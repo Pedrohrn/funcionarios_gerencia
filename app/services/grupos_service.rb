@@ -50,18 +50,15 @@ class GruposService
 	end
 
 	def self.micro_update(opts, params)
+		puts params
+		puts 'oi'
 		case params[:micro_update_type].to_s.to_sym
 		when :inativar, :reativar
 			self.inativar_reativar(params)
 		else
 			[:error, "Tipo de operação não permitida!"]
 		end
-
-		return [:success, {grupo: grupo.to_frontend_obj}] if grupo.save
-		[ :error, grupo.errors.full_messages ]
 	end
-
-	private
 
 	def self.inativar_reativar(params)
 		grupo, errors = nil, []
@@ -79,5 +76,4 @@ class GruposService
 		[:error, errors] if errors.any?
 		[:success, {grupo: grupo.to_frontend_obj}]
 	end
-	private_class_method :inativar_reativar
 end
