@@ -25,5 +25,12 @@ class CreateUsuarios < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    add_index :usuarios, :cpf, unique: true
+    add_index :usuarios, :email, unique: true
+    add_index :usuarios, :nome
+    add_index :usuarios, :rg
+    add_index :usuarios, :cargo_id
+    add_index :usuarios, :inativado_em
   end
 end
