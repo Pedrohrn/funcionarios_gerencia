@@ -50,8 +50,6 @@ class GruposService
 	end
 
 	def self.micro_update(opts, params)
-		puts params
-		puts 'oi'
 		case params[:micro_update_type].to_s.to_sym
 		when :inativar, :reativar
 			self.inativar_reativar(params)
