@@ -14,6 +14,7 @@ class CargosService
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
 			cargo = model.find_by(id: params[:id]) || model.new
+			cargo.lock!
 
 			cargo.assign_attributes(params)
 
@@ -31,6 +32,7 @@ class CargosService
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
 			cargo = model.find_by(id: params[:id])
+			cargo.lock!
 
 			cargo.destroy
 
@@ -59,6 +61,7 @@ class CargosService
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
 			cargo = model.find_by(id: params[:id])
+			cargo.lock!
 
 			cargo.inativado_em = cargo.inativado? ? nil : Time.now
 

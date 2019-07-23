@@ -20,6 +20,7 @@ class GruposService
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id]) || model.new
+			grupo.lock!
 
 			grupo.assign_attributes(params)
 
@@ -37,6 +38,7 @@ class GruposService
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
+			grupo.lock!
 			grupo.destroy
 
 			unless grupo.destroy
@@ -62,6 +64,7 @@ class GruposService
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
+			grupo.lock!
 
 			grupo.inativado_em = grupo.inativado? ? nil : Time.now
 

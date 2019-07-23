@@ -1,6 +1,8 @@
 class Grupo < ApplicationRecord
 	has_many :usuarios
 
+	validates_uniqueness_of :nome, :case_sensitive => true, message: 'Já existe um grupo com esse nome! Escolha outro!'
+
 	VALIDATES_PRESENCES = [
 		{ key: :nome, label: 'Nome' },
 	]

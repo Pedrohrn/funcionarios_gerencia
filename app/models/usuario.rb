@@ -54,7 +54,7 @@ class Usuario < ApplicationRecord
 		attrs
 	end
 
-	def telefone_obj   
+	def telefone_obj
 		telefones
 	end
 

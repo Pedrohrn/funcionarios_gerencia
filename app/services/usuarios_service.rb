@@ -17,22 +17,21 @@ class UsuariosService
 	end
 
 	def self.submit(opts, params)
-		puts 'params'
-		puts params
-		cargo = params.delete(:cargo) || []
-		grupo = params.delete(:grupo) || []
+		cargo = params.delete(:cargo) || {}
+		grupo = params.delete(:grupo) || {}
 		#gestao =
 		params.delete(:gestao)
+		puts cargo.blank?
+		puts grupo.blank?
 
-		params[:cargo_id] = cargo.empty? ? nil : cargo[:id]
-		params[:grupo_id] = grupo.empty? ? nil : grupo[:id]
+		params[:cargo_id] = cargo.blank? ? 0 : cargo[:id]
+		params[:grupo_id] = grupo.blank? ? 0 : grupo[:id]
 
 		usuario, errors = nil, []
 		ApplicationRecord.transaction do
 			usuario = model.find_by(id: params[:id]) || model.new
+			usuario.lock!
 			usuario.assign_attributes(params)
-
-			puts params
 
 			unless usuario.save
 				errors = usuario.errors.full_messages
@@ -48,6 +47,7 @@ class UsuariosService
 		usuario, errors = nil, []
 		ApplicationRecord.transaction do
 			usuario = model.find_by(id: params[:id])
+			usuario.lock!
 			usuario.destroy
 
 			unless usuario.destroy
@@ -75,6 +75,7 @@ class UsuariosService
 		usuario, errors = nil, []
 		ApplicationRecord.transaction do
 			usuario = model.find_by(id: params[:id])
+			usuario.lock!
 
 			usuario.inativado_em = usuario.inativado? ? nil : Time.now
 

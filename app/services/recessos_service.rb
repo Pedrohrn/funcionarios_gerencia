@@ -19,6 +19,7 @@ class RecessosService
 		recesso, errors = nil, []
 		ApplicationRecord.transaction do
 			recesso = model.find_by(id: params[:id]) || model.new
+			recesso.lock!
 
 			recesso.assign_attributes(params)
 
@@ -36,6 +37,7 @@ class RecessosService
 		recesso, errors = nil, []
 		ApplicationRecord.transaction do
 			recesso = model.find_by(id: params[:id])
+			recesso.lock!
 
 			recesso.destroy
 			unless recesso.destroy
