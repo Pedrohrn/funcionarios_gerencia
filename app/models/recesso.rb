@@ -21,6 +21,7 @@ class Recesso < ApplicationRecord
 	def to_frontend_obj
 		attrs = slim_obj
 		attrs[:observacoes] = observacoes
+		attrs[:cadastrado_em] = created_at
 		attrs
 	end
 
