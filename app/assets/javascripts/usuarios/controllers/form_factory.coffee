@@ -4,19 +4,17 @@ angular.module('scApp').lazy
 	(scAlert, scModal)->
 		->
 			baseObj =
-				opened: false
-				active: false
 				modal: new scModal()
 
-				init: (usuario)->
-					@usuario = usuario
+				init: (usuario, grupo)->
+					@usuario = usuario || { grupo: @grupo }
 					@modal.active = true
-					@opened = true
+					console.log @modal.active
 
 				close: ->
 					@usuario = {}
-					@opened = false
 					@modal.active = false
+					console.log @modal.active
 
 				cancelar: ->
 					scAlert.open
