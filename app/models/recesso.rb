@@ -6,8 +6,11 @@ class Recesso < ApplicationRecord
 		{ key: :data_inicio, label: 'Data inicio' },
 	]
 
+	VALIDATES_LENGTH = [
+		{ key: :observacoes, label: "Observações", max_length: 500}
+	]
+
 	validate :validar_campos
-	validate :validar_observacoes
 
 	def slim_obj
 		{
@@ -31,13 +34,12 @@ class Recesso < ApplicationRecord
 			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
 		}
 
-		errors.empty?
-	end
+		VALIDATES_LENGTH.each{ |obj|
+			next if send(obj[:key]).to_s.length <= obj[:max_length] || send(obj[:key]).to_s.blank?
+			errors.add(:base, "#{obj[:label]} é muito longa! O máximo permitido é de 500 caracteres")
+		}
 
-	def validar_observacoes
-		if observacoes.length > 2000
-			errors.add(:base, "A observação é muito longa! O máximo permido são 2000 caracteres!")
-		end
+		errors.empty?
 	end
 
 end

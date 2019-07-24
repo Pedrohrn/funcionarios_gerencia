@@ -21,7 +21,8 @@ class Usuario < ApplicationRecord
 		{ key: :complemento, max_length: 100, label: 'complemento' },
 	]
 
-	validate :validar_campos#, :validar_tamanhos
+	validate :validar_campos
+	#validate :validar_tamanhos
 
 	accepts_nested_attributes_for :recessos, allow_destroy: true
 
@@ -72,16 +73,15 @@ class Usuario < ApplicationRecord
 			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
 		}
 
+		VALIDATES_LENGTH.each{ |obj|
+			next if send(obj[:key]).to_s.length <= obj[:max_length] || send(obj[:key]).to_s.blank?
+			errors.add(:base, "O tamanho do #{obj[:key]} é maior que o permitido (#{obj[:max_length]})!")
+		}
+
 		errors.empty?
 	end
 
 	def validar_tamanhos
-		VALIDATES_LENGTH.each{ |obj|
-			puts obj[:label].to_s.length
-			next if obj[:label].length <= obj[:max_length]
-			errors.add(:base, "O tamanho do #{obj[:key]} é maior que o permitido (#{obj[:max_length]})!")
-		}
-
 		errors.empty?
 	end
 end

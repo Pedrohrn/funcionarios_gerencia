@@ -7,6 +7,10 @@ class Grupo < ApplicationRecord
 		{ key: :nome, label: 'Nome' },
 	]
 
+	VALIDATES_LENGTH = [
+		{ key: :nome, label: 'Nome', max_length: 100 },
+	]
+
 	validate :validar_campos
 
 	def slim_obj
@@ -35,6 +39,11 @@ class Grupo < ApplicationRecord
 		VALIDATES_PRESENCES.each{ |obj|
 			next if send(obj[:key]).present?
 			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
+		}
+
+		VALIDATES_LENGTH.each{ |obj|
+			next if send(obj[:key]).to_s.length <= obj[:max_length] || send(obj[:key]).to_s.blank?
+			errors.add(:base, "#{obj[:label]} é muito longo! O máximo permitido é #{obj[:max_length]} caracteres")
 		}
 
 		errors.empty?
