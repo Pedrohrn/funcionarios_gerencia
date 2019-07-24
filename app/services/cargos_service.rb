@@ -32,18 +32,23 @@ class CargosService
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
 			cargo = model.find_by(id: params[:id])
-			cargo.lock!
 
-			cargo.destroy
+			cargos = Usuario.where(cargo_id: params[:id]) || []
 
-			unless cargo.destroy
-				errors = cargo.errors.full_messages
-				raise ActiveRecord::Rollback
+			if cargos.empty?
+				cargo.destroy
+
+				unless cargo.destroy
+					errors = [ { message: 'Registro não encontrado!'}]
+					raise ActiveRecord::Rollback
+				end
+			else
+				errors = ['O cargo possui vínculos com usuários e não poderá ser excluído!']
 			end
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {}]
+		[:success,  {status: 'success'} ]
 	end
 
 	def self.micro_update(opts, params)

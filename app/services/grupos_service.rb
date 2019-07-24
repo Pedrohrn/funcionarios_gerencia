@@ -38,17 +38,20 @@ class GruposService
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
-			grupo.lock!
-			grupo.destroy
+			if grupo.usuarios.empty?
+				grupo.destroy
 
-			unless grupo.destroy
-				errors = grupo.errors.full_messages
-				raise ActiveRecord::Rollback
+				unless grupo.destroy
+					errors = grupo.errors.full_messages
+					raise ActiveRecord::Rollback
+				end
+			else
+				errors = ['Esse grupo possui usuários e não poderá ser excluído.']
 			end
 		end
 
 		return [ :error, errors ] if errors.any?
-		[:success, {}]
+		[:success, {status: 'success'}]
 	end
 
 	def self.micro_update(opts, params)
