@@ -21,7 +21,7 @@ class Usuario < ApplicationRecord
 		{ key: :complemento, max_length: 100, label: 'complemento' },
 	]
 
-	validate :validar_campos#, :validar_tamanhos, :validar_uniqueness
+	validate :validar_campos#, :validar_tamanhos
 
 	accepts_nested_attributes_for :recessos, allow_destroy: true
 
@@ -70,17 +70,6 @@ class Usuario < ApplicationRecord
 		VALIDATES_PRESENCES.each{ |obj|
 			next if send(obj[:key]).present?
 			errors.add(:base, "#{obj[:label]} não pode ser vazio!")
-		}
-
-		errors.empty?
-	end
-
-	def validar_uniqueness
-		VALIDATES_UNIQUENESS.each{ |obj|
-			aux = Usuario.where(obj[:key] == obj.to_s)
-			puts aux
-			next if aux.empty?
-			errors.add(:base, "Já existe um #{obj[:label]} igual a este cadastrado!")
 		}
 
 		errors.empty?
