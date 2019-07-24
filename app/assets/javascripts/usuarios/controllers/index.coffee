@@ -58,6 +58,15 @@ angular.module('scApp').lazy
 
 		vm.logCtrl =
 			modal: new scModal()
+			list: []
+			carregando: false
+
+			init: (registro)->
+				registro.acc = new scToggle()
+
+			loadList: ->
+				return if @carregando
+				@carregando = true
 
 		vm.filtro =
 			filtro_avancado: false
@@ -177,6 +186,7 @@ angular.module('scApp').lazy
 
 			edit: (usuario)->
 				usuario.edit.opened = true
+				vm.formFact.init(usuario)
 				return if usuario.loaded || @loading
 				params = angular.copy usuario
 
@@ -190,12 +200,12 @@ angular.module('scApp').lazy
 						usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
 						usuario.loaded = true
 						angular.extend usuario, data.usuario
-						vm.formFact.init(usuario)
 					(response)=>
 						@loading = false
-
+						usuario.loaded = false
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
+
 
 			rmv: (usuario)->
 				scAlert.open
@@ -282,6 +292,10 @@ angular.module('scApp').lazy
 			openModal: ->
 				@modal.open()
 
+			closeModal: ->
+				@modal.close()
+				@resetForm()
+
 			edit: (grupo) ->
 				if @creatingModeOn
 					scAlert.open
@@ -291,7 +305,7 @@ angular.module('scApp').lazy
 						]
 				else
 					@creatingModeOn = true
-					grupo.modal_edit.toggle()
+					grupo.modal_edit.opened = true
 
 			new: ->
 				if @creatingModeOn
@@ -336,11 +350,13 @@ angular.module('scApp').lazy
 				Grupo.destroy params,
 					(data)=>
 						@loading = false
-
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == params.id
-						vm.listCtrl.list.remove(grupo)
-
-						scTopMessages.openSuccess 'Registro excluído com sucesso!'
+						if data.status == 'success'
+							grupo = vm.listCtrl.list.find (obj)-> obj.id == params.id
+							vm.listCtrl.list.remove(grupo)
+							scTopMessages.openSuccess 'Registro excluído com sucesso!'
+						else
+							errors = data.errors
+							scTopMessages.openDanger errors unless Object.blank(errors)
 					(response)=>
 						@loading = false
 
@@ -361,12 +377,13 @@ angular.module('scApp').lazy
 						else
 							grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
 							grupo.edit.opened = false
-							grupo.modal_edit.opened = false
 							angular.extend grupo, data.grupo
 							message = 'Registro atualizado com sucesso!'
+							if grupo.modal_edit
+								grupo.modal_edit.opened = false
 
 						scTopMessages.openSuccess message
-						@resetForm()
+						@resetForm(grupo)
 					(response)=>
 						@loading = false
 
@@ -487,7 +504,8 @@ angular.module('scApp').lazy
 							usuario.ferias.push(ferias)
 							message = 'Registro cadastrado com sucesso!'
 						else
-							angular.extend usuario, data.usuario
+							recesso = usuario.ferias.find (obj)-> obj.id == data.recesso.id
+							angular.extend recesso, data.recesso
 							message = 'Registro atualizado com sucesso!'
 
 						@resetForm()
@@ -529,6 +547,7 @@ angular.module('scApp').lazy
 				@creatingMode = !@creatingMode
 
 			edit: (cargo) ->
+				@menuOpened = false
 				if Object.blank(cargo)
 					scAlert.open
 						title: 'Selecione um cargo para poder editar!'
@@ -539,6 +558,7 @@ angular.module('scApp').lazy
 					@toggleCreatingMode()
 
 			new: ->
+				@menuOpened = false
 				@newRecord = true
 				@toggleCreatingMode()
 
@@ -576,6 +596,7 @@ angular.module('scApp').lazy
 					]
 
 			destroy: (cargo) ->
+				@menuOpened = false
 				return if @loading
 
 				@loading = true
@@ -586,15 +607,23 @@ angular.module('scApp').lazy
 						@loading = false
 						@resetForm()
 
-						scTopMessages.openSuccess 'Registro excluído com sucesso!'
+						if data.status == 'success'
+							cargo = @list.find (obj)-> obj.id == cargo.id
+							@list.remove(cargo)
+							scTopMessages.openSuccess 'Registro excluído com sucesso!'
+						else
+							errors = data.errors
+							scTopMessages.openDanger errors unless Object.blank(errors)
 					(response)=>
 						@loading = false
+						console.log data.errors
 
 						errors = response.data?.errors
 
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			inativar_reativar: (cargo)->
+				@menuOpened = false
 				label = if cargo.inativado_em then 'reativar' else 'inativar'
 				scAlert.open
 					title: "Deseja mesmo " + label + ' o cargo?'
