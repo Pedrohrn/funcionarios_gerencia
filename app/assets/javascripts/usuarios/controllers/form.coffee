@@ -46,7 +46,7 @@ angular.module('scApp').lazy
 				vm.params.expedientes.remove expediente
 
 			addExpediente: ->
-				vm.params.expedientes.unshift({ dias: [], horario_fim: '', horario_inicio: '' })
+				vm.params.expedientes.unshift({ dias: [], hora_fim: '', hora_inicio: '' })
 
 			addTelefone: ->
 				return if @novoTelefone == ''
@@ -61,6 +61,8 @@ angular.module('scApp').lazy
 					@novoTelefone = ''
 
 			updateTelefone: (telefone)->
+				@novoTelefone = angular.copy telefone
+				vm.params.telefones.remove(telefone)
 
 			rmvTelefone: (telefone)->
 				vm.params.telefones.remove(telefone)
