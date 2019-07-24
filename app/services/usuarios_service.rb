@@ -19,13 +19,11 @@ class UsuariosService
 	def self.submit(opts, params)
 		cargo = params.delete(:cargo) || {}
 		grupo = params.delete(:grupo) || {}
+
 		#gestao =
 		params.delete(:gestao)
-		puts cargo.blank?
-		puts grupo.blank?
-
-		params[:cargo_id] = cargo.blank? ? 0 : cargo[:id]
-		params[:grupo_id] = grupo.blank? ? 0 : grupo[:id]
+		params[:cargo_id] = cargo.blank? ? 1 : cargo[:id]
+		params[:grupo_id] = grupo.blank? ? 1 : grupo[:id]
 
 		usuario, errors = nil, []
 		ApplicationRecord.transaction do
