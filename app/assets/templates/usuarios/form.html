@@ -57,7 +57,7 @@
 						<div class="sc-m-b-md">
 							<label ng-if="!indexCtrl.cargosCtrl.creatingMode">
 								<div class="sc-label">Cargo:
-									<span class="sc-text-red sc-text-sm" ng-if="formCtrl.params.cargo.inativado_em">Desativado! Escolha outro ou reative-o</span>
+									<span class="sc-text-red sc-text-sm" ng-if="formCtrl.params.cargo.inativado_em">Cargo desativado! Escolha outro ou reative-o</span>
 								</div>
 								<div class="sc-input-group sc-dropdown" sc-dropdown-menu>
 									<select
@@ -119,7 +119,7 @@
 					</div>
 					<div class="fcol-xs-33">
 						<div class="sc-label">CPF:</div>
-						<input class="sc-input-block sc-input-default" type="" sc-mask="cpf" placeholder="999.999.999-99" ng-model="formCtrl.params.cpf">
+						<input class="sc-input-block sc-input-default" type="text" sc-mask="cpf" ng-model="formCtrl.params.cpf">
 					</div>
 					<div class="fcol-xs-33">
 						<div class="sc-label">RG:</div>
@@ -127,7 +127,7 @@
 					</div>
 					<div class="fcol-xs-33">
 						<div class="sc-label">Nascimento:</div>
-						<input class="sc-input-default sc-input-block" sc-date-picker type="date" min="1900-01-01" max="3000-12-31" ng-model="formCtrl.params.nascimento">
+						<input class="sc-input-default sc-input-block" sc-date-picker type="date" min="1900-01-01" max="3000-12-31" ng-model="formCtrl.params.data_nascimento">
 					</div>
 					<div class="sc-fieldset fcol-xs-auto sc-p-o sc-m-h-md">
 						<div class="sc-fieldset-head flex-row">
