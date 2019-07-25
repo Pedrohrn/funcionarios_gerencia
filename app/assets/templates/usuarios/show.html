@@ -17,7 +17,7 @@
 			</div>
 		</li>
 		<li ng-repeat="usuario in grupo.usuarios track by $index" ng-init="indexCtrl.usuariosCtrl.init(usuario)" class="fcol-xl-25 fcol-lg-33 fcol-md-50 fcol-xs-100">
-			<div class="sc-bg-white sc-fieldset justify-content-space-between sc-m-md sc-bg-{{usuario.status.color}}-lighter">
+			<div class="sc-bg-white sc-fieldset justify-content-space-between sc-m-md sc-bg-{{usuario.status.color}}-lighter" ng-class="{'sc-opac-60': usuario.excluindo}">
 				<div class="flex-row sc-p-b-o">
 					<div class="sc-p-r-lg">
 						<div class="sc-border-gray-light sc-border-solid sc-border-lg sc-border-radius sc-bg-white align-center" style="background-size: cover; background-position: center; width: 5.158em; height: 4.586em; line-height: 5.258em;">
@@ -63,16 +63,16 @@
 				</div>
 				<div class="sc-p-t-o">
 					<div class="sc-m-b-xs">Vigência:
-						<span class="sc-text-blue sc-label">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} à {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+						<span class="sc-text-blue sc-label">{{usuario.vigencia_inicio | date: 'dd/MM/yyyy' }} - {{usuario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
 					</div>
 					<div class="sc-m-b-xs">Dias e horários:
 						<div class="clear"></div>
-						<span ng-repeat="expediente in usuario.expedientes track by $index" class="sc-text-blue clear">
+						<div ng-repeat="expediente in usuario.expedientes track by $index" class="sc-text-blue clear sc-m-v-xs" ng-init="indexCtrl.showCtrl.diasInit(expediente)">
 							<i class="sc-icon sc-icon-relogio-2"></i>
-							<span ng-repeat="dia in expediente.dias">{{dia}},</span>
-							de {{expediente.hora_inicio | date: 'mediumTime' }} até {{expediente.hora_fim | date: 'mediumTime' }}
+							<span ng-repeat="dia in expediente.dias">{{dia.key}},</span>
+							das {{expediente.hora_inicio | date: 'mediumTime' }} até {{expediente.hora_fim | date: 'mediumTime' }}
 							<div class="clear"></div>
-						</span>
+						</div>
 					</div>
 				</div>
 			</div>
