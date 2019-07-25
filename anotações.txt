@@ -65,10 +65,7 @@ Usuario
 TODO
 	-> edição de grupos (usuarios) e categorias (passagem_serviço) tá zuada. ao editar mais de um ao mesmo tempo, o controller buga, pegando uma só informação e colocando nos outros três campos
 	-> é possível os cards ficarem alinhados, mesmo quando não são do mesmo tamanho?
-	-> é necessário validar o tamanho de cada um dos dados recebidos? se não, de alguns? se sim, quais?
 	-> olhar a tela de resumo para tentar aplicar a dinâmica dos cards na show dos usuarios (desafio: fazer com que a ação de arrastar um usuario troque o seu grupo)
-	-> talvez seja necessário colocar um time-out para carregar os dados do usuário direito na edição
-
 
 
 	-> quais dados serão necessários para salvar um usuário?
