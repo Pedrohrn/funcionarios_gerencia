@@ -40,7 +40,7 @@
 						</span>
 					</div>
 				</li>
-				<li ng-repeat="ferias in usuario.ferias track by $index" ng-init="indexCtrl.feriasCtrl.init(ferias)" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-sm sc-p-r-o sc-m-b-sm sc-border-radius">
+				<li ng-repeat="ferias in usuario.ferias track by $index" ng-init="indexCtrl.feriasCtrl.init(ferias)" class="sc-text-cian-darker sc-bg-cian-lighter sc-p-sm sc-p-r-o sc-m-b-sm sc-border-radius" ng-class="{'sc-opac-60': ferias.excluindo}">
 					<div class="sc-cursor-pointer flex-row" ng-click="indexCtrl.feriasCtrl.show(ferias)">
 						<div class="sc-m-l-md align-self-center">
 							<i class="sc-icon" ng-class="ferias.acc.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
