@@ -19,13 +19,13 @@
 					ng-repeat="grupo in indexCtrl.listCtrl.list track by $index"
 					class="sc-border-t-none as-sortable-item"
 					ng-init="itemCtrl.init(grupo)"
-					ng-class="{'sc-acc-blue': grupo.show.opened}"
+					ng-class="{'sc-acc-blue': grupo.show.opened, 'sc-opac-60': grupo.excluindo}"
 				>
 					<div class="sc-accordion-head flex-row" ng-click="itemCtrl.accToggle(grupo)">
 						<label class="fcol-xs-3em align-center" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'" ng-show="indexCtrl.screenMode.list">
 							<i class="sc-icon" ng-if="indexCtrl.screenMode.list" ng-class="grupo.show.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
 						</label>
-						<label as-sortable-item-handle ng-if="indexCtrl.screenMode.sort" class="fcol-xs-3em align-center as-sortable-item-handle" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
+						<label as-sortable-item-handle ng-if="indexCtrl.screenMode.sort" class="fcol-xs-3em align-center drag-icon as-sortable-item-handle" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
 							<i class="sc-icon sc-icon-menu sc-text-black"></i>
 						</label>
 						<div ng-if="!grupo.edit.opened" class="fcol-xs-40" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
@@ -45,7 +45,8 @@
 						<div class="fcol-xs-auto"></div>
 						<div class="fcol-xs-3em align-center" sc-stop-click>
 							<div class="sc-dropdown">
-								<i class="sc-icon sc-icon-reticiencias-v" ng-click="grupo.menu.toggle()" ng-class="grupo.show.opened ? 'sc-badge-hover-white' : 'sc-badge-hover-gray'"></i>
+								<i ng-if="!grupo.carregando" class="sc-icon sc-icon-reticiencias-v" ng-click="grupo.menu.toggle()" ng-class="grupo.show.opened ? 'sc-badge-hover-white' : 'sc-badge-hover-gray'"></i>
+								<i class="sc-icon sc-icon-carregando-1 sc-icon-spin sc-badge-hover-gray" ng-if="grupo.carregando"></i>
 								<div ng-if="grupo.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block;">
 									<ul>
 										<li ng-click="indexCtrl.formFact.init(usuario = {}, grupo)">
@@ -79,9 +80,6 @@
 						</div>
 					</div>
 					<div ng-if="grupo.show.opened" class="sc-accordion-body sc-p-b-o ng-animation-slider" ng-include="indexCtrl.templates.usuarios.show"></div>
-					<div ng-if="grupo.newUser.opened && indexCtrl.itemCtrl.newRecord">
-						<div ng-include="indexCtrl.templates.usuarios.form" ng-init="usuario = indexCtrl.formFact.usuario; formFact = indexCtrl.formFact"></div>
-					</div>
 				</li>
 			</ul>
 		</div>

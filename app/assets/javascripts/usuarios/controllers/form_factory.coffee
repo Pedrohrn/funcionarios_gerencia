@@ -7,14 +7,13 @@ angular.module('scApp').lazy
 				modal: new scModal()
 
 				init: (usuario, grupo)->
+					@grupo = grupo
 					@usuario = usuario || { grupo: @grupo }
 					@modal.active = true
-					console.log @modal.active
 
 				close: ->
 					@usuario = {}
 					@modal.active = false
-					console.log @modal.active
 
 				cancelar: ->
 					scAlert.open

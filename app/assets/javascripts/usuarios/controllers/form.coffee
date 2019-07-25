@@ -9,13 +9,13 @@ angular.module('scApp').lazy
 
 		vm.baseFact = null
 
-		vm.init = (usuario, grupo, baseFact)->
+		vm.init = (usuario, baseFact)->
 			vm.baseFact = baseFact
 			vm.params = angular.copy usuario || {}
 			if !vm.params.id
 				vm.params.telefones = []
 				vm.params.expedientes = []
-				vm.params.grupo = grupo
+				vm.params.grupo = vm.baseFact.grupo
 			else
 				vm.params.vigencia_inicio = new Date(vm.params.vigencia_inicio)
 				vm.params.vigencia_fim = new Date(vm.params.vigencia_fim)
