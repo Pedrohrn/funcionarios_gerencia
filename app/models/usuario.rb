@@ -22,7 +22,6 @@ class Usuario < ApplicationRecord
 	]
 
 	validate :validar_campos
-	#validate :validar_tamanhos
 
 	accepts_nested_attributes_for :recessos, allow_destroy: true
 
@@ -81,7 +80,4 @@ class Usuario < ApplicationRecord
 		errors.empty?
 	end
 
-	def validar_tamanhos
-		errors.empty?
-	end
 end
