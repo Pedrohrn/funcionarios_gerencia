@@ -91,7 +91,10 @@
 	<div class="sc-modal-footer">
 		<button ng-if="!indexCtrl.feriasCtrl.creatingModeOn" class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.cancelar(usuario)">Fechar</button>
 		<div class="align-right" ng-if="indexCtrl.feriasCtrl.creatingModeOn">
-			<button class="sc-btn sc-btn-blue" ng-click="indexCtrl.feriasCtrl.submit(usuario)">Salvar</button>
+			<button class="sc-btn sc-btn-blue" ng-click="indexCtrl.feriasCtrl.submit(usuario)">
+				<span ng-if="!indexCtrl.feriasCtrl.loading">Salvar</span>
+				<span ng-if="indexCtrl.feriasCtrl.loading">Carregando</span>
+			</button>
 			<button class="sc-btn sc-btn-default" ng-click="indexCtrl.feriasCtrl.cancelar()">Cancelar</button>
 		</div>
 	</div>

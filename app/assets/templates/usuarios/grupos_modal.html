@@ -27,7 +27,7 @@
 			</div>
 			<ul class="sc-accordion">
 				<li as-sortable-item ng-repeat="grupo in indexCtrl.listCtrl.list track by $index" ng-init="indexCtrl.gruposCtrl.init(grupo)" class="sc-border-t-none">
-					<div class="flex-row sc-accordion-head sc-text-blue" style="background-color: #FFF;">
+					<div class="flex-row sc-accordion-head sc-text-blue" ng-class="{'sc-opac-60': grupo.excluindo}" style="background-color: #FFF;">
 						<div ng-class="indexCtrl.gruposCtrl.creatingModeOn ? 'sc-cursor-not-allowed' : 'as-sortable-item-handle'" as-sortable-item-handle class="align-center fcol-xs-3em">
 							<i class="sc-icon sc-icon-menu sc-text-black"></i>
 						</div>
@@ -49,7 +49,8 @@
 						<div class="fcol-xs-auto"></div>
 						<div class="align-center fcol-xs-3em" sc-stop-click>
 							<div class="sc-dropdown">
-								<i ng-click="grupo.options.toggle()" class="sc-icon sc-icon-reticiencias-v sc-badge-hover-gray"></i>
+								<i ng-click="grupo.options.toggle()" class="sc-icon sc-icon-reticiencias-v sc-badge-hover-gray" ng-if="!grupo.loading"></i>
+								<i ng-if="grupo.loading" class="sc-icon sc-icon-carregando-1 sc-icon-spin sc-badge-hover-gray"></i>
 								<div ng-if="grupo.options.opened" class="sc-dropdown-menu pull-right" style="display: block;">
 									<ul>
 										<li ng-click="indexCtrl.gruposCtrl.edit(grupo)">
