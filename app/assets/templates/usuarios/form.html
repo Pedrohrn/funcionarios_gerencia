@@ -1,4 +1,4 @@
-<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario, grupo, formFact)">
+<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(usuario, formFact)">
 	<div sc-modal="indexCtrl.formFact.modal">
 		<div class="sc-modal-header">
 			<span ng-if="!usuario.id">Novo usuário</span>
@@ -69,7 +69,8 @@
 										<option ng-hide="formCtrl.params.cargo" label="Selecione um cargo"></option>
 									</select>
 									<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="indexCtrl.cargosCtrl.openMenu()">
-										<i class="sc-icon sc-icon-reticiencias-v"></i>
+										<i class="sc-icon sc-icon-reticiencias-v" ng-if="!indexCtrl.cargosCtrl.loading"></i>
+										<i class="sc-icon sc-icon-carregando-1 sc-icon-spin" ng-if="indexCtrl.cargosCtrl.loading"></i>
 									</button>
 									<div class="sc-dropdown-menu pull-right" ng-if="indexCtrl.cargosCtrl.menuOpened" style="display: block; top: 2.3em; left: 8.9em;">
 										<ul>
