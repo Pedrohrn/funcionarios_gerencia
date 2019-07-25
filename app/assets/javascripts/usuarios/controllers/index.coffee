@@ -56,6 +56,16 @@ angular.module('scApp').lazy
 		vm.init = ->
 			vm.filtro.exec()
 
+		vm.showCtrl =
+			aux: []
+			diasInit: (expediente)->
+				@aux = angular.copy expediente.dias
+				expediente.dias = []
+				for item in @aux
+					dia = vm.settings.diasSemana.find (obj)-> obj.value == item
+					expediente.dias.push(dia)
+				console.log expediente.dias
+
 		vm.logCtrl =
 			modal: new scModal()
 			list: []
@@ -219,19 +229,24 @@ angular.module('scApp').lazy
 				grupo_id = usuario.grupo.id
 				return if @loading
 				@loading = true
+				usuario.excluindo = true
 				params = angular.copy usuario
 
 				Usuario.destroy params,
 					(data)=>
 						@loading = false
 
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == grupo_id
-						usuario = grupo.usuarios.find (obj)-> obj.id == usuario.id
-						grupo.usuarios.remove(usuario)
+						status = data.status
+						if status == 'success'
+							grupo = vm.listCtrl.list.find (obj)-> obj.id == grupo_id
+							usuario = grupo.usuarios.find (obj)-> obj.id == usuario.id
+							usuario.excluindo = false
+							grupo.usuarios.remove(usuario)
 
-						scTopMessages.openSuccess 'Registro excluído com sucesso!'
+							scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)->
 						@loading = false
+						usuario.excluindo = false
 
 						errors = response.data?.errors
 
@@ -262,12 +277,14 @@ angular.module('scApp').lazy
 					(data)=>
 						@loading = false
 
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == params.grupo_id
-						usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
-						angular.extend usuario, data.usuario
+						status = data.status
+						if status == 'success'
+							grupo = vm.listCtrl.list.find (obj)-> obj.id == params.grupo_id
+							usuario = grupo.usuarios.find (obj)-> obj.id == data.usuario.id
+							angular.extend usuario, data.usuario
 
-						msg = data.message
-						scTopMessages.openSuccess msg unless Object.blank(msg)
+							msg = data.message
+							scTopMessages.openSuccess msg unless Object.blank(msg)
 					(response)=>
 						@loading = false
 
@@ -344,12 +361,14 @@ angular.module('scApp').lazy
 				return if @loading
 
 				@loading = true
+				grupo.excluindo = true
 
 				params = angular.copy grupo
 
 				Grupo.destroy params,
 					(data)=>
 						@loading = false
+						grupo.excluindo = false
 						if data.status == 'success'
 							grupo = vm.listCtrl.list.find (obj)-> obj.id == params.id
 							vm.listCtrl.list.remove(grupo)
@@ -359,6 +378,7 @@ angular.module('scApp').lazy
 							scTopMessages.openDanger errors unless Object.blank(errors)
 					(response)=>
 						@loading = false
+						grupo.excluindo = false
 
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
@@ -366,26 +386,31 @@ angular.module('scApp').lazy
 			submit: ->
 				return if @loading
 				@loading = true
+				grupo.carregando = true
 				Grupo.submit @params,
 					(data)=>
 						@loading = false
 
-						grupo = data.grupo
-						if @newRecord
-							vm.listCtrl.list.push(grupo)
-							message = 'Registro cadastrado com sucesso!'
-						else
-							grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
-							grupo.edit.opened = false
-							angular.extend grupo, data.grupo
-							message = 'Registro atualizado com sucesso!'
-							if grupo.modal_edit
-								grupo.modal_edit.opened = false
+						status = data.status
+						if status == 'success'
+							grupo = data.grupo
+							if @newRecord
+								vm.listCtrl.list.push(grupo)
+								message = 'Registro cadastrado com sucesso!'
+							else
+								grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+								grupo.edit.opened = false
+								grupo.carregando = false
+								angular.extend grupo, data.grupo
+								message = 'Registro atualizado com sucesso!'
+								if grupo.modal_edit
+									grupo.modal_edit.opened = false
 
-						scTopMessages.openSuccess message
-						@resetForm(grupo)
+							scTopMessages.openSuccess message
+							@resetForm(grupo)
 					(response)=>
 						@loading = false
+						grupo.carregando = false
 
 						errors = response.data?.errors
 
@@ -401,17 +426,23 @@ angular.module('scApp').lazy
 				}
 
 				@loading = true
+				grupo.carregando = true
 
 				Grupo.micro_update params,
 					(data)=>
 						@loading = false
 
-						grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
-						angular.extend grupo, data.grupo
+						status = data.status
+						if status == 'success'
 
-						scTopMessages.openSuccess 'Registro atualizado com sucesso!'
+							grupo = vm.listCtrl.list.find (obj)-> obj.id == data.grupo.id
+							grupo.carregando = false
+							angular.extend grupo, data.grupo
+
+							scTopMessages.openSuccess 'Registro atualizado com sucesso!'
 					(response)=>
 						@loading = false
+						grupo.carregando = false
 
 						errors = response.data?.errors
 
@@ -460,17 +491,22 @@ angular.module('scApp').lazy
 				return if @loading
 
 				@loading = true
+				ferias.excluindo = true
 				params = angular.copy ferias
 
 				Recesso.destroy params,
 					(data)=>
 						@loading = false
-						usuario.ferias.remove(ferias)
+						ferias.excluindo = false
 
-						scTopMessages.openSuccess 'Registro excluído com sucesso!'
+						status = data.status
+						if status == 'success'
+							usuario.ferias.remove(ferias)
+
+							scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)=>
 						@loading = false
-
+						ferias.excluindo = false
 						errors = response.data?.errors
 
 						scTopMessages.openDanger errors unless Object.blank(errors)
@@ -500,17 +536,19 @@ angular.module('scApp').lazy
 
 						ferias = data.recesso
 
-						if @newRecord
-							usuario.ferias.push(ferias)
-							message = 'Registro cadastrado com sucesso!'
-						else
-							recesso = usuario.ferias.find (obj)-> obj.id == data.recesso.id
-							angular.extend recesso, data.recesso
-							message = 'Registro atualizado com sucesso!'
+						status = data.status
+						if status == 'success'
+							if @newRecord
+								usuario.ferias.push(ferias)
+								message = 'Registro cadastrado com sucesso!'
+							else
+								recesso = usuario.ferias.find (obj)-> obj.id == data.recesso.id
+								angular.extend recesso, data.recesso
+								message = 'Registro atualizado com sucesso!'
 
-						@resetForm()
+							@resetForm()
 
-						scTopMessages.openSuccess message
+							scTopMessages.openSuccess message
 					(response)=>
 						@loading = false
 
@@ -571,16 +609,18 @@ angular.module('scApp').lazy
 				Cargo.submit @params,
 					(data)=>
 						@loading = false
-						if @newRecord
-							@list.push(data.cargo)
-							message = 'Registro cadastrado com sucesso!'
-						else
-							cargo = @list.find (obj)-> obj.id == data.cargo.id
-							angular.extend cargo, data.cargo
-							message = 'Registro atualizado com sucesso!'
+						status = data.status
+						if status == 'success'
+							if @newRecord
+								@list.push(data.cargo)
+								message = 'Registro cadastrado com sucesso!'
+							else
+								cargo = @list.find (obj)-> obj.id == data.cargo.id
+								angular.extend cargo, data.cargo
+								message = 'Registro atualizado com sucesso!'
 
-						scTopMessages.openSuccess message
-						@resetForm()
+							scTopMessages.openSuccess message
+							@resetForm()
 					(response)=>
 						@loading = false
 
@@ -647,10 +687,13 @@ angular.module('scApp').lazy
 					(data)=>
 						@loading = false
 
-						cargo = vm.cargosCtrl.list.find (obj)-> obj.id == data.cargo.id
-						angular.extend cargo, data.cargo
+						status = data.status
 
-						scTopMessages.openSuccess 'Registro atualizado com sucesso!'
+						if status == 'success'
+							cargo = vm.cargosCtrl.list.find (obj)-> obj.id == data.cargo.id
+							angular.extend cargo, data.cargo
+
+							scTopMessages.openSuccess 'Registro atualizado com sucesso!'
 
 					(response)=>
 						@loading = false
