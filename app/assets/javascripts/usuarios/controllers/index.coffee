@@ -494,22 +494,22 @@ angular.module('scApp').lazy
 				ferias.excluindo = true
 				params = angular.copy ferias
 
-#				Recesso.destroy params,
-#					(data)=>
-#						@loading = false
-#						ferias.excluindo = false
-#
-#						status = data.status
-#						if status == 'success'
-#							usuario.ferias.remove(ferias)
-#
-#							scTopMessages.openSuccess 'Registro excluído com sucesso!'
-#					(response)=>
-#						@loading = false
-#						ferias.excluindo = false
-#						errors = response.data?.errors
-#
-#						scTopMessages.openDanger errors unless Object.blank(errors)
+				Recesso.destroy params,
+					(data)=>
+						@loading = false
+						ferias.excluindo = false
+
+						status = data.status
+						if status == 'success'
+							usuario.ferias.remove(ferias)
+
+							scTopMessages.openSuccess 'Registro excluído com sucesso!'
+					(response)=>
+						@loading = false
+						ferias.excluindo = false
+						errors = response.data?.errors
+
+						scTopMessages.openDanger errors unless Object.blank(errors)
 
 			show: (ferias) ->
 				ferias.acc.toggle()
@@ -535,7 +535,6 @@ angular.module('scApp').lazy
 						@loading = false
 
 						ferias = data.recesso
-						console.log data.status
 
 						status = data.status
 						if status == 'success'
