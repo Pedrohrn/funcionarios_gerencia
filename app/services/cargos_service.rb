@@ -25,7 +25,7 @@ class CargosService
 		end
 
 		return [ :error, errors] if errors.any?
-		[ :success, {cargo: cargo.to_frontend_obj} ]
+		[ :success, {cargo: cargo.to_frontend_obj, status: 'success'} ]
 	end
 
 	def self.destroy(opts, params)
@@ -77,7 +77,7 @@ class CargosService
 		end
 
 		return if [:error, errors] if errors.any?
-		[:success, { cargo: cargo.to_frontend_obj }]
+		[:success, { cargo: cargo.to_frontend_obj, status: 'success' }]
 	end
 
 end

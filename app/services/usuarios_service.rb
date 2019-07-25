@@ -38,7 +38,7 @@ class UsuariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {usuario: usuario.to_frontend_obj}]
+		[:success, {usuario: usuario.to_frontend_obj, status: 'success'}]
 	end
 
 	def self.destroy(opts, params)
@@ -55,7 +55,7 @@ class UsuariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {}]
+		[:success, {status: 'success'}]
 	end
 
 	def self.micro_update(opts, params)
@@ -84,6 +84,6 @@ class UsuariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {usuario: usuario.to_frontend_obj}]
+		[:success, {usuario: usuario.to_frontend_obj, status: 'success'}]
 	end
 end

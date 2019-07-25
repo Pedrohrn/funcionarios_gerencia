@@ -31,14 +31,14 @@ class GruposService
 		end
 
 		return [ :error, errors ] if errors.any?
-		[:success, {grupo: grupo.to_frontend_obj}]
+		[:success, {grupo: grupo.to_frontend_obj, status: 'success'}]
 	end
 
 	def self.destroy(opts, params)
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
-			if grupo.usuarios.empty?
+			if !grupo.usuarios.empty?
 				grupo.destroy
 
 				unless grupo.destroy
@@ -78,6 +78,6 @@ class GruposService
 		end
 
 		[:error, errors] if errors.any?
-		[:success, {grupo: grupo.to_frontend_obj}]
+		[:success, {grupo: grupo.to_frontend_obj, status: 'success'}]
 	end
 end

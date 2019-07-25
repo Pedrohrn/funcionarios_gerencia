@@ -30,7 +30,7 @@ class RecessosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, { recesso: recesso.to_frontend_obj }]
+		[:success, { recesso: recesso.to_frontend_obj, status: 'success' }]
 	end
 
 	def self.destroy(opts, params)
@@ -47,7 +47,7 @@ class RecessosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {}]
+		[:success, {status: 'success'}]
 	end
 
 end
