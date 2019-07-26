@@ -36,7 +36,7 @@ class Recesso < ApplicationRecord
 
 		VALIDATES_LENGTH.each{ |obj|
 			next if send(obj[:key]).to_s.length <= obj[:max_length] || send(obj[:key]).to_s.blank?
-			errors.add(:base, "#{obj[:label]} é muito longa! O máximo permitido é de 500 caracteres")
+			errors.add(:base, "#{obj[:label]} é muito longa! O máximo permitido é de #{obj[:max_length]} caracteres")
 		}
 
 		errors.empty?

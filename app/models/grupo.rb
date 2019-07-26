@@ -12,6 +12,7 @@ class Grupo < ApplicationRecord
 	]
 
 	validate :validar_campos
+	validate :validar_remocao
 
 	def slim_obj
 		{
@@ -49,4 +50,11 @@ class Grupo < ApplicationRecord
 		errors.empty?
 	end
 
+	def validar_remocao
+		if usuarios.any?
+			errors.add(:base, "Esse grupo possui usuários e não poderá ser excluído")
+		end
+
+		errors.empty?
+	end
 end

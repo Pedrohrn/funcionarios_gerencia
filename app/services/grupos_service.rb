@@ -31,27 +31,21 @@ class GruposService
 		end
 
 		return [ :error, errors ] if errors.any?
-		[:success, {grupo: grupo.to_frontend_obj, status: 'success'}]
+		[:success, { grupo: grupo.to_frontend_obj }]
 	end
 
 	def self.destroy(opts, params)
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
-			if !grupo.usuarios.empty?
-				grupo.destroy
-
-				unless grupo.destroy
-					errors = grupo.errors.full_messages
-					raise ActiveRecord::Rollback
-				end
-			else
-				errors = ['Esse grupo possui usuários e não poderá ser excluído.']
+			unless grupo.destroy
+				errors = grupo.errors.full_messages
+				raise ActiveRecord::Rollback
 			end
 		end
 
 		return [ :error, errors ] if errors.any?
-		[:success, {status: 'success'}]
+		[:success, {}]
 	end
 
 	def self.micro_update(opts, params)
@@ -77,7 +71,7 @@ class GruposService
 			end
 		end
 
-		[:error, errors] if errors.any?
-		[:success, {grupo: grupo.to_frontend_obj, status: 'success'}]
+		return [:error, errors] if errors.any?
+		[:success, { grupo: grupo.to_frontend_obj }]
 	end
 end

@@ -74,3 +74,39 @@ TODO
 			nome,
 			cpf,
 		}
+
+
+CorpoDiretivo
+
+
+STI
+
+Cliente::Pessoa.all.first
+	# type
+	Administrativo::Pesssoa < Cliente::Pesssoa
+		type = 'Administrativo::Pesssoa'
+
+		Administravio::VinculoUnidadeMorador < Administrativo::Pesssoa
+			type = 'Administrativo::VinculoUnidadeMorador'
+
+		Administravio::VinculoUnidadeFuncionario < Administrativo::Pesssoa
+			type = 'Administrativo::VinculoUnidadeFuncionario'
+
+
+	Financeiro::Pesssoa
+	xxx::Pessoa
+
+
+
+
+	Administrativo::FuncionarioGrupo
+		has_many :funcionarios, class_name: 'Administrativo::Funcionario'
+			belongs_to :cargo, class_name: 'Administrativo::FuncionarioCargo'
+			belongs_to :pessoa, class_name: 'Administrativo::Pesssoa'
+
+
+Tela assumirá a ordenação parecendo com a tela de moradores.
+Adicionar usuário, no top_bar_content dará lugar ao adicionar grupo. para adciionar usuário, é somente dentro do grupo agora (como se fosse em moradores). tendo isso em vista, moral de grupos pode morrer
+aplicar as nomenclaturas dos modelos conforme acima.
+separar os itens da tela de cadastro (form). o que diz respeito ao funcionário ficará no top, e os demais dados (dados gerais, pessoais) ficarão abaixo, isolados.
+

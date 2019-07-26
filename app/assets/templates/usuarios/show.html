@@ -25,7 +25,10 @@
 						</div>
 					</div>
 					<div class="fcol-xs-auto sc-p-b-md">
-						<div class="sc-m-b-xs">{{usuario.nome}}</div>
+						<div class="sc-m-b-xs">
+							{{usuario.nome}}
+							<span ng-init="indexCtrl.userStatusInit(usuario)" class="sc-border-radius sc-bg-{{usuario.status.color}}">{{usuario.status.label}}</span>
+						</div>
 						<div class="sc-m-b-xs">Cargo:
 							<span class="sc-text-blue">{{usuario.cargo.nome}}</span>
 						</div>
