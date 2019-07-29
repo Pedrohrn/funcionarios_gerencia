@@ -65,15 +65,16 @@ angular.module('scApp').lazy
 				{ key: 'fora_do_expediente', label: 'Fora do expediente', color: 'cian'},
 			]
 
-			diasInit: (expediente)->
-				return if expediente.carregado
-				expediente.carregado = true
-				@aux = angular.copy expediente.dias
-				expediente.dias = []
-				for item in @aux
-					dia = vm.settings.diasSemana.find (obj)-> obj.value == item
-					expediente.dias.push(dia)
-				console.log expediente.dias
+			diasInit: (usuario)->
+				return if usuario.expedientes_carregados || usuario.expedientes == null
+				usuario.expedientes_carregados = true
+				usuario.expedientes_frontend = angular.copy usuario.expedientes
+				for expediente in usuario.expedientes_frontend
+					aux = angular.copy expediente.dias
+					expediente.dias = []
+					for item in aux
+						dia = vm.settings.diasSemana.find (obj)-> obj.value == item
+						expediente.dias.push(dia)
 
 			userStatusInit: (usuario)->
 				return if usuario.carregado
@@ -175,9 +176,19 @@ angular.module('scApp').lazy
 
 						@list.addOrExtend item for item in data.grupos
 
+				Cargo.list params,
+					(data)=>
+						vm.cargosCtrl.list.addOrExtend item for item in data.cargos
+
 		vm.usuariosCtrl =
 			list: []
 			params: {}
+
+			newUser: (grupo) ->
+				grupo.creatingNewUser = true
+
+			cancelarCadastro: (grupo)->
+				grupo.creatingNewUser = false
 
 			init: (usuario)->
 				usuario.menu = new scToggle()
@@ -185,6 +196,7 @@ angular.module('scApp').lazy
 				usuario.ferias_modal = new scModal()
 				usuario.ferias = usuario.ferias || []
 				expedientes = usuario.expedientes
+				vm.showCtrl.diasInit(usuario)
 
 			open_ferias_modal: (usuario)->
 				usuario.ferias_modal.open()
@@ -339,7 +351,12 @@ angular.module('scApp').lazy
 
 			cancelar: (grupo)->
 				if @newRecord
-					@newRecord = false
+					scAlert.open
+						title: 'Deseja mesmo cancelar sem salvar?'
+						buttons: [
+							{ label: 'Sim', color: 'yellow', action: -> vm.gruposCtrl.newRecord = false },
+							{ label: 'Não', color: 'gray' }
+						]
 				else
 					grupo.edit.toggle()
 
@@ -654,7 +671,6 @@ angular.module('scApp').lazy
 						scTopMessages.openSuccess 'Registro excluído com sucesso!'
 					(response)=>
 						@loading = false
-						console.log data.errors
 
 						errors = response.data?.errors
 
