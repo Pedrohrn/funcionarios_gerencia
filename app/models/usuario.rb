@@ -51,11 +51,16 @@ class Usuario < ApplicationRecord
 		attrs[:cep] = cep
 		attrs[:bairro] = bairro
 		attrs[:cidade] = cidade
+		attrs[:emails_alternativos] = emails_alternativos_obj
 		attrs
 	end
 
 	def telefone_obj
 		telefones
+	end
+
+	def emails_alternativos_obj
+		emails
 	end
 
 	def expediente_obj
