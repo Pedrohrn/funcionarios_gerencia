@@ -20,6 +20,7 @@ class CreateUsuarios < ActiveRecord::Migration[5.2]
       t.datetime :vigencia_inicio
       t.datetime :vigencia_fim
       t.json :telefones
+      t.json :emails_alternativos
       t.json :expedientes
       t.json :visualizacoes
 
