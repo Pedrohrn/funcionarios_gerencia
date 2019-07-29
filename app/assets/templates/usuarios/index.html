@@ -10,9 +10,29 @@
 		<a>Início</a> / Ações / Corpo Diretivo
 	</section>
 
-	<section id="usuarios">
+	<section id="grupos">
 		<div>
 			<ul class="sc-accordion sc-border-t-none" sc-scroll="listCtrl.nextPage()">
+				<li ng-if="indexCtrl.gruposCtrl.newRecord" class="sc-acc-blue" ng-init="indexCtrl.gruposCtrl.formInit(grupo = {})">
+					<div class="sc-accordion-head flex-row" style="min-height: 42.781px;" ng-click="indexCtrl.gruposCtrl.cancelar(grupo = {})">
+						<label class="fcol-xs-3em align-center">
+							<i class="sc-icon sc-icon-mais-1"></i>
+						</label>
+						<div class="fcol-xs-auto sc-text-white">
+							Novo cadastro
+						</div>
+					</div>
+					<div class="sc-accordion-body sc-p-b-o ng-animation-slider">
+						<div class="sc-m-h-xs sc-bg-white">
+							<div class="fcol-xs-100 sc-p-lg">
+								<div class="sc-label">Novo grupo:</div>
+								<input class="sc-input-default" placeholder="Nome do grupo" ng-model="indexCtrl.gruposCtrl.params.nome"/>
+								<button class="sc-btn sc-btn-blue sc-m-l-lg" ng-click="indexCtrl.gruposCtrl.submit()">Salvar</button>
+								<button class="sc-btn sc-btn-default sc-m-l-md" ng-click="indexCtrl.gruposCtrl.cancelar(grupo = {})">Cancelar</button>
+							</div>
+						</div>
+					</div>
+				</li>
 				<li
 					as-sortable-item
 					ng-controller="CorpoDiretivo::ShowCtrl as itemCtrl"
@@ -23,7 +43,7 @@
 				>
 					<div class="sc-accordion-head flex-row" ng-click="itemCtrl.accToggle(grupo)">
 						<label class="fcol-xs-3em align-center" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'" ng-show="indexCtrl.screenMode.list">
-							<i class="sc-icon" ng-if="indexCtrl.screenMode.list" ng-class="grupo.show.opened ? 'sc-icon-menos-1' : 'sc-icon-mais-1'"></i>
+							<i class="sc-icon" ng-if="indexCtrl.screenMode.list" ng-class="grupo.show.opened ? 'sc-icon-seta-11-cima' : 'sc-icon-seta-11-baixo'"></i>
 						</label>
 						<label as-sortable-item-handle ng-if="indexCtrl.screenMode.sort" class="fcol-xs-3em align-center drag-icon as-sortable-item-handle" ng-class="grupo.show.opened ? 'sc-text-white' : 'sc-text-blue'">
 							<i class="sc-icon sc-icon-menu sc-text-black"></i>
