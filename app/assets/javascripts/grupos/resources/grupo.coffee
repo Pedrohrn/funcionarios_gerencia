@@ -4,18 +4,18 @@ angular.module('scApp').lazy
 	($resource)->
 		encapsulateData = (data) -> JSON.stringify { grupo: data }
 
-		$resource 'http://localhost:3000/grupos/:id.json', { id: '@id' },
+		$resource 'http://localhost:3000/funcionario_grupos/:id.json', { id: '@id' },
 			list:
 				method: 'GET'
 
 			submit:
 				method: 'POST'
-				url: 'http://localhost:3000/grupos/submit'
+				url: 'http://localhost:3000/funcionario_grupos/submit'
 				transformRequest: encapsulateData
 
 			micro_update:
 				method: 'PUT'
-				url: 'http://localhost:3000/grupos/micro_update'
+				url: 'http://localhost:3000/funcionario_grupos/micro_update'
 				transformRequest: encapsulateData
 
 			destroy:
