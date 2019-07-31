@@ -1,0 +1,282 @@
+<div ng-controller="CorpoDiretivo::FormCtrl as formCtrl" ng-init="formCtrl.init(funcionario, formFact)">
+	<div sc-modal="indexCtrl.formFact.modal" class="sc-modal-xxl">
+		<div class="sc-modal-header">
+			<span ng-if="!funcionario.id">Novo usuário</span>
+			<span ng-if="funcionario.id">Editar usuário</span>
+			<i class="sc-icon sc-icon-fechar-1 sc-modal-close sc-badge-hover-red" ng-click="indexCtrl.formFact.cancelar()"></i>
+		</div>
+
+		<div class="sc-modal-body">
+			<form>
+				<div class="sc-fieldset flex-row">
+					<div class="sc-fieldset-head fcol-xs-100">
+						<div class="sc-text-bold sc-text-blue">Dados do funcionário</div>
+					</div>
+					<div class="fcol-xs-30">
+						<div class="sc-m-b-md">
+							<div class="sc-label">Grupo:</div>
+							<select class="sc-input-default sc-input-block" ng-options="grupo as grupo.nome disable when grupo.inativado_em for grupo in indexCtrl.listCtrl.list track by grupo.id" ng-model="formCtrl.params.grupo">
+								<option ng-hide="formCtrl.params.grupo" label="Selecione um grupo"></option>
+							</select>
+						</div>
+					</div>
+					<div class="fcol-xs-30">
+						<div class="sc-m-b-md">
+							<label ng-if="!indexCtrl.cargosCtrl.creatingMode">
+								<div class="sc-label">Cargo:
+									<span class="sc-text-red sc-text-sm" ng-if="formCtrl.params.cargo.inativado_em">Cargo desativado! Escolha outro ou reative-o</span>
+								</div>
+								<div class="sc-input-group sc-dropdown" sc-dropdown-menu>
+									<select
+									class="sc-input-default"
+									ng-class="{'error': formCtrl.params.cargo.inativado_em}"
+									ng-options="cargo as cargo.nome for cargo in indexCtrl.cargosCtrl.list track by cargo.id"
+									ng-model="formCtrl.params.cargo"
+									>
+										<option ng-hide="formCtrl.params.cargo" label="Selecione um cargo"></option>
+									</select>
+									<button class="sc-btn sc-btn-thin sc-btn-yellow" ng-click="indexCtrl.cargosCtrl.openMenu()">
+										<i class="sc-icon sc-icon-reticiencias-v" ng-if="!indexCtrl.cargosCtrl.loading"></i>
+										<i class="sc-icon sc-icon-carregando-1 sc-icon-spin" ng-if="indexCtrl.cargosCtrl.loading"></i>
+									</button>
+									<div class="sc-dropdown-menu pull-right" ng-if="indexCtrl.cargosCtrl.menuOpened" style="display: block; top: 2.3em; left: 8.9em;">
+										<ul>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.new()">
+												<span class="align-left">
+													<i class="sc-icon sc-icon-mais-1"></i>
+													Novo
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.edit(cargo = formCtrl.params.cargo)">
+												<span class="align-left">
+													<i class="sc-icon sc-icon-lapis"></i>
+													Editar
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.rmv(cargo = formCtrl.params.cargo)">
+												<span class="align-left">
+													<i class="sc-icon sc-icon-lixeira-2"></i>
+													Excluir
+												</span>
+											</li>
+											<li sc-dropdown-close-menu ng-click="indexCtrl.cargosCtrl.inativar_reativar(cargo = formCtrl.params.cargo)">
+												<span class="align-left">
+													<i ng-if="!formCtrl.params.cargo.inativado_em" class="sc-icon sc-icon-banir"></i>
+													<i ng-if="formCtrl.params.cargo.inativado_em" class="sc-icon sc-icon-seta-9-esquerda"></i>
+													<span ng-if="!formCtrl.params.cargo.inativado_em">Inativar</span>
+													<span ng-if="formCtrl.params.cargo.inativado_em">Reativar</span>
+												</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</label>
+							<label ng-if="indexCtrl.cargosCtrl.creatingMode" ng-init="indexCtrl.cargosCtrl.formInit(formCtrl.params.cargo)">
+								<div class="sc-label">Nome:</div>
+								<div class="sc-input-group">
+									<input class="sc-input-default sc-input-thin" type="text" ng-model="indexCtrl.cargosCtrl.params.nome"/>
+									<button class="sc-btn sc-btn-green" ng-click="indexCtrl.cargosCtrl.submit(cargo = indexCtrl.cargosCtrl.params)">
+										<i class="sc-icon sc-icon-visto-1"></i>
+									</button>
+									<button class="sc-btn sc-btn-red" ng-click="indexCtrl.cargosCtrl.resetForm()">
+										<i class="sc-icon sc-icon-fechar-1"></i>
+									</button>
+								</div>
+							</label>
+						</div>
+					</div>
+					<div class="fcol-xs-auto">
+						<div class="sc-m-b-md">
+							<div class="sc-label">Vigência</div>
+							<div class="flex-row-with-padding">
+								<input sc-date-picker class="sc-input-default sc-input-date" type="date" ng-model="formCtrl.params.vigencia_inicio"/>
+								<div class="sc-text-blue sc-m-h-lg align-self-center"> à </div>
+								<input sc-date-picker class="sc-input-default sc-input-date" type="date" ng-model="formCtrl.params.vigencia_fim"/>
+							</div>
+						</div>
+					</div>
+					<div class="fcol-xs-100 sc-p-t-o">
+						<div class="sc-fieldset fcol-xs-100">
+							<div class="sc-fieldset-head flex-row">
+								<div class="sc-label sc-p-t-xs">Expedientes:</div>
+								<button class="sc-btn sc-btn-green sc-btn-thin sc-btn-sm sc-m-l-md" ng-click="formCtrl.formCtrl.addExpediente()">Adicionar</button>
+							</div>
+							<div class="sc-p-v-xs" ng-repeat="expediente in formCtrl.params.expedientes track by $index">
+							 	<div class="sc-m-b-lg sc-m-t-sm" style="font-size: 11.9px;">
+							 		<div class="ng-animation-slider flex-row" style="display: block;">
+							 			<label class="sc-p-md" ng-repeat="dia in indexCtrl.settings.diasSemana">
+							 				<input class="sc-m-r-xs sc-checkbox" ng-checked="expediente.dias.include(dia.value)" ng-click="formCtrl.expedientesCtrl.toggleDay(dia, expediente)" type="checkbox"/>
+							 				<span class="sc-label">{{dia.key}}</span>
+							 			</label>
+							 			<label>
+											<input sc-mask="hora" type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_inicio"/>
+										</label>
+										<label class="sc-label sc-m-h-lg align-self-center">até</label>
+										<label>
+											<input sc-mask="hora" type="text" style="max-width: 4em;" class="sc-input-default sc-input-block sc-input-time" ng-model="expediente.hora_fim"/>
+										</label>
+							 			<i class="sc-m-h-lg sc-icon sc-icon-lixeira-1 sc-text-lg sc-badge-hover-red" ng-click="formCtrl.formCtrl.rmvExpediente(expediente)"></i>
+							 		</div>
+							 	</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="sc-fieldset flex-row-with-padding">
+					<div class="sc-fieldset-head fcol-xs-100">
+						<div class="sc-text-blue sc-text-bold">Dados gerais</div>
+					</div>
+					<div class="fcol-xs-100 sc-p-b-o fcol-md-50">
+						<div class="sc-m-b-md">
+							<div class="sc-label">Nome:</div>
+							<input class="sc-input-default sc-input-block" ng-model="formCtrl.params.pessoa.nome"/>
+						</div>
+					</div>
+					<div class="fcol-xs-100 sc-p-b-o fcol-md-50">
+						<div class="sc-label">E-mail:</div>
+						<input class="sc-input-default sc-input-block" type="email" ng-model="formCtrl.params.pessoa.email"/>
+					</div>
+					<div class="fcol-xs-100 fcol-md-50">
+						<div class="sc-label">Telefones:</div>
+						<div class="sc-tag-box">
+							<div ng-repeat="telefone in formCtrl.params.pessoa.telefones track by $index">
+								<span class="sc-tag sc-tag-blue">
+									<span ng-click="formCtrl.formCtrl.updateTelefone(telefone)">{{telefone}}</span>
+									<i class="sc-icon sc-icon-fechar-1 sc-tag-remove" ng-click="formCtrl.formCtrl.rmvTelefone(telefone)"></i>
+								</span>
+							</div>
+							<input class="phantom sc-input-block" ng-blur="formCtrl.formCtrl.addTelefone()" ng-keydown="formCtrl.formCtrl.telNavigate()" ng-model="formCtrl.formCtrl.novoTelefone" placeholder="Digite um novo telefone"/>
+						</div>
+					</div>
+					<div class="fcol-xs-100 fcol-md-50">
+						<div class="sc-label">Emails alternativos</div>
+						<div class="sc-tag-box">
+							<div ng-repeat="email in formCtrl.params.emails_alternativos track by $index">
+								<span class="sc-tag sc-tag-blue">
+									<span ng-click="formCtrl.formCtrl.updateEmail(email)">{{email}}</span>
+									<i class="sc-icon sc-icon-fechar-1 sc-tag-remove" ng-click="formCtrl.formCtrl.rmvEmail(email)"></i>
+								</span>
+							</div>
+							<input class="phantom sc-input-block" ng-blur="formCtrl.formCtrl.addEmail()" ng-keydown="formCtrl.formCtrl.emailNavigate()" ng-model="formCtrl.formCtrl.novoEmail" placeholder="Digite um novo email"/>
+						</div>
+					</div>
+					<div class="fcol-xs-33">
+						<div class="sc-label">CPF:</div>
+						<input class="sc-input-block sc-input-default" type="text" sc-mask="cpf" ng-model="formCtrl.params.pessoa.cpf">
+					</div>
+					<div class="fcol-xs-33">
+						<div class="sc-label">RG:</div>
+						<input class="sc-input-default sc-input-block" type="" ng-model="formCtrl.params.pessoa.rg">
+					</div>
+					<div class="fcol-xs-33">
+						<div class="sc-label">Nascimento:</div>
+						<input class="sc-input-default sc-input-block" sc-date-picker type="date" min="1900-01-01" max="3000-12-31" ng-model="formCtrl.params.pessoa.data_nascimento">
+					</div>
+				</div>
+				<div class="sc-fieldset flex-row-with-padding">
+					<div class="sc-fieldset-head fcol-xs-100">
+						<div class="sc-text-blue sc-text-bold">Endereço</div>
+					</div>
+					<div class="fcol-xs-25">
+						<div class="sc-label">CEP:</div>
+						<div class="sc-input-group">
+							<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.pessoa.cep"/>
+							<button class="sc-btn sc-btn-blue">
+								<i class="sc-icon sc-icon-lupa-1"></i>
+							</button>
+						</div>
+					</div>
+					<div class="fcol-xs-25">
+						<div class="sc-label">Cidade:</div>
+						<div class="sc-input-group">
+							<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.pessoa.cidade"/>
+							<button class="sc-btn sc-btn-blue">
+								<i class="sc-icon sc-icon-lupa-1"></i>
+							</button>
+						</div>
+					</div>
+					<div class="fcol-xs-25">
+						<div class="sc-label">Logradouro:</div>
+						<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.pessoa.logradouro"/>
+					</div>
+					<div class="fcol-xs-25">
+						<div class="sc-label">Complemento:</div>
+						<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.pessoa.complemento"/>
+					</div>
+					<div class="fcol-xs-25">
+						<div class="sc-label">Bairro:</div>
+						<input class="sc-input-default sc-input-block" type="text" ng-model="formCtrl.params.pessoa.bairro">
+					</div>
+				</div>
+				<div class="sc-fieldset flex-row-with-padding">
+					<div class="sc-fieldset-head fcol-xs-100 flex-row sc-p-v-o">
+						<div class="sc-text-blue align-self-center sc-text-bold">Anexos</div>
+						<div class="sc-btn-group align-self-center sc-m-h-lg">
+							<button class="sc-btn sc-btn-blue sc-btn-thin sc-btn-sm">
+								<i class="sc-icon sc-icon-clipe"></i>
+								Anexar
+							</button>
+							<button class="sc-btn sc-btn-blue sc-btn-thin sc-btn-sm">
+								<i class="sc-icon sc-icon-camera-2"></i>
+								Tirar foto
+							</button>
+						</div>
+						<select class="sc-input sc-input-thin sc-text-sm sc-input-default sc-m-v-xs" ng-model="params.anexo.type">
+							<option label="Selecione o tipo"></option>
+							<option label="Documento" value="documento"></option>
+							<option label="Foto" value="foto"></option>
+						</select>
+					</div>
+					<div ng-repeat="anexo in formCtrl.params.anexos track by $index">
+						{{anexo}}
+					</div>
+					<div class="fcol-xs-auto">
+						<div class="align-center">
+							<div class="sc-text-blue">
+								<i class="sc-icon-exclamacao-1"></i>
+								Nenhum anexo!
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="sc-fieldset flex-row-with-padding">
+					<div class="sc-fieldset-head fcol-xs-100">
+						<div class="sc-text-blue sc-text-bold">Visualizações</div>
+					</div>
+					<ul class="fcol-xs-100 sc-m-t-lg">
+						<li ng-repeat="grupo in indexCtrl.settings.grupos_list track by $index" class="sc-m-v-sm flex-row sc-border-b-lg" ng-init="formCtrl.formCtrl.init(grupo)">
+							<div class="fcol-xs-auto">
+								<div class="sc-label sc-text-">{{grupo.label}}</div>
+							</div>
+							<div class="fcol-xs-25 sc-dropdown">
+								<button class="sc-btn sc-btn-block sc-btn-blue sc-btn-thin" ng-click="grupo.visualizacoes.toggle()">
+									<span class="sc-badge sc-badge-fixed sc-bg-yellow">{{grupo.checked}}</span>
+									Visualizar
+									<i class="sc-icon" ng-class="grupo.visualizacoes.opened ? 'sc-icon-seta-5-cima' : 'sc-icon-seta-5-baixo'"></i>
+								</button>
+								<ul class="sc-dropdown-menu pull-right" ng-if="grupo.visualizacoes.opened" style="display: block; max-height: 13em; overflow: auto; min-width: 10.8em;">
+									<li ng-repeat="option in indexCtrl.settings.dadosPessoais track by $index" ng-click="formCtrl.formCtrl.toggleVisualizacoesOption(option, grupo)">
+										<span class="align-left">
+											<i class="sc-icon" ng-class="option.checked ? 'sc-icon-visto-3' : 'sc-icon-quadrado-1'"></i>
+											{{option.label}}
+										</span>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+
+		<div class="sc-modal-footer">
+			<button class="sc-btn sc-btn-blue sc-m-h-lg" ng-click="formCtrl.submit(funcionario)">
+				<span ng-if="!formCtrl.formCtrl.loading">Salvar</span>
+				<span ng-if="formCtrl.formCtrl.loading">Carregando</span>
+			</button>
+			<button class="sc-btn sc-btn-red" ng-click="indexCtrl.formFact.cancelar()">Cancelar</button>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,110 @@
+<div class="sc-m-h-xs sc-p-md">
+	<div class="sc-fieldset">
+		<div class="sc-fieldset-head flex-row">
+			<div class="sc-label align-self-center">
+				<i class="sc-icon sc-icon-grupo-2"></i>
+				Funcionários
+			</div>
+			<button ng-click="indexCtrl.funcionariosCtrl.newUser(grupo)" class="sc-btn sc-btn-green sc-btn-sm sc-m-h-lg sc-btn-thin">
+				<i class="sc-icon sc-icon-mais-1"></i>
+				Cadastrar
+			</button>
+		</div>
+		<ul class="flex-row sc-p-o">
+		<li ng-if="grupo.carregando" class="fcol-xs-100 sc-m-v-md">
+			<div class="sc-text-blue align-center">
+				<i class="sc-icon sc-icon-carregando-2 sc-icon-spin"></i>
+				Carregando!
+			</div>
+		</li>
+		<li ng-if="grupo.funcionarios.length <= 0" class="fcol-xs-100">
+			<div class="align-center sc-text-blue sc-border-radius sc-bg-white sc-p-v-lg">
+				<i class="sc-icon sc-icon-exclamacao-1 sc-p-o"></i>
+				<span class="sc-p-o">Nenhum usuário cadastrado!</span>
+			</div>
+		</li>
+		<li ng-repeat="funcionario in grupo.funcionarios track by $index" ng-init="indexCtrl.funcionariosCtrl.init(funcionario)" class="fcol-xl-25 fcol-lg-33 fcol-md-50 fcol-xs-100">
+			<div class="sc-bg-white sc-fieldset justify-content-space-between sc-m-md sc-bg-{{funcionario.status.color}}-lighter" ng-class="{'sc-opac-60': funcionario.excluindo}">
+				<div class="sc-p-b-o">
+					<div class="sc-input-group fcol-xs-100 sc-p-b-lg">
+						<input class="sc-input-default sc-input-block" placeholder="Busque por um funcionário" ng-model="funcionario.pessoa.nome"/>
+						<button class="sc-btn sc-btn-yellow"  ng-click="indexCtrl.funcionariosCtrl.edit(funcionario)">
+							<i class="sc-icon" ng-class="{'sc-icon-lapis': !funcionario.procurando, 'sc-icon-carregando-1 sc-icon-spin': funcionario.carregando}"></i>
+						</button>
+						<button class="sc-btn sc-btn-blue sc-dropdown" ng-click="funcionario.menu.toggle()">
+							<i class=" sc-icon sc-icon-reticiencias-v"></i>
+							<ul ng-if="funcionario.menu.opened" class="sc-dropdown-menu ng-animation-slider pull-right" style="display: block; min-width: 11em;">
+								<li ng-click="indexCtrl.funcionariosCtrl.open_ferias_modal(funcionario)">
+									<div class="align-left"><i class="sc-icon sc-icon-calendario-2"></i>Férias</div>
+								</li>
+								<li ng-click="indexCtrl.funcionariosCtrl.inativar(funcionario)">
+									<div class="align-left">
+										<i class="sc-icon sc-icon-banir"></i>
+										<div ng-if="!funcionario.inativado_em">Inativar</div>
+										<div ng-if="funcionario.inativado_em">Reativar</div>
+									</div>
+								</li>
+								<li ng-click="indexCtrl.funcionariosCtrl.rmv(funcionario)">
+									<div class="align-left"><i class="sc-icon sc-icon-lixeira-2"></i>Remover</div>
+								</li>
+							</ul>
+						</button>
+					</div>
+					<div class="flex-row">
+						<div class="fcol-xs-auto sc-p-b-md">
+							<div class="sc-p-b-xs sc-text-gray">Cargo:
+								<span class="sc-text-blue sc-text-bold">{{funcionario.cargo.nome}}</span>
+							</div>
+							<div class="sc-p-b-xs sc-text-gray">Telefones:
+								<span ng-repeat="telefone in funcionario.pessoa.telefones" class="sc-text-blue sc-text-bold">{{telefone}}   </span>
+							</div>
+							<div class="sc-p-b-xs sc-text-gray">E-mail:
+								<span class="sc-text-blue sc-text-bold">{{funcionario.pessoa.email}}</span>
+							</div>
+							<div class="sc-p-b-xs sc-text-gray">Vigência:
+								<span class="sc-text-blue sc-text-bold">{{funcionario.vigencia_inicio | date: 'dd/MM/yyyy' }} - {{funcionario.vigencia_fim | date: 'dd/MM/yyyy' }}</span>
+							</div>
+							<div class="sc-p-b-xs sc-text-gray">Dias e horários:
+								<div class="clear"></div>
+								<div ng-repeat="expediente in funcionario.expedientes_frontend track by $index" class="sc-text-blue sc-text-bold clear sc-m-v-xs">
+									<i class="sc-icon sc-icon-relogio-2"></i>
+									<span ng-repeat="dia in expediente.dias">{{dia.key}},</span>
+									das {{expediente.hora_inicio | date: 'mediumTime' }} até {{expediente.hora_fim | date: 'mediumTime' }}
+									<div class="clear"></div>
+								</div>
+							</div>
+						</div>
+						<div class="sc-border-gray-light sc-border-solid sc-border-lg sc-border-radius sc-bg-white align-center" style="background-size: cover; background-position: center; width: 5.158em; height: 4.586em; line-height: 5.258em;">
+							<i class="sc-icon sc-icon-camera-1 sc-text-gray" style="font-size: 2.4em;"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-if="funcionario.ferias_modal.active">
+				<div ng-include="indexCtrl.templates.funcionarios.ferias_modal"></div>
+			</div>
+		</li>
+		<li ng-if="grupo.creatingNewUser" class="fcol-xl-25 fcol-lg-33 fcol-md-50 fcol-xs-100">
+			<div class="sc-fieldset flex-row sc-bg-white">
+				<div class="sc-input-group fcol-xs-100">
+					<input class="sc-input-default sc-input-block" placeholder="Procure por um funcionário" ng-model="indexCtrl.funcionariosCtrl.buscaParams" />
+					<button class="sc-btn sc-btn-blue">
+						<i ng-if="!indexCtrl.funcionariosCtrl.newUserSelected" class="sc-icon" ng-class="{'sc-icon-lupa-1': !indexCtrl.funcionariosCtrl.procurando, 'sc-icon-carregando-1 sc-icon-spin': indexCtrl.funcionariosCtrl.procurando}"></i>
+					</button>
+					<button ng-if="indexCtrl.funcionariosCtrl.newUserSelected" class="sc-btn sc-btn-green" ng-click="indexCtrl.funcionariosCtrl.salvar()">Salvar</button>
+					<button class="sc-btn sc-btn-red" ng-click="indexCtrl.funcionariosCtrl.cancelarCadastro(grupo)">
+						<i class="sc-icon sc-icon-lixeira-1"></i>
+					</button>
+				</div>
+				<div class="fcol-xs-50 sc-text-sm">
+					Por enquanto esse botão ficará aqui, mas ele entra no typeahead/input
+					<button ng-click="indexCtrl.formFact.init(funcionario = {}, grupo = grupo)" class="sc-btn sc-btn-green sc-m-h-lg sc-btn-thin">
+						<i class="sc-icon sc-icon-mais-1"></i>
+						Cadastrar
+					</button>
+				</div>
+			</div>
+		</li>
+		</ul>
+	</div>
+</div>

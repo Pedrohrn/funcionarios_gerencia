@@ -1,0 +1,42 @@
+<div sc-modal="indexCtrl.logCtrl.modal">
+	<div class="sc-modal-header">
+		Histórico
+		<i ng-click="indexCtrl.logCtrl.modal.close()" class="sc-icon sc-icon-fechar-1 sc-modal-close sc-badge-hover-red"></i>
+	</div>
+
+	<div class="sc-modal-body">
+		<div class="sc-label">Histórico geral</div>
+		<ul ng-init="indexCtrl.logCtrl.loadList()">
+			<li ng-if="indexCtrl.logCtrl.carregando || indexCtrl.logCtrl.list.length <= 0" class="sc-text-cian-darker sc-bg-cian-lighter sc-border-radius sc-p-lg">
+				<div class="align-center">
+					<span ng-if="indexCtrl.logCtrl.carregando">
+						<i class="sc-icon sc-icon-carregando-1 sc-icon-spin"></i>
+						Carregando...
+					</span>
+					<span ng-if="indexCtrl.logCtrl.list.length > 0 && !indexCtrl.logCtrl.carregando">
+						<i class="sc-icon sc-icon-exclamacao-1"></i>
+						Nenhum histórico de registros para ser exibido!
+					</span>
+				</div>
+			</li>
+			<li ng-repeat="registro in indexCtrl.logCtrl.list track by $index" class="sc-border-radius sc-bg-{{registro.acao.color}}-lighter" ng-init="indexCtrl.logCtrl.init(registro)">
+				<div class="sc-cursor-pointer" ng-click="registro.acc.toggle()">
+					<span class="sc-text">
+						{{registro.user}} - {{registro.acao}}, em {{registro.data | date: 'dd/MM/yyyy'}} às {{registro.data | date: 'mediumTime'}}
+					</span>
+					<i class="sc-icon" ng-class="registro.acc.opened ? 'sc-icon-mais-1' : 'sc-icon-menos-1'"></i>
+				</div>
+				<div ng-if="registro.acc.opened" class="ng-animation-slider">
+					<div class="sc-m-t-md">
+						<span>registros....?</span>
+					</div>
+				</div>
+			</li>
+		</ul>
+
+	</div>
+
+	<div class="sc-modal-footer">
+		<button class="sc-btn sc-btn-default" ng-click="indexCtrl.logCtrl.modal.close()">Fechar</button>
+	</div>
+</div>
