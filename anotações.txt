@@ -13,61 +13,59 @@ quebrar tela de cadastro de grupo (permissoes vai para tela de cadastro de usuar
 
 
 
+def sort_numero
+q = [1,2,3,4]
+q.sample
+end
+
+def sort_pessoa
+u = [1,2,3,4,5,6,7,8,9,10,11,12]
+u.sample
+end
+
+emailsList = []
 tel_list = []
+
+50.times do
+e = Faker::Internet.email
+emailsList << e
+end
 
 100.times do
 t = Faker::PhoneNumber.phone_number
 telList << telefone
 end
 
-def sort_numero
-q = [1,2,3,4]
-q.sample
+def pegar_emails
+emails = @@emailsList.sample(sort_numero)
+@@emailsList = @@emailsList - emails
+emails
 end
 
-10.times do
-u = Usuario.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), cargo_id: Faker::Number.within(1..5), grupo_id: Faker::Number.within(1..4), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today), cep: Faker::Address.zip, logradouro: Faker::Address.street_name, cidade: Faker::Address.city, bairro: Faker::Address.community, complemento: Faker::Address.secondary_address, data_nascimento: Faker::Date.between(60.years.ago, Date.today), telefones: telList.sample(sort_numero))
-u.save
+def pegar_telefones
+telefones = @@telList.sample(sort_numero)
+@@telList = @@telList - telefones
+telefones
 end
 
 
-talvez será necessário criar a tabela de férias [ :inicio, :fim, :observacoes, :user_id ] (com user_id)
+12.times do
+p = Administrativo::Pessoa.new(nome: Faker::Name.name, email: Faker::Internet.email, cpf: CpfUtils.cpf, rg: Faker::Number.number(7), cep: Faker::Address.zip, logradouro: Faker::Address.street_name, cidade: Faker::Address.city, bairro: Faker::Address.community, complemento: Faker::Address.secondary_address, nascimento: Faker::Date.between(60.years.ago, Date.today), telefones: pegar_telefones, emails_alternativos: pegar_emails)
+p.save
+end
+
+12.times do
+f = Administrativo::Funcionario.new(pessoa_id: sort_pessoa, cargo_id: Faker::Number.within(1..5), grupo_id: Faker::Number.within(1..4), vigencia_inicio: Faker::Date.between(5.years.ago, Date.today), vigencia_fim: Faker::Date.between(5.years.ago, Date.today))
+f.save
+end
 
 
-Usuario
-	id
-	grupo_id
-	cargo_id
-	inativado_em
-	foto
-	nome
-	...
-	DADOS PESSOAIS
-	...
-	vigencia =
-		{ data_inicio, data_fim }
-	expedientes = [
-		{ days_list }
-	]
-	anexos
-	grupo_permissoes = [
-		{ grupo_id }
-	]
-	gestoes = [
-		{ gestao_id }
-	]
-	ferias = [
-		{ data_inicio, data_fim, observacoes }
-
-
-
+talvez será necessário criar a tabela de férias [ :inicio, :fim, :observacoes, :user_id ]
 
 TODO
 	-> edição de grupos (usuarios) e categorias (passagem_serviço) tá zuada. ao editar mais de um ao mesmo tempo, o controller buga, pegando uma só informação e colocando nos outros três campos
 	-> é possível os cards ficarem alinhados, mesmo quando não são do mesmo tamanho?
 	-> olhar a tela de resumo para tentar aplicar a dinâmica dos cards na show dos usuarios (desafio: fazer com que a ação de arrastar um usuario troque o seu grupo)
-
-
 	-> quais dados serão necessários para salvar um usuário?
 		usuario:
 		{
