@@ -47,15 +47,15 @@ app = angular.module('scApp', ['ngRoute', 'ngResource', 'sc.commons.directives.m
   }
 
   objDefault = {
-    templateUrl: "<%= asset_path('usuarios/index.html') %>",
+    templateUrl: "<%= asset_path('funcionarios/index.html') %>",
     resolve : carregarCssJs({
       js: [
         "<%= asset_path('templates.js') %>", // Não, Jamais, nunca tire do primeiro item!!!
-        "<%= asset_path('usuarios/resources/usuario.js') %>",
-        "<%= asset_path('usuarios/controllers/index.js') %>",
-        "<%= asset_path('usuarios/controllers/form.js') %>",
-        "<%= asset_path('usuarios/controllers/show.js') %>",
-        "<%= asset_path('usuarios/controllers/form_factory.js') %>",
+        "<%= asset_path('funcionarios/resources/funcionario.js') %>",
+        "<%= asset_path('funcionarios/controllers/index.js') %>",
+        "<%= asset_path('funcionarios/controllers/form.js') %>",
+        "<%= asset_path('funcionarios/controllers/show.js') %>",
+        "<%= asset_path('funcionarios/controllers/form_factory.js') %>",
         "<%= asset_path('cargos/resources/cargo.js') %>",
         "<%= asset_path('grupos/resources/grupo.js') %>",
         "<%= asset_path('recessos/resources/recesso.js') %>",

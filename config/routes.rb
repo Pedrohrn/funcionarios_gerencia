@@ -1,28 +1,28 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'usuarios#index'
+  root 'funcionarios#index'
 
-  resources :recessos,  only: [:index, :destroy, :show] do
+  resources :funcionario_recessos,  only: [:index, :destroy, :show] do
     collection do
       post :submit
     end
   end
 
-  resources :grupos, 		only: [:index, :destroy, :show] do
+  resources :funcionario_grupos, 		only: [:index, :destroy, :show] do
   	collection do
       post :submit
   		put :micro_update
   	end
   end
 
-  resources :cargos, 		only: [:index, :destroy, :show] do
+  resources :funcionario_cargos, 		only: [:index, :destroy, :show] do
   	collection do
       post :submit
   		put :micro_update
   	end
   end
 
-  resources :usuarios, 	only: [:index, :show, :destroy] do
+  resources :funcionarios, 	        only: [:index, :show, :destroy] do
     collection do
       post :submit
       put :micro_update

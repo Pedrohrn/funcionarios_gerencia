@@ -10,54 +10,65 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_11_200908) do
+ActiveRecord::Schema.define(version: 2019_07_31_132713) do
 
-  create_table "cargos", force: :cascade do |t|
+  create_table "administrativo_funcionario_cargos", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "inativado_em"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["nome"], name: "index_administrativo_funcionario_cargos_on_nome", unique: true
   end
 
-  create_table "grupos", force: :cascade do |t|
+  create_table "administrativo_funcionario_grupos", force: :cascade do |t|
     t.string "nome", null: false
     t.datetime "inativado_em"
+    t.integer "order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["nome"], name: "index_administrativo_funcionario_grupos_on_nome", unique: true
   end
 
-  create_table "recessos", force: :cascade do |t|
+  create_table "administrativo_funcionario_recessos", force: :cascade do |t|
     t.string "observacoes"
     t.datetime "data_inicio", null: false
     t.datetime "data_fim", null: false
-    t.integer "usuario_id", null: false
+    t.integer "funcionario_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "usuarios", force: :cascade do |t|
-    t.string "nome", null: false
-    t.string "email"
-    t.string "cidade"
-    t.string "logradouro"
-    t.string "complemento"
-    t.string "bairro"
-    t.integer "cep"
-    t.integer "gestao_id"
-    t.integer "cargo_id"
-    t.integer "grupo_id"
-    t.integer "cpf"
-    t.integer "rg"
-    t.datetime "inativado_em"
-    t.datetime "data_nascimento"
-    t.datetime "horarios"
+  create_table "administrativo_funcionarios", force: :cascade do |t|
+    t.integer "funcionario_cargo_id"
+    t.integer "pessoa_id", null: false
+    t.integer "funcionario_grupo_id"
     t.datetime "vigencia_inicio"
     t.datetime "vigencia_fim"
-    t.json "telefones"
     t.json "expedientes"
+    t.datetime "inativado_em"
     t.json "visualizacoes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "administrativo_pessoas", force: :cascade do |t|
+    t.string "nome", null: false
+    t.json "telefones"
+    t.integer "cpf"
+    t.integer "rg"
+    t.integer "nascimento"
+    t.string "email"
+    t.json "emails_alternativos"
+    t.string "cidade"
+    t.string "bairro"
+    t.string "complemento"
+    t.string "logradouro"
+    t.integer "cep"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cpf"], name: "index_administrativo_pessoas_on_cpf", unique: true
+    t.index ["email"], name: "index_administrativo_pessoas_on_email", unique: true
+    t.index ["nome"], name: "index_administrativo_pessoas_on_nome"
   end
 
 end
