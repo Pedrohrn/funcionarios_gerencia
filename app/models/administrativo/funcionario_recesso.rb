@@ -24,7 +24,7 @@ class Administrativo::FuncionarioRecesso < ApplicationRecord
 	def funcionario_obj
 		{
 			id: funcionario[:id],
-			nome: funcionario[:nome,
+			nome: funcionario[:nome],
 		}
 	end
 

@@ -1,13 +1,14 @@
 class Administrativo::Funcionario < ApplicationRecord
 	belongs_to 	:pessoa,		class_name: 'Administrativo::Pessoa'
-	belongs_to 	:grupo, 		class_name: 'Administrativo::FuncionarioGrupo', foreign_key: 'funcionario_grupo_id'
-	belongs_to 	:cargo, 		class_name: 'Administrativo::FuncionarioCargo', foreign_key: 'funcionario_cargo_id'
+	belongs_to 	:grupo, 		class_name: 'Administrativo::FuncionarioGrupo', foreign_key: :grupo_id
+	belongs_to 	:cargo, 		class_name: 'Administrativo::FuncionarioCargo', foreign_key: :cargo_id
 	has_many 		:recessos, 	class_name: 'Administrativo::FuncionarioRecesso', dependent: :destroy
 
 	accepts_nested_attributes_for :recessos, allow_destroy: true
+	accepts_nested_attributes_for :pessoa, allow_destroy: true
 
 	VALIDATES_PRESENCES = [
-		{ key: :pessoa_id, label: 'Pessoa' },
+		{ key: :pessoa, label: 'Pessoa' },
 	]
 
 	validate :validar_campos
