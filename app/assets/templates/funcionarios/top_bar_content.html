@@ -33,12 +33,6 @@
 						Configurações
 					</span>
 				</li>
-				<li ng-click="indexCtrl.gruposCtrl.openModal()">
-					<span class="align-left">
-						<i class="sc-icon sc-icon-grupo-2"></i>
-						Grupos
-					</span>
-				</li>
 				<li ng-click="indexCtrl.screenMode.changeMode()">
 					<span class="align-left">
 						<i class="sc-icon sc-icon-menu"></i>Ordenar
@@ -56,7 +50,7 @@
 <div ng-if="indexCtrl.filtro.filtro_avancado" class="flex-row ng-animation-slider sc-p-sm" id="top-bar-filter">
 	<form class="col-xs-12 sc-p-md sc-p-h-o sc-p-t-md" ng-init="indexCtrl.filtro.init()" ng-submit="indexCtrl.filtro.buscar(params)">
 		<div class="col-xs-12 sc-m-b-md col-sm-6 col-md-3">
-			<div class="sc-label">Função/Cargos</div>
+			<div class="sc-label">Cargos</div>
 			<div class="sc-dropdown">
 				<button class="sc-btn sc-btn-block sc-btn-blue" ng-click="indexCtrl.filtro.showCargos()">
 					Selecione
