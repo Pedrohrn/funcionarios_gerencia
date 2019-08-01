@@ -308,25 +308,16 @@ angular.module('scApp').lazy
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
 		vm.gruposCtrl =
-			modal: new scModal()
 			newRecord: false
 			creatingModeOn: false
 			params: {}
 
 			init: (grupo)->
 				grupo.options = new scToggle()
-				grupo.modal_edit = new scToggle()
 
 			formInit: (grupo)->
 				return if !@newRecord && !@creatingModeOn
 				@params = angular.copy grupo || { nome: '' }
-
-			openModal: ->
-				@modal.open()
-
-			closeModal: ->
-				@modal.close()
-				@resetForm()
 
 			edit: (grupo) ->
 				if @creatingModeOn
@@ -337,7 +328,6 @@ angular.module('scApp').lazy
 						]
 				else
 					@creatingModeOn = true
-					grupo.modal_edit.opened = true
 
 			new: ->
 				if @creatingModeOn
@@ -359,10 +349,6 @@ angular.module('scApp').lazy
 						]
 				else
 					grupo.edit.toggle()
-
-			cancelar_modal: (grupo)->
-				grupo.modal_edit.toggle()
-				@creatingModeOn = false
 
 			rmv: (grupo)->
 				scAlert.open
@@ -398,7 +384,7 @@ angular.module('scApp').lazy
 						errors = response.data?.errors
 						scTopMessages.openDanger errors unless Object.blank(errors)
 
-			submit: ->
+			submit: (grupo) ->
 				return if @loading
 				@loading = true
 				grupo.carregando = true
@@ -639,8 +625,8 @@ angular.module('scApp').lazy
 							angular.extend cargo, data.cargo
 							message = 'Registro atualizado com sucesso!'
 
-							scTopMessages.openSuccess message
-							@resetForm()
+						scTopMessages.openSuccess message
+						@resetForm()
 					(response)=>
 						@loading = false
 
