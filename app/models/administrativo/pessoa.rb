@@ -9,7 +9,7 @@ class Administrativo::Pessoa < ApplicationRecord
 	VALIDATES_LENGTH = [
 		{ key: :nome, max_length: 120, label: 'nome' },
 		{ key: :rg, max_length: 30, label: 'rg' },
-		{ key: :cep, max_length: 7, label: 'cep' },
+		{ key: :cep, max_length: 8, label: 'cep' },
 		{ key: :logradouro, max_length: 150, label: 'logradouro' },
 		{ key: :complemento, max_length: 100, label: 'complemento' },
 	]
@@ -30,7 +30,8 @@ class Administrativo::Pessoa < ApplicationRecord
 		attrs[:email] = email
 		attrs[:cpf] = cpf
 		attrs[:rg] = rg
-		attrs[:data_nascimento] = nascimento
+		attrs[:nascimento] = nascimento
+		attrs[:emails_alternativos] = email_obj
 		attrs[:telefones] = telefone_obj
 		attrs[:cidade] = cidade
 		attrs[:logradouro] = logradouro
@@ -44,8 +45,8 @@ class Administrativo::Pessoa < ApplicationRecord
 		telefones
 	end
 
-	def emails_alternativos_obj
-		emails
+	def email_obj
+		emails_alternativos
 	end
 
 	def validar_campos
