@@ -1,5 +1,5 @@
 class Administrativo::FuncionarioCargo < ApplicationRecord
-	has_many :funcionarios, class_name: 'Administrativo::Funcionario'
+	has_many :funcionarios, class_name: 'Administrativo::Funcionario', foreign_key: :cargo_id
 
 	VALIDATES_PRESENCES = [
 		{ key: :nome, label: 'nome' },

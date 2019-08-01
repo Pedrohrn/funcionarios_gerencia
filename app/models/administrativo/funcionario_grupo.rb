@@ -1,5 +1,5 @@
 class Administrativo::FuncionarioGrupo < ApplicationRecord
-	has_many :funcionarios, class_name: 'Administrativo::Funcionario'
+	has_many :funcionarios, class_name: 'Administrativo::Funcionario', foreign_key: :grupo_id
 
 	validates_uniqueness_of :nome, :case_sensitive => true, message: 'Já existe um grupo com esse nome! Escolha outro!'
 
