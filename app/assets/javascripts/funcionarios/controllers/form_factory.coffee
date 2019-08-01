@@ -15,6 +15,9 @@ angular.module('scApp').lazy
 					@funcionario = {}
 					@modal.active = false
 
+				load: (funcionario) ->
+					@grupo.funcionarios.push(funcionario)
+
 				cancelar: ->
 					scAlert.open
 						title: 'Deseja mesmo fechar o formulário? Dados não salvos serão perdidos.'
