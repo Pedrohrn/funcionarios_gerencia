@@ -27,7 +27,7 @@
 							<div class="fcol-xs-100 sc-p-lg">
 								<div class="sc-label">Novo grupo:</div>
 								<input class="sc-input-default" placeholder="Nome do grupo" ng-model="indexCtrl.gruposCtrl.params.nome"/>
-								<button class="sc-btn sc-btn-blue sc-m-l-lg" ng-click="indexCtrl.gruposCtrl.submit()">Salvar</button>
+								<button class="sc-btn sc-btn-blue sc-m-l-lg" ng-click="indexCtrl.gruposCtrl.submit(grupo = {})">Salvar</button>
 								<button class="sc-btn sc-btn-default sc-m-l-md" ng-click="indexCtrl.gruposCtrl.cancelar(grupo = {})">Cancelar</button>
 							</div>
 						</div>
@@ -111,9 +111,6 @@
 		</div>
 		<div ng-if="indexCtrl.configuracoesCtrl.modal.active">
 			<div ng-include="indexCtrl.templates.funcionarios.configuracoes_modal"></div>
-		</div>
-		<div ng-if="indexCtrl.gruposCtrl.modal.active">
-			<div ng-include="indexCtrl.templates.funcionarios.grupos_modal"></div>
 		</div>
 		<div ng-if="indexCtrl.logCtrl.modal.active">
 			<div ng-include="indexCtrl.templates.funcionarios.log_geral_modal">
