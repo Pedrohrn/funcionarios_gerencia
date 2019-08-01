@@ -25,10 +25,11 @@ class FuncionariosService
 		params[:cargo_id] = cargo.blank? ? 1 : cargo[:id]
 		params[:grupo_id] = grupo.blank? ? 1 : grupo[:id]
 
+		params = set_pessoa(params)
+
 		funcionario, errors = nil, []
 		ApplicationRecord.transaction do
-			funcionario = model.find_by(id: params[:id]) || model.new
-			funcionario.lock!
+			funcionario = model.lock.find_by(id: params[:id]) || model.new
 			funcionario.assign_attributes(params)
 
 			unless funcionario.save
@@ -38,14 +39,13 @@ class FuncionariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {funcionario: funcionario.to_frontend_obj, status: 'success'}]
+		[:success, {funcionario: funcionario.to_frontend_obj}]
 	end
 
 	def self.destroy(opts, params)
 		funcionario, errors = nil, []
 		ApplicationRecord.transaction do
-			funcionario = model.find_by(id: params[:id])
-			funcionario.lock!
+			funcionario = model.lock.find_by(id: params[:id])
 			funcionario.destroy
 
 			unless funcionario.destroy
@@ -55,7 +55,7 @@ class FuncionariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {status: 'success'}]
+		[:success, {}]
 	end
 
 	def self.micro_update(opts, params)
@@ -84,6 +84,14 @@ class FuncionariosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {funcionario: funcionario.to_frontend_obj, status: 'success'}]
+		[:success, { funcionario: funcionario.to_frontend_obj }]
+	end
+
+	def self.set_pessoa(params)
+		pessoa = params.delete(:pessoa)
+
+		params[:pessoa_attributes] = pessoa
+
+		params
 	end
 end

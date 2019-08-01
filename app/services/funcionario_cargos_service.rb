@@ -13,8 +13,7 @@ class FuncionarioCargosService
 	def self.submit(opts, params)
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
-			cargo = model.find_by(id: params[:id]) || model.new
-			cargo.lock!
+			cargo = model.lock.find_by(id: params[:id]) || model.new
 
 			cargo.assign_attributes(params)
 
@@ -25,7 +24,7 @@ class FuncionarioCargosService
 		end
 
 		return [ :error, errors] if errors.any?
-		[ :success, {cargo: cargo.to_frontend_obj, status: 'success'} ]
+		[ :success, { cargo: cargo.to_frontend_obj } ]
 	end
 
 	def self.destroy(opts, params)
@@ -33,13 +32,13 @@ class FuncionarioCargosService
 		ApplicationRecord.transaction do
 			cargo = model.find_by(id: params[:id])
 
-			cargos = Funcionario.where(cargo_id: params[:id]) || []
+			funcionarios = Administrativo::Funcionario.where(cargo_id: params[:id]) || []
 
-			if cargos.empty?
+			if funcionarios.empty?
 				cargo.destroy
 
 				unless cargo.destroy
-					errors = [ { message: 'Registro não encontrado!'}]
+					errors = [ { message: 'Registro não encontrado!'} ]
 					raise ActiveRecord::Rollback
 				end
 			else
@@ -48,7 +47,7 @@ class FuncionarioCargosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success,  {status: 'success'} ]
+		[:success,  {} ]
 	end
 
 	def self.micro_update(opts, params)
@@ -65,8 +64,7 @@ class FuncionarioCargosService
 	def self.inativar_reativar(params)
 		cargo, errors = nil, []
 		ApplicationRecord.transaction do
-			cargo = model.find_by(id: params[:id])
-			cargo.lock!
+			cargo = model.lock.find_by(id: params[:id])
 
 			cargo.inativado_em = cargo.inativado? ? nil : Time.now
 
@@ -77,7 +75,7 @@ class FuncionarioCargosService
 		end
 
 		return if [:error, errors] if errors.any?
-		[:success, { cargo: cargo.to_frontend_obj, status: 'success' }]
+		[:success, { cargo: cargo.to_frontend_obj }]
 	end
 
 end

@@ -19,8 +19,7 @@ class FuncionarioGruposService
 	def self.submit(opts, params)
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
-			grupo = model.find_by(id: params[:id]) || model.new
-			grupo.lock!
+			grupo = model.lock.find_by(id: params[:id]) || model.new
 
 			grupo.assign_attributes(params)
 
@@ -38,9 +37,17 @@ class FuncionarioGruposService
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
 			grupo = model.find_by(id: params[:id])
-			unless grupo.destroy
-				errors = grupo.errors.full_messages
-				raise ActiveRecord::Rollback
+
+			funcionarios = Administrativo::Funcionario.where(grupo_id: params[:id]) || []
+
+			if funcionarios.empty?
+				grupo.funcionarios.any?
+				unless grupo.destroy
+					errors = grupo.errors.full_messages
+					raise ActiveRecord::Rollback
+				end
+			else
+				errors = ['O grupo possuí usuários e não poderá ser excluído!']
 			end
 		end
 
@@ -60,8 +67,7 @@ class FuncionarioGruposService
 	def self.inativar_reativar(params)
 		grupo, errors = nil, []
 		ApplicationRecord.transaction do
-			grupo = model.find_by(id: params[:id])
-			grupo.lock!
+			grupo = model.lock.find_by(id: params[:id])
 
 			grupo.inativado_em = grupo.inativado? ? nil : Time.now
 

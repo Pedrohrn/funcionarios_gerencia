@@ -18,8 +18,7 @@ class FuncionarioRecessosService
 	def self.submit(opts, params)
 		recesso, errors = nil, []
 		ApplicationRecord.transaction do
-			recesso = model.find_by(id: params[:id]) || model.new
-			recesso.lock!
+			recesso = model.lock.find_by(id: params[:id]) || model.new
 
 			recesso.assign_attributes(params)
 
@@ -30,15 +29,13 @@ class FuncionarioRecessosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, { recesso: recesso.to_frontend_obj, status: 'success' }]
+		[:success, { recesso: recesso.to_frontend_obj }]
 	end
 
 	def self.destroy(opts, params)
 		recesso, errors = nil, []
 		ApplicationRecord.transaction do
-			recesso = model.find_by(id: params[:id])
-			recesso.lock!
-
+			recesso = model.lock.find_by(id: params[:id])
 			recesso.destroy
 			unless recesso.destroy
 				errors = recesso.errors.full_messages
@@ -47,7 +44,7 @@ class FuncionarioRecessosService
 		end
 
 		return [:error, errors] if errors.any?
-		[:success, {status: 'success'}]
+		[:success, {}]
 	end
 
 end

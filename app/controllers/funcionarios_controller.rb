@@ -52,12 +52,9 @@ class FuncionariosController < ApplicationController
 	end
 
 	def funcionarios_params
-		attrs = [ :id, :vigencia_inicio, :vigencia_fim, :expedientes, :inativado_em ]
+		attrs = [ :id, :vigencia_inicio, :vigencia_fim, :inativado_em ]
 		attrs << {cargo: [:id]}
 		attrs << {grupo: [:id]}
-		attrs << {
-			telefones: []
-		}
 		attrs << {
 			expedientes: [
 				:hora_inicio,
@@ -70,16 +67,16 @@ class FuncionariosController < ApplicationController
 				:id,
 				:nome,
 				:email,
-				:telefones,
-				:emails_alternativos,
-				:data_nascimento,
+				:nascimento,
+				:cpf,
 				:cep,
+				:rg,
 				:logradouro,
 				:complemento,
 				:cidade,
 				:bairro,
 				emails_alternativos: [],
-				contatos: [],
+				telefones: [],
 			]
 		}
 
