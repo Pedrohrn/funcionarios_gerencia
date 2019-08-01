@@ -17,7 +17,7 @@
 				Carregando!
 			</div>
 		</li>
-		<li ng-if="grupo.funcionarios.length <= 0" class="fcol-xs-100">
+		<li ng-if="grupo.funcionarios.length <= 0 && !grupo.creatingNewUser" class="fcol-xs-100">
 			<div class="align-center sc-text-blue sc-border-radius sc-bg-white sc-p-v-lg">
 				<i class="sc-icon sc-icon-exclamacao-1 sc-p-o"></i>
 				<span class="sc-p-o">Nenhum usuário cadastrado!</span>

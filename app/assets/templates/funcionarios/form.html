@@ -152,7 +152,7 @@
 					<div class="fcol-xs-100 fcol-md-50">
 						<div class="sc-label">Emails alternativos</div>
 						<div class="sc-tag-box">
-							<div ng-repeat="email in formCtrl.params.emails_alternativos track by $index">
+							<div ng-repeat="email in formCtrl.params.pessoa.emails_alternativos track by $index">
 								<span class="sc-tag sc-tag-blue">
 									<span ng-click="formCtrl.formCtrl.updateEmail(email)">{{email}}</span>
 									<i class="sc-icon sc-icon-fechar-1 sc-tag-remove" ng-click="formCtrl.formCtrl.rmvEmail(email)"></i>
@@ -171,7 +171,7 @@
 					</div>
 					<div class="fcol-xs-33">
 						<div class="sc-label">Nascimento:</div>
-						<input class="sc-input-default sc-input-block" sc-date-picker type="date" min="1900-01-01" max="3000-12-31" ng-model="formCtrl.params.pessoa.data_nascimento">
+						<input class="sc-input-default sc-input-block" sc-date-picker type="date" min="1900-01-01" max="3000-12-31" ng-model="formCtrl.params.pessoa.nascimento">
 					</div>
 				</div>
 				<div class="sc-fieldset flex-row-with-padding">
@@ -244,7 +244,7 @@
 					<div class="sc-fieldset-head fcol-xs-100">
 						<div class="sc-text-blue sc-text-bold">Visualizações</div>
 					</div>
-					<ul class="fcol-xs-100 sc-m-t-lg">
+					<ul class="fcol-xs-100">
 						<li ng-repeat="grupo in indexCtrl.settings.grupos_list track by $index" class="sc-m-v-sm flex-row sc-border-b-lg" ng-init="formCtrl.formCtrl.init(grupo)">
 							<div class="fcol-xs-auto">
 								<div class="sc-label sc-text-">{{grupo.label}}</div>
