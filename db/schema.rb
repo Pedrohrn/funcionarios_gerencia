@@ -39,9 +39,9 @@ ActiveRecord::Schema.define(version: 2019_07_31_132713) do
   end
 
   create_table "administrativo_funcionarios", force: :cascade do |t|
-    t.integer "funcionario_cargo_id"
+    t.integer "cargo_id"
     t.integer "pessoa_id", null: false
-    t.integer "funcionario_grupo_id"
+    t.integer "grupo_id"
     t.datetime "vigencia_inicio"
     t.datetime "vigencia_fim"
     t.json "expedientes"
